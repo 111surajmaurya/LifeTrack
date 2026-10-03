@@ -1,0 +1,5193 @@
+{
+ "version": 1,
+ "note": "Approximate values for typical Indian home/restaurant portions. Real calories vary with oil, sugar and recipe. Medium bowl ≈ 150 g cooked / 150 ml; small ≈ 65%, large ≈ 140%.",
+ "units": {
+  "piece": "count with + / −",
+  "bowl": "pick small/medium/large, then count",
+  "glass": "pick size, then count",
+  "cup": "pick size, then count",
+  "tbsp": "tsp or tbsp, then count",
+  "plate": "half/full, then count",
+  "pack": "pick size",
+  "handful": "pick size",
+  "scoop": "pick size",
+  "serving": "pick size",
+  "thali": "pick size"
+ },
+ "categories": [
+  "Breads",
+  "Rice",
+  "Dal & Legumes",
+  "Vegetables (Sabji)",
+  "Non-veg",
+  "Breakfast",
+  "Snacks",
+  "Sweets",
+  "Dairy",
+  "Beverages",
+  "Fruits",
+  "Fast food & Others"
+ ],
+ "foods": [
+  {
+   "id": "roti",
+   "name": "Roti / Chapati",
+   "aliases": [
+    "chapati",
+    "phulka",
+    "rotli"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 100
+    }
+   ]
+  },
+  {
+   "id": "roti_ghee",
+   "name": "Roti with ghee",
+   "aliases": [
+    "ghee roti",
+    "chupdi roti"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 45,
+     "kcal": 140
+    }
+   ]
+  },
+  {
+   "id": "paratha_plain",
+   "name": "Plain paratha",
+   "aliases": [
+    "parantha"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "paratha_aloo",
+   "name": "Aloo paratha",
+   "aliases": [
+    "potato paratha"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 250
+    }
+   ]
+  },
+  {
+   "id": "paratha_gobi",
+   "name": "Gobi paratha",
+   "aliases": [
+    "cauliflower paratha"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 230
+    }
+   ]
+  },
+  {
+   "id": "paratha_paneer",
+   "name": "Paneer paratha",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 110,
+     "kcal": 290
+    }
+   ]
+  },
+  {
+   "id": "paratha_methi",
+   "name": "Methi paratha",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 70,
+     "kcal": 200
+    }
+   ]
+  },
+  {
+   "id": "naan",
+   "name": "Naan",
+   "aliases": [
+    "plain naan"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 90,
+     "kcal": 260
+    }
+   ]
+  },
+  {
+   "id": "naan_butter",
+   "name": "Butter naan",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 95,
+     "kcal": 310
+    }
+   ]
+  },
+  {
+   "id": "naan_garlic",
+   "name": "Garlic naan",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 95,
+     "kcal": 300
+    }
+   ]
+  },
+  {
+   "id": "tandoori_roti",
+   "name": "Tandoori roti",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 50,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "missi_roti",
+   "name": "Missi roti",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 55,
+     "kcal": 150
+    }
+   ]
+  },
+  {
+   "id": "makki_roti",
+   "name": "Makki ki roti",
+   "aliases": [
+    "makki roti",
+    "corn roti"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 70,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "bajra_roti",
+   "name": "Bajra roti",
+   "aliases": [
+    "bajre ki roti",
+    "millet roti"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 50,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "jowar_roti",
+   "name": "Jowar roti / Bhakri",
+   "aliases": [
+    "bhakri",
+    "jowar bhakri"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 50,
+     "kcal": 110
+    }
+   ]
+  },
+  {
+   "id": "puri",
+   "name": "Puri",
+   "aliases": [
+    "poori"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 30,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "bhatura",
+   "name": "Bhatura",
+   "aliases": [
+    "bhature"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 90,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "kulcha",
+   "name": "Kulcha",
+   "aliases": [],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 90,
+     "kcal": 250
+    }
+   ]
+  },
+  {
+   "id": "thepla",
+   "name": "Thepla",
+   "aliases": [
+    "methi thepla"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "bread_slice",
+   "name": "Bread slice (white)",
+   "aliases": [
+    "white bread",
+    "toast"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "bread_brown",
+   "name": "Brown bread slice",
+   "aliases": [
+    "wheat bread"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 65
+    }
+   ]
+  },
+  {
+   "id": "pav",
+   "name": "Pav",
+   "aliases": [
+    "pao",
+    "bun"
+   ],
+   "category": "Breads",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 110
+    }
+   ]
+  },
+  {
+   "id": "rice_plain",
+   "name": "Plain rice (steamed)",
+   "aliases": [
+    "chawal",
+    "white rice",
+    "steamed rice"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "rice_brown",
+   "name": "Brown rice",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "jeera_rice",
+   "name": "Jeera rice",
+   "aliases": [
+    "cumin rice"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 156
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 240
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 336
+    }
+   ]
+  },
+  {
+   "id": "ghee_rice",
+   "name": "Ghee rice",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 182
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 280
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 392
+    }
+   ]
+  },
+  {
+   "id": "veg_pulao",
+   "name": "Veg pulao",
+   "aliases": [
+    "pulav",
+    "pilaf"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 117,
+     "kcal": 162
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 180,
+     "kcal": 250
+    },
+    {
+     "label": "Large bowl",
+     "grams": 252,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "peas_pulao",
+   "name": "Peas pulao",
+   "aliases": [
+    "matar pulao"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 117,
+     "kcal": 156
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 180,
+     "kcal": 240
+    },
+    {
+     "label": "Large bowl",
+     "grams": 252,
+     "kcal": 336
+    }
+   ]
+  },
+  {
+   "id": "veg_biryani",
+   "name": "Veg biryani",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "chicken_biryani",
+   "name": "Chicken biryani",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 162,
+     "kcal": 247
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 250,
+     "kcal": 380
+    },
+    {
+     "label": "Large bowl",
+     "grams": 350,
+     "kcal": 532
+    }
+   ]
+  },
+  {
+   "id": "mutton_biryani",
+   "name": "Mutton biryani",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 162,
+     "kcal": 280
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 250,
+     "kcal": 430
+    },
+    {
+     "label": "Large bowl",
+     "grams": 350,
+     "kcal": 602
+    }
+   ]
+  },
+  {
+   "id": "egg_biryani",
+   "name": "Egg biryani",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 150,
+     "kcal": 221
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 230,
+     "kcal": 340
+    },
+    {
+     "label": "Large bowl",
+     "grams": 322,
+     "kcal": 476
+    }
+   ]
+  },
+  {
+   "id": "curd_rice",
+   "name": "Curd rice",
+   "aliases": [
+    "thayir sadam",
+    "dahi chawal"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 150
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 230
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 322
+    }
+   ]
+  },
+  {
+   "id": "lemon_rice",
+   "name": "Lemon rice",
+   "aliases": [
+    "chitranna"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 117,
+     "kcal": 162
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 180,
+     "kcal": 250
+    },
+    {
+     "label": "Large bowl",
+     "grams": 252,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "tamarind_rice",
+   "name": "Tamarind rice",
+   "aliases": [
+    "puliyodarai",
+    "pulihora"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 117,
+     "kcal": 176
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 180,
+     "kcal": 270
+    },
+    {
+     "label": "Large bowl",
+     "grams": 252,
+     "kcal": 378
+    }
+   ]
+  },
+  {
+   "id": "khichdi",
+   "name": "Khichdi",
+   "aliases": [
+    "kichdi",
+    "moong dal khichdi"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 136
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 210
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 294
+    }
+   ]
+  },
+  {
+   "id": "fried_rice_veg",
+   "name": "Veg fried rice",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 188
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 290
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 406
+    }
+   ]
+  },
+  {
+   "id": "fried_rice_egg",
+   "name": "Egg fried rice",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 208
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 320
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 448
+    }
+   ]
+  },
+  {
+   "id": "fried_rice_chicken",
+   "name": "Chicken fried rice",
+   "aliases": [],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 228
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 350
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 490
+    }
+   ]
+  },
+  {
+   "id": "daliya",
+   "name": "Daliya (broken wheat)",
+   "aliases": [
+    "dalia",
+    "broken wheat",
+    "lapsi"
+   ],
+   "category": "Rice",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 98
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 150
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "dal_tadka",
+   "name": "Dal tadka",
+   "aliases": [
+    "daal",
+    "dal fry",
+    "toor dal",
+    "arhar dal",
+    "yellow dal"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 98
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 150
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "dal_makhani",
+   "name": "Dal makhani",
+   "aliases": [],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 150
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 230
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 322
+    }
+   ]
+  },
+  {
+   "id": "moong_dal",
+   "name": "Moong dal",
+   "aliases": [
+    "mung dal",
+    "green gram dal"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 84
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 130
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 182
+    }
+   ]
+  },
+  {
+   "id": "masoor_dal",
+   "name": "Masoor dal",
+   "aliases": [
+    "red lentil"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 91
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 140
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 196
+    }
+   ]
+  },
+  {
+   "id": "chana_dal",
+   "name": "Chana dal",
+   "aliases": [],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 104
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 160
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 224
+    }
+   ]
+  },
+  {
+   "id": "sambar",
+   "name": "Sambar",
+   "aliases": [
+    "sambhar"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "rasam",
+   "name": "Rasam",
+   "aliases": [],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 32
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 50
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "rajma",
+   "name": "Rajma",
+   "aliases": [
+    "kidney beans curry"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "chole",
+   "name": "Chole / Chana masala",
+   "aliases": [
+    "chana",
+    "chickpea curry",
+    "chhole"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 143
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 220
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "kadhi",
+   "name": "Kadhi",
+   "aliases": [
+    "kadhi pakora"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 91
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 140
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 196
+    }
+   ]
+  },
+  {
+   "id": "sprouts",
+   "name": "Sprouts (moong)",
+   "aliases": [
+    "moong sprouts"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 72
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 110
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 154
+    }
+   ]
+  },
+  {
+   "id": "chana_boiled",
+   "name": "Boiled black chana",
+   "aliases": [
+    "kala chana"
+   ],
+   "category": "Dal & Legumes",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 104
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 160
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 224
+    }
+   ]
+  },
+  {
+   "id": "aloo_gobi",
+   "name": "Aloo gobi",
+   "aliases": [
+    "gobi",
+    "potato cauliflower"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 98
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 150
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "aloo_matar",
+   "name": "Aloo matar",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 104
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 160
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 224
+    }
+   ]
+  },
+  {
+   "id": "aloo_sabji",
+   "name": "Aloo sabji (dry)",
+   "aliases": [
+    "sukhi aloo",
+    "jeera aloo",
+    "potato sabzi"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 110
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 170
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 238
+    }
+   ]
+  },
+  {
+   "id": "bhindi",
+   "name": "Bhindi masala",
+   "aliases": [
+    "okra",
+    "lady finger"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "baingan",
+   "name": "Baingan bharta",
+   "aliases": [
+    "brinjal",
+    "eggplant"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 84
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 130
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 182
+    }
+   ]
+  },
+  {
+   "id": "palak_paneer",
+   "name": "Palak paneer",
+   "aliases": [
+    "spinach paneer"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 156
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 240
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 336
+    }
+   ]
+  },
+  {
+   "id": "paneer_butter",
+   "name": "Paneer butter masala",
+   "aliases": [
+    "paneer makhani"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "shahi_paneer",
+   "name": "Shahi paneer",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 208
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 320
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 448
+    }
+   ]
+  },
+  {
+   "id": "kadai_paneer",
+   "name": "Kadai paneer",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 169
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 260
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 364
+    }
+   ]
+  },
+  {
+   "id": "matar_paneer",
+   "name": "Matar paneer",
+   "aliases": [
+    "mutter paneer"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 150
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 230
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 322
+    }
+   ]
+  },
+  {
+   "id": "paneer_bhurji",
+   "name": "Paneer bhurji",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 162
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 250
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "mix_veg",
+   "name": "Mixed vegetable curry",
+   "aliases": [
+    "mix veg",
+    "sabji",
+    "sabzi",
+    "vegetable curry"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 91
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 140
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 196
+    }
+   ]
+  },
+  {
+   "id": "lauki",
+   "name": "Lauki sabji",
+   "aliases": [
+    "bottle gourd",
+    "doodhi",
+    "ghia"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 46
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 70
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 98
+    }
+   ]
+  },
+  {
+   "id": "tinda",
+   "name": "Tinda sabji",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 52
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 80
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 112
+    }
+   ]
+  },
+  {
+   "id": "karela",
+   "name": "Karela sabji",
+   "aliases": [
+    "bitter gourd"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 58
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 90
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 126
+    }
+   ]
+  },
+  {
+   "id": "cabbage_sabji",
+   "name": "Cabbage sabji",
+   "aliases": [
+    "patta gobi",
+    "band gobi"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 58
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 90
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 126
+    }
+   ]
+  },
+  {
+   "id": "methi_aloo",
+   "name": "Methi aloo",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 98
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 150
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "palak_sabji",
+   "name": "Palak sabji / Saag",
+   "aliases": [
+    "saag",
+    "sarson ka saag",
+    "spinach"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 65
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 100
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 140
+    }
+   ]
+  },
+  {
+   "id": "gajar_matar",
+   "name": "Gajar matar",
+   "aliases": [
+    "carrot peas"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "veg_kurma",
+   "name": "Veg kurma / Korma",
+   "aliases": [
+    "korma"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "mushroom_masala",
+   "name": "Mushroom masala",
+   "aliases": [],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 98
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 150
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "soya_chunks",
+   "name": "Soya chunks curry",
+   "aliases": [
+    "nutri",
+    "soya"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "salad",
+   "name": "Salad (cucumber, tomato, onion)",
+   "aliases": [
+    "kachumber",
+    "green salad"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 26
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 40
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 56
+    }
+   ]
+  },
+  {
+   "id": "raita",
+   "name": "Raita",
+   "aliases": [
+    "boondi raita",
+    "cucumber raita"
+   ],
+   "category": "Vegetables (Sabji)",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 46
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 70
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 98
+    }
+   ]
+  },
+  {
+   "id": "egg_boiled",
+   "name": "Egg (boiled)",
+   "aliases": [
+    "anda",
+    "boiled egg",
+    "egg"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 50,
+     "kcal": 78
+    }
+   ]
+  },
+  {
+   "id": "egg_fried",
+   "name": "Egg (fried)",
+   "aliases": [
+    "fried egg"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 55,
+     "kcal": 95
+    }
+   ]
+  },
+  {
+   "id": "egg_omelette",
+   "name": "Omelette (1 egg)",
+   "aliases": [
+    "omlet",
+    "omelet",
+    "anda omelette"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 70,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "egg_omelette2",
+   "name": "Omelette (2 eggs)",
+   "aliases": [
+    "double omelette"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 130,
+     "kcal": 220
+    }
+   ]
+  },
+  {
+   "id": "egg_bhurji",
+   "name": "Egg bhurji",
+   "aliases": [
+    "anda bhurji",
+    "scrambled eggs"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "egg_curry",
+   "name": "Egg curry",
+   "aliases": [
+    "anda curry"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 143
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 220
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "chicken_curry",
+   "name": "Chicken curry",
+   "aliases": [
+    "chicken masala",
+    "chicken gravy"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 162
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 250
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "butter_chicken",
+   "name": "Butter chicken",
+   "aliases": [
+    "murgh makhani"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 214
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 330
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 462
+    }
+   ]
+  },
+  {
+   "id": "chicken_tikka_masala",
+   "name": "Chicken tikka masala",
+   "aliases": [],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "chicken_tikka",
+   "name": "Chicken tikka",
+   "aliases": [],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 45
+    }
+   ]
+  },
+  {
+   "id": "tandoori_chicken",
+   "name": "Tandoori chicken (leg)",
+   "aliases": [
+    "tandoori"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 120,
+     "kcal": 220
+    }
+   ]
+  },
+  {
+   "id": "chicken_grilled",
+   "name": "Grilled chicken breast",
+   "aliases": [
+    "grilled chicken",
+    "chicken breast"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 65,
+     "kcal": 107
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 100,
+     "kcal": 165
+    },
+    {
+     "label": "Large bowl",
+     "grams": 140,
+     "kcal": 231
+    }
+   ]
+  },
+  {
+   "id": "chicken_fry",
+   "name": "Chicken fry",
+   "aliases": [
+    "chicken 65",
+    "fried chicken"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "mutton_curry",
+   "name": "Mutton curry",
+   "aliases": [
+    "mutton masala",
+    "goat curry",
+    "gosht"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 208
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 320
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 448
+    }
+   ]
+  },
+  {
+   "id": "keema",
+   "name": "Keema",
+   "aliases": [
+    "kheema",
+    "minced meat"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 182
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 280
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 392
+    }
+   ]
+  },
+  {
+   "id": "fish_curry",
+   "name": "Fish curry",
+   "aliases": [
+    "macher jhol"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "fish_fry",
+   "name": "Fish fry",
+   "aliases": [
+    "fried fish"
+   ],
+   "category": "Non-veg",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "prawn_curry",
+   "name": "Prawn curry",
+   "aliases": [
+    "shrimp curry",
+    "jhinga"
+   ],
+   "category": "Non-veg",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 143
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 220
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "idli",
+   "name": "Idli",
+   "aliases": [
+    "idly"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 40
+    }
+   ]
+  },
+  {
+   "id": "dosa_plain",
+   "name": "Plain dosa",
+   "aliases": [
+    "dosa",
+    "dosai"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 80,
+     "kcal": 130
+    }
+   ]
+  },
+  {
+   "id": "dosa_masala",
+   "name": "Masala dosa",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 150,
+     "kcal": 220
+    }
+   ]
+  },
+  {
+   "id": "dosa_rava",
+   "name": "Rava dosa",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 90,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "uttapam",
+   "name": "Uttapam",
+   "aliases": [
+    "uthappam"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 120,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "vada_medu",
+   "name": "Medu vada",
+   "aliases": [
+    "vada",
+    "vadai"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 45,
+     "kcal": 130
+    }
+   ]
+  },
+  {
+   "id": "appam",
+   "name": "Appam",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "upma",
+   "name": "Upma",
+   "aliases": [
+    "rava upma",
+    "suji upma"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "poha",
+   "name": "Poha",
+   "aliases": [
+    "pohe",
+    "chivda"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "sabudana_khichdi",
+   "name": "Sabudana khichdi",
+   "aliases": [
+    "sabudana"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "oats",
+   "name": "Oats porridge (milk)",
+   "aliases": [
+    "oatmeal",
+    "oats"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "oats_masala",
+   "name": "Masala oats",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 104
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 160
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 224
+    }
+   ]
+  },
+  {
+   "id": "cornflakes",
+   "name": "Cornflakes with milk",
+   "aliases": [
+    "cereal"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "muesli",
+   "name": "Muesli with milk",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 143
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 220
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "pongal",
+   "name": "Ven pongal",
+   "aliases": [
+    "pongal"
+   ],
+   "category": "Breakfast",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 162
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 250
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "chole_bhature",
+   "name": "Chole bhature (1 bhatura + chole)",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "plate",
+   "servings": [
+    {
+     "label": "Small plate",
+     "grams": 125,
+     "kcal": 225
+    },
+    {
+     "label": "Medium plate",
+     "grams": 250,
+     "kcal": 450
+    },
+    {
+     "label": "Large plate",
+     "grams": 400,
+     "kcal": 720
+    }
+   ]
+  },
+  {
+   "id": "aloo_tikki",
+   "name": "Aloo tikki",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "sandwich_veg",
+   "name": "Veg sandwich",
+   "aliases": [
+    "sandwich"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 120,
+     "kcal": 200
+    }
+   ]
+  },
+  {
+   "id": "sandwich_grilled",
+   "name": "Grilled cheese sandwich",
+   "aliases": [
+    "cheese sandwich"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 140,
+     "kcal": 300
+    }
+   ]
+  },
+  {
+   "id": "egg_toast",
+   "name": "Egg toast",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 90,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "bread_butter",
+   "name": "Bread with butter",
+   "aliases": [
+    "butter toast"
+   ],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 35,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "bread_jam",
+   "name": "Bread with jam",
+   "aliases": [],
+   "category": "Breakfast",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "samosa",
+   "name": "Samosa",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 260
+    }
+   ]
+  },
+  {
+   "id": "kachori",
+   "name": "Kachori",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 190
+    }
+   ]
+  },
+  {
+   "id": "pakora",
+   "name": "Pakora / Bhajiya",
+   "aliases": [
+    "bhaji",
+    "bhajiya",
+    "onion pakoda",
+    "pakoda"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "vada_pav",
+   "name": "Vada pav",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 120,
+     "kcal": 290
+    }
+   ]
+  },
+  {
+   "id": "pav_bhaji",
+   "name": "Pav bhaji (2 pav + bhaji)",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 300,
+     "kcal": 400
+    }
+   ]
+  },
+  {
+   "id": "bhel_puri",
+   "name": "Bhel puri",
+   "aliases": [
+    "bhel"
+   ],
+   "category": "Snacks",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 117
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 180
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "pani_puri",
+   "name": "Pani puri / Golgappa",
+   "aliases": [
+    "golgappa",
+    "puchka"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 20,
+     "kcal": 25
+    }
+   ]
+  },
+  {
+   "id": "sev_puri",
+   "name": "Sev puri (6 pcs)",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "plate",
+   "servings": [
+    {
+     "label": "Small plate",
+     "grams": 60,
+     "kcal": 125
+    },
+    {
+     "label": "Medium plate",
+     "grams": 120,
+     "kcal": 250
+    },
+    {
+     "label": "Large plate",
+     "grams": 180,
+     "kcal": 375
+    }
+   ]
+  },
+  {
+   "id": "dahi_puri",
+   "name": "Dahi puri (6 pcs)",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "plate",
+   "servings": [
+    {
+     "label": "Small plate",
+     "grams": 75,
+     "kcal": 150
+    },
+    {
+     "label": "Medium plate",
+     "grams": 150,
+     "kcal": 300
+    },
+    {
+     "label": "Large plate",
+     "grams": 225,
+     "kcal": 450
+    }
+   ]
+  },
+  {
+   "id": "dhokla",
+   "name": "Dhokla",
+   "aliases": [
+    "khaman"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 30,
+     "kcal": 45
+    }
+   ]
+  },
+  {
+   "id": "chana_chaat",
+   "name": "Chana chaat",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 130
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 200
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 280
+    }
+   ]
+  },
+  {
+   "id": "papdi_chaat",
+   "name": "Papdi chaat",
+   "aliases": [
+    "chaat"
+   ],
+   "category": "Snacks",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "spring_roll",
+   "name": "Spring roll",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 130
+    }
+   ]
+  },
+  {
+   "id": "momos",
+   "name": "Momo (veg)",
+   "aliases": [
+    "momo",
+    "dumpling"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 35
+    }
+   ]
+  },
+  {
+   "id": "momos_chicken",
+   "name": "Momo (chicken)",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 28,
+     "kcal": 45
+    }
+   ]
+  },
+  {
+   "id": "maggi",
+   "name": "Maggi (1 packet)",
+   "aliases": [
+    "noodles",
+    "instant noodles"
+   ],
+   "category": "Snacks",
+   "unit": "pack",
+   "servings": [
+    {
+     "label": "Small pack",
+     "grams": 35,
+     "kcal": 155
+    },
+    {
+     "label": "Medium pack",
+     "grams": 70,
+     "kcal": 310
+    },
+    {
+     "label": "Large pack",
+     "grams": 140,
+     "kcal": 620
+    }
+   ]
+  },
+  {
+   "id": "namkeen",
+   "name": "Namkeen / Mixture",
+   "aliases": [
+    "mixture",
+    "bhujia",
+    "sev"
+   ],
+   "category": "Snacks",
+   "unit": "handful",
+   "servings": [
+    {
+     "label": "Small handful",
+     "grams": 15,
+     "kcal": 75
+    },
+    {
+     "label": "Medium handful",
+     "grams": 30,
+     "kcal": 150
+    },
+    {
+     "label": "Large handful",
+     "grams": 60,
+     "kcal": 300
+    }
+   ]
+  },
+  {
+   "id": "biscuit_marie",
+   "name": "Marie biscuit",
+   "aliases": [
+    "marie"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 7,
+     "kcal": 25
+    }
+   ]
+  },
+  {
+   "id": "biscuit_parle",
+   "name": "Parle-G biscuit",
+   "aliases": [
+    "parle g",
+    "glucose biscuit"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 5,
+     "kcal": 20
+    }
+   ]
+  },
+  {
+   "id": "biscuit_cream",
+   "name": "Cream biscuit",
+   "aliases": [
+    "bourbon",
+    "oreo"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 12,
+     "kcal": 60
+    }
+   ]
+  },
+  {
+   "id": "rusk",
+   "name": "Rusk / Toast",
+   "aliases": [
+    "toast biscuit"
+   ],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 12,
+     "kcal": 50
+    }
+   ]
+  },
+  {
+   "id": "khakhra",
+   "name": "Khakhra",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 15,
+     "kcal": 60
+    }
+   ]
+  },
+  {
+   "id": "popcorn",
+   "name": "Popcorn",
+   "aliases": [],
+   "category": "Snacks",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 16,
+     "kcal": 65
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 25,
+     "kcal": 100
+    },
+    {
+     "label": "Large bowl",
+     "grams": 35,
+     "kcal": 140
+    }
+   ]
+  },
+  {
+   "id": "chips",
+   "name": "Potato chips",
+   "aliases": [
+    "lays",
+    "wafers"
+   ],
+   "category": "Snacks",
+   "unit": "pack",
+   "servings": [
+    {
+     "label": "Small pack",
+     "grams": 15,
+     "kcal": 80
+    },
+    {
+     "label": "Medium pack",
+     "grams": 30,
+     "kcal": 160
+    },
+    {
+     "label": "Large pack",
+     "grams": 60,
+     "kcal": 320
+    }
+   ]
+  },
+  {
+   "id": "peanuts",
+   "name": "Roasted peanuts",
+   "aliases": [
+    "moongfali",
+    "groundnut"
+   ],
+   "category": "Snacks",
+   "unit": "handful",
+   "servings": [
+    {
+     "label": "Small handful",
+     "grams": 15,
+     "kcal": 85
+    },
+    {
+     "label": "Medium handful",
+     "grams": 30,
+     "kcal": 170
+    },
+    {
+     "label": "Large handful",
+     "grams": 60,
+     "kcal": 340
+    }
+   ]
+  },
+  {
+   "id": "makhana",
+   "name": "Makhana (roasted)",
+   "aliases": [
+    "fox nuts",
+    "lotus seeds"
+   ],
+   "category": "Snacks",
+   "unit": "handful",
+   "servings": [
+    {
+     "label": "Small handful",
+     "grams": 15,
+     "kcal": 50
+    },
+    {
+     "label": "Medium handful",
+     "grams": 30,
+     "kcal": 100
+    },
+    {
+     "label": "Large handful",
+     "grams": 60,
+     "kcal": 200
+    }
+   ]
+  },
+  {
+   "id": "chana_roasted",
+   "name": "Roasted chana",
+   "aliases": [
+    "bhuna chana"
+   ],
+   "category": "Snacks",
+   "unit": "handful",
+   "servings": [
+    {
+     "label": "Small handful",
+     "grams": 15,
+     "kcal": 60
+    },
+    {
+     "label": "Medium handful",
+     "grams": 30,
+     "kcal": 120
+    },
+    {
+     "label": "Large handful",
+     "grams": 60,
+     "kcal": 240
+    }
+   ]
+  },
+  {
+   "id": "gulab_jamun",
+   "name": "Gulab jamun",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 150
+    }
+   ]
+  },
+  {
+   "id": "rasgulla",
+   "name": "Rasgulla",
+   "aliases": [
+    "rosogolla"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "jalebi",
+   "name": "Jalebi",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 150
+    }
+   ]
+  },
+  {
+   "id": "laddu_besan",
+   "name": "Besan laddu",
+   "aliases": [
+    "ladoo",
+    "laddoo"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "laddu_motichoor",
+   "name": "Motichoor laddu",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 190
+    }
+   ]
+  },
+  {
+   "id": "barfi",
+   "name": "Barfi",
+   "aliases": [
+    "burfi",
+    "kaju katli"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 35,
+     "kcal": 140
+    }
+   ]
+  },
+  {
+   "id": "peda",
+   "name": "Peda",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 110
+    }
+   ]
+  },
+  {
+   "id": "soan_papdi",
+   "name": "Soan papdi",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "kheer",
+   "name": "Kheer",
+   "aliases": [
+    "payasam",
+    "rice pudding"
+   ],
+   "category": "Sweets",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 150
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 230
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 322
+    }
+   ]
+  },
+  {
+   "id": "halwa_sooji",
+   "name": "Sooji halwa",
+   "aliases": [
+    "suji halwa",
+    "rava kesari",
+    "sheera"
+   ],
+   "category": "Sweets",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 195
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 300
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "halwa_gajar",
+   "name": "Gajar halwa",
+   "aliases": [
+    "carrot halwa"
+   ],
+   "category": "Sweets",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 182
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 280
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 392
+    }
+   ]
+  },
+  {
+   "id": "halwa_moong",
+   "name": "Moong dal halwa",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 78,
+     "kcal": 228
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 120,
+     "kcal": 350
+    },
+    {
+     "label": "Large bowl",
+     "grams": 168,
+     "kcal": 490
+    }
+   ]
+  },
+  {
+   "id": "rasmalai",
+   "name": "Rasmalai",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 60,
+     "kcal": 180
+    }
+   ]
+  },
+  {
+   "id": "mysore_pak",
+   "name": "Mysore pak",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 40,
+     "kcal": 200
+    }
+   ]
+  },
+  {
+   "id": "chocolate_small",
+   "name": "Chocolate (small bar)",
+   "aliases": [
+    "dairy milk",
+    "chocolate"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 130
+    }
+   ]
+  },
+  {
+   "id": "ice_cream",
+   "name": "Ice cream",
+   "aliases": [],
+   "category": "Sweets",
+   "unit": "scoop",
+   "servings": [
+    {
+     "label": "Small scoop",
+     "grams": 42,
+     "kcal": 84
+    },
+    {
+     "label": "Medium scoop",
+     "grams": 70,
+     "kcal": 140
+    },
+    {
+     "label": "Large scoop",
+     "grams": 126,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "cake_slice",
+   "name": "Cake slice",
+   "aliases": [
+    "pastry"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 80,
+     "kcal": 300
+    }
+   ]
+  },
+  {
+   "id": "chikki",
+   "name": "Peanut chikki",
+   "aliases": [
+    "chikki"
+   ],
+   "category": "Sweets",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 25,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "milk_full",
+   "name": "Milk (full cream)",
+   "aliases": [
+    "doodh",
+    "milk"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 98
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 150
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "milk_toned",
+   "name": "Milk (toned)",
+   "aliases": [
+    "toned milk"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 78
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 120
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "milk_skim",
+   "name": "Milk (skimmed)",
+   "aliases": [
+    "skimmed milk",
+    "double toned"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 55
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 85
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 119
+    }
+   ]
+  },
+  {
+   "id": "milk_bournvita",
+   "name": "Milk with Bournvita/Horlicks",
+   "aliases": [
+    "bournvita",
+    "horlicks",
+    "complan",
+    "boost"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 143
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 220
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "curd",
+   "name": "Curd / Dahi",
+   "aliases": [
+    "dahi",
+    "yogurt",
+    "yoghurt"
+   ],
+   "category": "Dairy",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 58
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 90
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 126
+    }
+   ]
+  },
+  {
+   "id": "curd_lowfat",
+   "name": "Low-fat curd",
+   "aliases": [],
+   "category": "Dairy",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 39
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 60
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 84
+    }
+   ]
+  },
+  {
+   "id": "lassi_sweet",
+   "name": "Sweet lassi",
+   "aliases": [
+    "lassi"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 143
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 220
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 308
+    }
+   ]
+  },
+  {
+   "id": "lassi_salted",
+   "name": "Salted lassi",
+   "aliases": [],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 78
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 120
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "chaas",
+   "name": "Chaas / Buttermilk",
+   "aliases": [
+    "buttermilk",
+    "mattha"
+   ],
+   "category": "Dairy",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 26
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 40
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 56
+    }
+   ]
+  },
+  {
+   "id": "paneer_cube",
+   "name": "Paneer (raw, 30 g)",
+   "aliases": [
+    "paneer"
+   ],
+   "category": "Dairy",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "30 g cube",
+     "grams": 30,
+     "kcal": 80
+    }
+   ]
+  },
+  {
+   "id": "cheese_slice",
+   "name": "Cheese slice",
+   "aliases": [
+    "cheese"
+   ],
+   "category": "Dairy",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 20,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "ghee",
+   "name": "Ghee",
+   "aliases": [],
+   "category": "Dairy",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 5,
+     "kcal": 45
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 15,
+     "kcal": 135
+    }
+   ]
+  },
+  {
+   "id": "butter",
+   "name": "Butter",
+   "aliases": [
+    "amul butter"
+   ],
+   "category": "Dairy",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 5,
+     "kcal": 33
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 14,
+     "kcal": 100
+    }
+   ]
+  },
+  {
+   "id": "chai",
+   "name": "Chai (with milk & sugar)",
+   "aliases": [
+    "tea",
+    "milk tea",
+    "cutting chai"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 54
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 90
+    }
+   ]
+  },
+  {
+   "id": "chai_nosugar",
+   "name": "Chai (no sugar)",
+   "aliases": [
+    "sugar free tea"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 30
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 50
+    }
+   ]
+  },
+  {
+   "id": "green_tea",
+   "name": "Green tea",
+   "aliases": [],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 1
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 2
+    }
+   ]
+  },
+  {
+   "id": "black_tea",
+   "name": "Black tea (no milk)",
+   "aliases": [
+    "black chai"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 3
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 5
+    }
+   ]
+  },
+  {
+   "id": "coffee_milk",
+   "name": "Coffee (with milk & sugar)",
+   "aliases": [
+    "coffee",
+    "filter coffee"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 60
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 100
+    }
+   ]
+  },
+  {
+   "id": "coffee_black",
+   "name": "Black coffee",
+   "aliases": [
+    "americano",
+    "espresso"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 90,
+     "kcal": 3
+    },
+    {
+     "label": "Regular cup",
+     "grams": 150,
+     "kcal": 5
+    }
+   ]
+  },
+  {
+   "id": "cappuccino",
+   "name": "Cappuccino",
+   "aliases": [
+    "latte"
+   ],
+   "category": "Beverages",
+   "unit": "cup",
+   "servings": [
+    {
+     "label": "Small cup",
+     "grams": 120,
+     "kcal": 72
+    },
+    {
+     "label": "Regular cup",
+     "grams": 200,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "cold_coffee",
+   "name": "Cold coffee",
+   "aliases": [
+    "iced coffee"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 162
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 250
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "nimbu_pani",
+   "name": "Nimbu pani (with sugar)",
+   "aliases": [
+    "lemonade",
+    "shikanji",
+    "lemon water"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 39
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 60
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 84
+    }
+   ]
+  },
+  {
+   "id": "coconut_water",
+   "name": "Coconut water",
+   "aliases": [
+    "nariyal pani"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 29
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 45
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 63
+    }
+   ]
+  },
+  {
+   "id": "juice_orange",
+   "name": "Orange juice",
+   "aliases": [
+    "juice"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 72
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 110
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 154
+    }
+   ]
+  },
+  {
+   "id": "juice_mango",
+   "name": "Mango juice / Frooti",
+   "aliases": [
+    "frooti",
+    "maaza",
+    "slice"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 98
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 150
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "juice_sugarcane",
+   "name": "Sugarcane juice",
+   "aliases": [
+    "ganne ka ras"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 117
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 180
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 252
+    }
+   ]
+  },
+  {
+   "id": "milkshake",
+   "name": "Milkshake",
+   "aliases": [
+    "banana shake",
+    "mango shake",
+    "shake"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 195
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 300
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 420
+    }
+   ]
+  },
+  {
+   "id": "soft_drink",
+   "name": "Soft drink / Cola",
+   "aliases": [
+    "coke",
+    "pepsi",
+    "thums up",
+    "sprite",
+    "cold drink"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 68
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 105
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 147
+    }
+   ]
+  },
+  {
+   "id": "soft_drink_diet",
+   "name": "Diet cola",
+   "aliases": [
+    "diet coke",
+    "coke zero"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 1
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 2
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 3
+    }
+   ]
+  },
+  {
+   "id": "beer",
+   "name": "Beer",
+   "aliases": [],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 214,
+     "kcal": 98
+    },
+    {
+     "label": "Regular glass",
+     "grams": 330,
+     "kcal": 150
+    },
+    {
+     "label": "Large glass",
+     "grams": 462,
+     "kcal": 210
+    }
+   ]
+  },
+  {
+   "id": "whisky_peg",
+   "name": "Whisky / Rum / Vodka (30 ml)",
+   "aliases": [
+    "peg",
+    "whiskey",
+    "rum",
+    "vodka",
+    "drink"
+   ],
+   "category": "Beverages",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 peg (30 ml)",
+     "grams": 30,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "wine",
+   "name": "Wine",
+   "aliases": [],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 98,
+     "kcal": 81
+    },
+    {
+     "label": "Regular glass",
+     "grams": 150,
+     "kcal": 125
+    },
+    {
+     "label": "Large glass",
+     "grams": 210,
+     "kcal": 175
+    }
+   ]
+  },
+  {
+   "id": "water",
+   "name": "Water",
+   "aliases": [
+    "pani"
+   ],
+   "category": "Beverages",
+   "unit": "glass",
+   "servings": [
+    {
+     "label": "Small glass",
+     "grams": 162,
+     "kcal": 0
+    },
+    {
+     "label": "Regular glass",
+     "grams": 250,
+     "kcal": 0
+    },
+    {
+     "label": "Large glass",
+     "grams": 350,
+     "kcal": 0
+    }
+   ]
+  },
+  {
+   "id": "banana",
+   "name": "Banana",
+   "aliases": [
+    "kela"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 120,
+     "kcal": 105
+    }
+   ]
+  },
+  {
+   "id": "apple",
+   "name": "Apple",
+   "aliases": [
+    "seb"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 180,
+     "kcal": 95
+    }
+   ]
+  },
+  {
+   "id": "orange",
+   "name": "Orange",
+   "aliases": [
+    "santra",
+    "mosambi"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 130,
+     "kcal": 60
+    }
+   ]
+  },
+  {
+   "id": "mango",
+   "name": "Mango",
+   "aliases": [
+    "aam"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 300,
+     "kcal": 200
+    }
+   ]
+  },
+  {
+   "id": "papaya",
+   "name": "Papaya",
+   "aliases": [
+    "papita"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 39
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 60
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 84
+    }
+   ]
+  },
+  {
+   "id": "watermelon",
+   "name": "Watermelon",
+   "aliases": [
+    "tarbooj"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 29
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 45
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 63
+    }
+   ]
+  },
+  {
+   "id": "muskmelon",
+   "name": "Muskmelon",
+   "aliases": [
+    "kharbooja"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 32
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 50
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "grapes",
+   "name": "Grapes",
+   "aliases": [
+    "angoor"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 65
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 100
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 140
+    }
+   ]
+  },
+  {
+   "id": "pomegranate",
+   "name": "Pomegranate",
+   "aliases": [
+    "anaar"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "guava",
+   "name": "Guava",
+   "aliases": [
+    "amrood"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 150,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "chikoo",
+   "name": "Chikoo / Sapota",
+   "aliases": [
+    "sapota"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 80
+    }
+   ]
+  },
+  {
+   "id": "pear",
+   "name": "Pear",
+   "aliases": [],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 180,
+     "kcal": 100
+    }
+   ]
+  },
+  {
+   "id": "kiwi",
+   "name": "Kiwi",
+   "aliases": [],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 75,
+     "kcal": 45
+    }
+   ]
+  },
+  {
+   "id": "berries",
+   "name": "Strawberries / Berries",
+   "aliases": [
+    "strawberry",
+    "blueberry"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 32
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 50
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "fruit_salad",
+   "name": "Mixed fruit bowl",
+   "aliases": [
+    "fruit chaat",
+    "fruit salad"
+   ],
+   "category": "Fruits",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "dates",
+   "name": "Dates",
+   "aliases": [
+    "khajoor",
+    "khajur"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 8,
+     "kcal": 25
+    }
+   ]
+  },
+  {
+   "id": "dry_fruits",
+   "name": "Dry fruits mix",
+   "aliases": [
+    "mixed nuts",
+    "nuts"
+   ],
+   "category": "Fruits",
+   "unit": "handful",
+   "servings": [
+    {
+     "label": "Small handful",
+     "grams": 15,
+     "kcal": 90
+    },
+    {
+     "label": "Medium handful",
+     "grams": 30,
+     "kcal": 180
+    },
+    {
+     "label": "Large handful",
+     "grams": 60,
+     "kcal": 360
+    }
+   ]
+  },
+  {
+   "id": "almond",
+   "name": "Almonds (5)",
+   "aliases": [
+    "badam"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "5 almonds",
+     "grams": 6,
+     "kcal": 35
+    }
+   ]
+  },
+  {
+   "id": "walnut",
+   "name": "Walnuts (2 halves)",
+   "aliases": [
+    "akhrot"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "2 halves",
+     "grams": 8,
+     "kcal": 50
+    }
+   ]
+  },
+  {
+   "id": "cashew",
+   "name": "Cashews (5)",
+   "aliases": [
+    "kaju"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "5 cashews",
+     "grams": 8,
+     "kcal": 45
+    }
+   ]
+  },
+  {
+   "id": "raisins",
+   "name": "Raisins (1 tbsp)",
+   "aliases": [
+    "kishmish"
+   ],
+   "category": "Fruits",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 tbsp",
+     "grams": 10,
+     "kcal": 30
+    }
+   ]
+  },
+  {
+   "id": "pizza_slice",
+   "name": "Pizza slice (medium)",
+   "aliases": [
+    "pizza"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 100,
+     "kcal": 250
+    }
+   ]
+  },
+  {
+   "id": "burger_veg",
+   "name": "Veg burger",
+   "aliases": [
+    "burger"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 150,
+     "kcal": 350
+    }
+   ]
+  },
+  {
+   "id": "burger_chicken",
+   "name": "Chicken burger",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 180,
+     "kcal": 450
+    }
+   ]
+  },
+  {
+   "id": "french_fries",
+   "name": "French fries",
+   "aliases": [
+    "fries"
+   ],
+   "category": "Fast food & Others",
+   "unit": "serving",
+   "servings": [
+    {
+     "label": "Small serving",
+     "grams": 60,
+     "kcal": 180
+    },
+    {
+     "label": "Medium serving",
+     "grams": 100,
+     "kcal": 300
+    },
+    {
+     "label": "Large serving",
+     "grams": 150,
+     "kcal": 450
+    }
+   ]
+  },
+  {
+   "id": "pasta",
+   "name": "Pasta (red/white sauce)",
+   "aliases": [
+    "macaroni"
+   ],
+   "category": "Fast food & Others",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 228
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 350
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 490
+    }
+   ]
+  },
+  {
+   "id": "noodles_hakka",
+   "name": "Hakka noodles",
+   "aliases": [
+    "chowmein",
+    "chow mein",
+    "noodles"
+   ],
+   "category": "Fast food & Others",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 208
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 320
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 448
+    }
+   ]
+  },
+  {
+   "id": "manchurian",
+   "name": "Veg manchurian (gravy)",
+   "aliases": [
+    "gobi manchurian"
+   ],
+   "category": "Fast food & Others",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 98,
+     "kcal": 169
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 150,
+     "kcal": 260
+    },
+    {
+     "label": "Large bowl",
+     "grams": 210,
+     "kcal": 364
+    }
+   ]
+  },
+  {
+   "id": "frankie",
+   "name": "Frankie / Kathi roll (veg)",
+   "aliases": [
+    "kathi roll",
+    "roll",
+    "wrap"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 150,
+     "kcal": 300
+    }
+   ]
+  },
+  {
+   "id": "frankie_chicken",
+   "name": "Chicken kathi roll",
+   "aliases": [
+    "chicken roll"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 180,
+     "kcal": 380
+    }
+   ]
+  },
+  {
+   "id": "shawarma",
+   "name": "Shawarma",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 200,
+     "kcal": 400
+    }
+   ]
+  },
+  {
+   "id": "soup_veg",
+   "name": "Veg soup",
+   "aliases": [
+    "soup",
+    "tomato soup",
+    "sweet corn soup"
+   ],
+   "category": "Fast food & Others",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 52
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 80
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 112
+    }
+   ]
+  },
+  {
+   "id": "soup_chicken",
+   "name": "Chicken soup",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "bowl",
+   "servings": [
+    {
+     "label": "Small bowl",
+     "grams": 130,
+     "kcal": 78
+    },
+    {
+     "label": "Medium bowl",
+     "grams": 200,
+     "kcal": 120
+    },
+    {
+     "label": "Large bowl",
+     "grams": 280,
+     "kcal": 168
+    }
+   ]
+  },
+  {
+   "id": "thali_veg",
+   "name": "Veg thali (full meal)",
+   "aliases": [
+    "thali",
+    "full meal"
+   ],
+   "category": "Fast food & Others",
+   "unit": "thali",
+   "servings": [
+    {
+     "label": "Small thali",
+     "grams": 300,
+     "kcal": 420
+    },
+    {
+     "label": "Medium thali",
+     "grams": 500,
+     "kcal": 700
+    },
+    {
+     "label": "Large thali",
+     "grams": 650,
+     "kcal": 910
+    }
+   ]
+  },
+  {
+   "id": "thali_nonveg",
+   "name": "Non-veg thali",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "thali",
+   "servings": [
+    {
+     "label": "Small thali",
+     "grams": 330,
+     "kcal": 540
+    },
+    {
+     "label": "Medium thali",
+     "grams": 550,
+     "kcal": 900
+    },
+    {
+     "label": "Large thali",
+     "grams": 715,
+     "kcal": 1170
+    }
+   ]
+  },
+  {
+   "id": "sugar",
+   "name": "Sugar",
+   "aliases": [
+    "cheeni",
+    "shakkar"
+   ],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 4,
+     "kcal": 16
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 12,
+     "kcal": 48
+    }
+   ]
+  },
+  {
+   "id": "honey",
+   "name": "Honey",
+   "aliases": [
+    "shahad"
+   ],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 7,
+     "kcal": 21
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 21,
+     "kcal": 64
+    }
+   ]
+  },
+  {
+   "id": "oil",
+   "name": "Cooking oil",
+   "aliases": [
+    "tel",
+    "refined oil"
+   ],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 5,
+     "kcal": 40
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 14,
+     "kcal": 120
+    }
+   ]
+  },
+  {
+   "id": "peanut_butter",
+   "name": "Peanut butter",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 5,
+     "kcal": 32
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 16,
+     "kcal": 95
+    }
+   ]
+  },
+  {
+   "id": "jam",
+   "name": "Jam",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 7,
+     "kcal": 17
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 20,
+     "kcal": 50
+    }
+   ]
+  },
+  {
+   "id": "pickle",
+   "name": "Pickle / Achar",
+   "aliases": [
+    "achar",
+    "achaar"
+   ],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 5,
+     "kcal": 10
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 15,
+     "kcal": 30
+    }
+   ]
+  },
+  {
+   "id": "chutney",
+   "name": "Chutney (coconut/mint)",
+   "aliases": [
+    "coconut chutney",
+    "green chutney"
+   ],
+   "category": "Fast food & Others",
+   "unit": "tbsp",
+   "servings": [
+    {
+     "label": "1 tsp",
+     "grams": 7,
+     "kcal": 12
+    },
+    {
+     "label": "1 tbsp",
+     "grams": 20,
+     "kcal": 35
+    }
+   ]
+  },
+  {
+   "id": "papad",
+   "name": "Papad (roasted)",
+   "aliases": [
+    "papadum",
+    "appalam"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 10,
+     "kcal": 35
+    }
+   ]
+  },
+  {
+   "id": "papad_fried",
+   "name": "Papad (fried)",
+   "aliases": [],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 piece",
+     "grams": 12,
+     "kcal": 70
+    }
+   ]
+  },
+  {
+   "id": "protein_scoop",
+   "name": "Whey protein (1 scoop)",
+   "aliases": [
+    "whey",
+    "protein shake"
+   ],
+   "category": "Fast food & Others",
+   "unit": "piece",
+   "servings": [
+    {
+     "label": "1 scoop",
+     "grams": 30,
+     "kcal": 120
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+<resources>
+    <style name="Theme.LifeTrack" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- The ringing alarm sits on its own translucent window so it can cover the lock screen. -->
+    <style name="Theme.LifeTrack.Alarm" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowShowWallpaper">false</item>
+    </style>
+</resources>

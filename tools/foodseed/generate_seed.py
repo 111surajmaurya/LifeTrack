@@ -1,0 +1,275 @@
+# -*- coding: utf-8 -*-
+"""
+Turn catalogue.py + the USDA index into FoodSeed.kt, plus an audit file showing exactly which
+FDC entry every number came from.
+
+Run:  python generate_seed.py <path to FoodSeed.kt> <path to mapping_audit.txt>
+"""
+import json, io, os, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from catalogue import FOODS  # noqa: E402
+
+IDX = json.loads(io.open(os.path.join(HERE, 'nutrient_index.json'), encoding='utf-8').read())
+BY_ID = {r['id']: r for r in IDX}
+
+NUTRIENTS = ['kcal', 'protein', 'fiber', 'vitA', 'vitC', 'iron', 'calcium']
+
+
+def score(row, terms):
+    d = row['desc'].lower()
+    if not all(t in d for t in terms):
+        return -1
+    s = 100.0 - len(d) * 0.25
+    if row.get('src') == 'FNDDS':
+        s += 12
+    if ', nfs' in d:
+        s += 8
+    if 'baby food' in d or 'infant' in d:
+        s -= 60
+    if 'restaurant' in d or 'fast food' in d:
+        s -= 6
+    return s
+
+
+_cache = {}
+
+
+def resolve(src):
+    """A source spec -> (per-100g dict, human-readable provenance)."""
+    kind, val = src
+    if kind == 'id':
+        r = BY_ID.get(val)
+        if r is None:
+            raise SystemExit("unknown fdcId %s" % val)
+        return r, "%s [%s %s]" % (r['desc'], r.get('src', '?'), r['id'])
+    if kind == 'q':
+        key = val.lower()
+        if key not in _cache:
+            terms = key.split()
+            best, bestscore = None, 0
+            for r in IDX:
+                sc = score(r, terms)
+                if sc > bestscore:
+                    best, bestscore = r, sc
+            _cache[key] = best
+        r = _cache[key]
+        if r is None:
+            raise SystemExit("no FDC match for query: %r" % val)
+        return r, "%s [%s %s]" % (r['desc'], r.get('src', '?'), r['id'])
+    raise SystemExit("bad source kind %r" % kind)
+
+
+def nutrients_for(src, grams):
+    """Totals for one serving, plus provenance and the weight those totals actually describe."""
+    if src[0] == 'mix':
+        totals = dict((k, 0.0) for k in NUTRIENTS)
+        parts, weight = [], 0.0
+        for sub, g in src[1]:
+            row, prov = resolve(sub)
+            for k in NUTRIENTS:
+                totals[k] += row.get(k, 0.0) * g / 100.0
+            parts.append("%gg %s" % (g, prov))
+            weight += g
+        return totals, "MIX of " + " + ".join(parts), weight
+    row, prov = resolve(src)
+    totals = dict((k, row.get(k, 0.0) * grams / 100.0) for k in NUTRIENTS)
+    return totals, prov, float(grams)
+
+
+def kfloat(x):
+    """Kotlin literal: one decimal is all these numbers can honestly carry."""
+    return "%.1ff" % x
+
+
+SERVING_FN = {
+    'Piece': 'piece', 'Bowl': 'bowl', 'Plate': 'plate', 'Glass': 'glass',
+    'Cup': 'cup', 'Spoon': 'spoon', 'Handful': 'handful', 'Serve': 'serve',
+}
+
+CATEGORY_CONST = {
+    "Roti & bread": 'ROTI', "Rice & grains": 'RICE', "Dal & curry": 'DAL', "Sabji": 'SABJI',
+    "Egg & meat": 'NONVEG', "South Indian": 'SOUTH', "Chaat & street": 'CHAAT', "Snacks": 'SNACK',
+    "Italian": 'ITALIAN', "Fast food": 'FAST', "Dairy & drinks": 'DAIRY', "Fruit & nuts": 'FRUIT',
+    "Sweets": 'SWEET', "Other": 'OTHER',
+}
+
+CATEGORY_ORDER = ["Roti & bread", "Rice & grains", "Dal & curry", "Sabji", "Egg & meat",
+                  "South Indian", "Chaat & street", "Snacks", "Italian", "Fast food",
+                  "Dairy & drinks", "Fruit & nuts", "Sweets", "Other"]
+
+
+def main():
+    out_kt = sys.argv[1]
+    out_audit = sys.argv[2]
+
+    rows, audit = [], []
+    seen = set()
+    for name, cat, serving, grams, src in FOODS:
+        if name.lower() in seen:
+            raise SystemExit("duplicate food name: %s" % name)
+        seen.add(name.lower())
+        totals, prov, weight = nutrients_for(src, grams)
+        rows.append((name, cat, serving, grams, totals))
+        audit.append((name, cat, weight, totals, prov))
+
+    # ---- FoodSeed.kt ----
+    body = []
+    for cat in CATEGORY_ORDER:
+        group = [r for r in rows if r[1] == cat]
+        if not group:
+            continue
+        body.append("        // ---- %s ----" % cat)
+        for name, _c, serving, grams, t in group:
+            body.append('        %s("%s", %d, %s, %s, %s, %s, %s, %s, %s),' % (
+                SERVING_FN[serving], name.replace('"', '\\"'), int(round(t['kcal'])),
+                kfloat(t['protein']), kfloat(t['fiber']), kfloat(t['vitA']), kfloat(t['vitC']),
+                kfloat(t['iron']), kfloat(t['calcium']), CATEGORY_CONST[cat]))
+        body.append("")
+    if body and body[-1] == "":
+        body.pop()
+    # the final entry must not carry a trailing comma
+    body[-1] = body[-1].rstrip(',')
+
+    kt = KT_TEMPLATE.replace('@ITEMS@', "\n".join(body)).replace('@COUNT@', str(len(rows)))
+    io.open(out_kt, 'w', encoding='utf-8', newline='\n').write(kt)
+
+    # ---- audit ----
+    lines = ["Every number in FoodSeed.kt, and the USDA FoodData Central entry it came from.",
+             "Generated by generate_seed.py - do not edit by hand.",
+             "",
+             "Sources: FNDDS 2021-2023 (survey foods, released 2024-10-31) for prepared dishes,",
+             "         SR Legacy (2018-04) for reference foods. Both from fdc.nal.usda.gov.",
+             "",
+             "kcal/protein/fibre/vitA/vitC/iron/calcium are per ONE MEDIUM SERVING at the gram",
+             "weight shown, not per 100 g.",
+             ""]
+    for name, cat, grams, t, prov in audit:
+        lines.append("%-26s %-16s %6gg  %4dkcal %5.1fg protein %5.1fg fibre %6.1fug A %5.1fmg C %5.1fmg Fe %6.1fmg Ca"
+                     % (name, cat, grams, int(round(t['kcal'])), t['protein'], t['fiber'],
+                        t['vitA'], t['vitC'], t['iron'], t['calcium']))
+        lines.append("    <- %s" % prov)
+    io.open(out_audit, 'w', encoding='utf-8', newline='\n').write("\n".join(lines) + "\n")
+
+    print("foods generated:", len(rows))
+    for cat in CATEGORY_ORDER:
+        n = len([r for r in rows if r[1] == cat])
+        if n:
+            print("   %-16s %3d" % (cat, n))
+
+
+KT_TEMPLATE = '''package com.lifetrack.app.data
+
+/**
+ * The food catalogue: @COUNT@ everyday foods with calories, protein, fibre, vitamin A,
+ * vitamin C, iron and calcium for one *medium* serving.
+ *
+ * **This file is generated.** Every number is computed from USDA FoodData Central -
+ * FNDDS 2021-2023 for prepared dishes (dosa, biryani, samosa, pizza) and SR Legacy for
+ * reference foods (chapati, rice, fruit) - scaled to a real Indian serving: a 150 g katori,
+ * a 40 g roti, a 250 ml glass. Dishes neither database carries (poha, lassi, bhel puri,
+ * gulab jamun) are built from their measured ingredients instead of guessed at.
+ *
+ * The tooling that produced it, including the per-food provenance of every figure, lives in
+ * `tools/foodseed/` - edit `catalogue.py` and re-run `generate_seed.py`, never this file.
+ *
+ * Bowl/plate/glass items scale by portion (small x0.6, large x1.5); pieces just multiply by
+ * count. These are still averages of real foods, not of *your* food: a home kitchen's daal is
+ * not a laboratory's. Add your own item with exact numbers and it joins the same list.
+ */
+object FoodSeed {
+
+    /**
+     * Bumped whenever the numbers here change. `Repository.ensureSeeded` compares it against
+     * `Settings.seedVersion` and refreshes the catalogue when it is behind, which is the only
+     * reason a phone that already has `food_items` rows ever sees a corrected figure.
+     */
+    const val VERSION = 2
+
+    const val ROTI = "Roti & bread"
+    const val RICE = "Rice & grains"
+    const val DAL = "Dal & curry"
+    const val SABJI = "Sabji"
+    const val NONVEG = "Egg & meat"
+    const val SOUTH = "South Indian"
+    const val CHAAT = "Chaat & street"
+    const val SNACK = "Snacks"
+    const val ITALIAN = "Italian"
+    const val FAST = "Fast food"
+    const val DAIRY = "Dairy & drinks"
+    const val FRUIT = "Fruit & nuts"
+    const val SWEET = "Sweets"
+    const val OTHER = "Other"
+
+    /** Categories in the order they show up as browse chips. */
+    val categories = listOf(
+        ROTI, RICE, DAL, SABJI, NONVEG, SOUTH, CHAAT, SNACK, ITALIAN, FAST,
+        DAIRY, FRUIT, SWEET, OTHER
+    )
+
+    fun emojiFor(category: String): String = when (category) {
+        ROTI -> "\\uD83E\\uDED3"      // flatbread
+        RICE -> "\\uD83C\\uDF5A"      // rice
+        DAL -> "\\uD83C\\uDF72"       // stew
+        SABJI -> "\\uD83E\\uDD57"     // salad
+        NONVEG -> "\\uD83E\\uDD5A"    // egg
+        SOUTH -> "\\uD83E\\uDD63"     // bowl with spoon
+        CHAAT -> "\\uD83C\\uDF62"     // street snack
+        SNACK -> "\\uD83C\\uDF5F"     // fries
+        ITALIAN -> "\\uD83C\\uDF55"   // pizza
+        FAST -> "\\uD83C\\uDF54"      // burger
+        DAIRY -> "\\uD83E\\uDD5B"     // milk
+        FRUIT -> "\\uD83C\\uDF4E"     // apple
+        SWEET -> "\\uD83C\\uDF6E"     // custard
+        else -> "\\uD83C\\uDF7D"      // plate
+    }
+
+    private fun item(
+        name: String, kcal: Int, protein: Float, fiber: Float, vitA: Float, vitC: Float,
+        iron: Float, calcium: Float, serving: Serving, cat: String
+    ) = FoodItem(
+        name = name, kcal = kcal, protein = protein, fiber = fiber, vitA = vitA,
+        vitC = vitC, iron = iron, calcium = calcium, serving = serving.name, category = cat
+    )
+
+    private fun piece(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Piece, cat)
+
+    private fun bowl(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Bowl, cat)
+
+    private fun plate(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Plate, cat)
+
+    private fun glass(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Glass, cat)
+
+    private fun cup(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Cup, cat)
+
+    private fun spoon(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Spoon, cat)
+
+    private fun handful(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Handful, cat)
+
+    private fun serve(n: String, k: Int, p: Float, f: Float, a: Float, c: Float, fe: Float, ca: Float, cat: String) =
+        item(n, k, p, f, a, c, fe, ca, Serving.Serve, cat)
+
+    val items: List<FoodItem> = listOf(
+@ITEMS@
+    )
+
+    /**
+     * Per-medium-serving nutrition keyed by name, used to top up a catalogue that predates a
+     * release: seeding is skipped once `food_items` has rows, so without this an existing
+     * install would keep the old numbers forever. See `Repository.ensureSeeded`.
+     */
+    val byName: Map<String, FoodItem> = items.associateBy { it.name }
+}
+'''
+
+
+if __name__ == '__main__':
+    main()

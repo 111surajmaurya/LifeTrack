@@ -1,0 +1,619 @@
+524 foods added, 91 skipped as already in FoodSeed.kt
+
+D002  Tea with milk, no sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  44 kcal  |  no INDB link
+D003  Cutting chai (strong, extra milk & sugar)  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  102 kcal  |  no INDB link
+D004  Irani chai  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  128 kcal  |  no INDB link
+D005  Black tea, no sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  2 kcal  |  no INDB link
+D006  Lemon tea with sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  30 kcal  |  no INDB link
+D007  Green tea, no sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  1 kcal  |  no INDB link
+D008  South Indian filter coffee (milk + sugar)  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  106 kcal  |  no INDB link
+D009  Instant coffee with milk & sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  112 kcal  |  INDB ASC002 energy 23 vs 74/100 g - skipped
+D010  Black coffee, no sugar  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  1 kcal  |  no INDB link
+D011  Hot chocolate / cocoa milk  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  140 kcal  |  INDB BFP011
+D012  Haldi doodh (turmeric milk)  |  Cup = 1 glass (200 ml) / 1  (200 ml)  |  147 kcal  |  no INDB link
+D013  Badam milk (hot or cold)  |  Cup = 1 glass (200 ml) / 1  (200 ml)  |  206 kcal  |  no INDB link
+D014  Kesar doodh (saffron milk)  |  Cup = 1 glass (200 ml) / 1  (200 ml)  |  169 kcal  |  INDB OSR010
+D015  Kashmiri kahwa  |  Cup = 1 cup (150 ml) / 1  (150 ml)  |  39 kcal  |  INDB BFP007
+D016  Nimbu pani - sweet  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  66 kcal  |  INDB ASC008
+D017  Nimbu pani - sweet & salty  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  56 kcal  |  no INDB link
+D018  Nimbu pani - salted, no sugar  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  9 kcal  |  no INDB link
+D019  Lemon soda (sweet)  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  71 kcal  |  no INDB link
+D020  Jaljeera  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  64 kcal  |  INDB BFP024
+D021  Aam panna  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  100 kcal  |  INDB ASC005
+D022  Kokum sharbat  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  111 kcal  |  no INDB link
+D023  Bael sharbat  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  94 kcal  |  INDB OSR001
+D024  Sattu sharbat (salted)  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  94 kcal  |  INDB OSR002
+D025  Rose sharbat / Rooh Afza (with water)  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  90 kcal  |  no INDB link
+D026  Rooh Afza milk  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  267 kcal  |  no INDB link
+D027  Nannari sharbat  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  100 kcal  |  INDB OSR008 energy 89 vs 40/100 g - skipped
+D028  Sol kadhi  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  130 kcal  |  no INDB link
+D030  Sugarcane juice  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  184 kcal  |  no INDB link
+D031  Thandai  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  280 kcal  |  INDB OSR005
+D032  Jigarthanda  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  416 kcal  |  no INDB link
+D033  Falooda  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  413 kcal  |  no INDB link
+D034  Rose milk  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  273 kcal  |  no INDB link
+D035  Cold coffee (milk + sugar)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  241 kcal  |  INDB BFP013
+D036  Cold coffee with ice cream  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  338 kcal  |  INDB ASC015
+D037  Soft drink / cola  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  106 kcal  |  no INDB link
+D038  Packaged mango drink  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  156 kcal  |  no INDB link
+D039  Orange juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  137 kcal  |  no INDB link
+D040  Mosambi juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  113 kcal  |  no INDB link
+D041  Apple juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  138 kcal  |  no INDB link
+D042  Pomegranate juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  167 kcal  |  no INDB link
+D043  Grape juice (black/green)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  184 kcal  |  no INDB link
+D044  Pineapple juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  161 kcal  |  no INDB link
+D045  Watermelon juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  100 kcal  |  no INDB link
+D046  Muskmelon juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  110 kcal  |  no INDB link
+D047  Papaya juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  112 kcal  |  no INDB link
+D048  Mango juice (fresh pulp + water)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  95 kcal  |  no INDB link
+D049  Aamras (thick mango pulp, no sugar)  |  Bowl = 1 katori / 1  (150 g)  |  95 kcal  |  no INDB link
+D050  Aamras with sugar  |  Bowl = 1 katori / 1  (150 g)  |  125 kcal  |  no INDB link
+D051  Guava juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  106 kcal  |  no INDB link
+D052  Strawberry juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  100 kcal  |  no INDB link
+D053  Kiwi juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  157 kcal  |  no INDB link
+D054  Litchi juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  198 kcal  |  no INDB link
+D055  Jamun juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  102 kcal  |  no INDB link
+D056  Pear juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  146 kcal  |  no INDB link
+D057  Plum juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  140 kcal  |  no INDB link
+D058  Peach juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  124 kcal  |  no INDB link
+D059  Cranberry juice (unsweetened)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  153 kcal  |  no INDB link
+D060  Mixed fruit juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  150 kcal  |  no INDB link
+D061  Amla juice (diluted)  |  Glass = Double shot (60 ml) / 1  (60 ml)  |  8 kcal  |  no INDB link
+D062  Carrot juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  123 kcal  |  no INDB link
+D063  Beetroot juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  112 kcal  |  no INDB link
+D064  ABC juice (apple-beetroot-carrot)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  126 kcal  |  no INDB link
+D065  Tomato juice (fresh)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  60 kcal  |  no INDB link
+D066  Cucumber juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  47 kcal  |  no INDB link
+D067  Lauki juice (bottle gourd)  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  35 kcal  |  no INDB link
+D068  Karela juice (bitter gourd)  |  Glass = Double shot (60 ml) / 1  (60 ml)  |  9 kcal  |  no INDB link
+D069  Wheatgrass juice  |  Glass = Double shot (60 ml) / 1  (60 ml)  |  11 kcal  |  no INDB link
+D070  Green juice (spinach-cucumber-apple)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  78 kcal  |  no INDB link
+D071  Mixed vegetable juice  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  63 kcal  |  no INDB link
+D072  Sweet lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  259 kcal  |  INDB ASC021 energy 36 vs 86/100 g - skipped
+D073  Salted lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  107 kcal  |  INDB ASC022
+D074  Mango lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  282 kcal  |  no INDB link
+D075  Rose lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  267 kcal  |  no INDB link
+D076  Banana lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  273 kcal  |  no INDB link
+D077  Punjabi malai lassi (with cream)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  358 kcal  |  no INDB link
+D078  Dry fruit lassi  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  337 kcal  |  no INDB link
+D079  Chaas / plain buttermilk (salted)  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  40 kcal  |  no INDB link
+D080  Masala chaas  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  42 kcal  |  no INDB link
+D081  Neer mor  |  Glass = 1 glass (250 ml) / 1  (250 ml)  |  31 kcal  |  no INDB link
+D082  Banana milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  231 kcal  |  INDB ASC016
+D083  Mango milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  220 kcal  |  INDB ASC017
+D084  Chikoo milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  217 kcal  |  no INDB link
+D085  Strawberry milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  215 kcal  |  no INDB link
+D086  Chocolate milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  276 kcal  |  no INDB link
+D087  Sitaphal (custard apple) milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  255 kcal  |  no INDB link
+D088  Papaya milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  195 kcal  |  no INDB link
+D089  Dry fruit milkshake  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  332 kcal  |  no INDB link
+D090  Thick shake with ice cream (any flavour)  |  Glass = Regular glass (300 ml) / 1  (300 ml)  |  360 kcal  |  INDB BFP607
+D091  Milk - toned (3% fat)  |  Glass = 1 glass (200 ml) / 1  (200 ml)  |  116 kcal  |  no INDB link
+D092  Milk - full cream (6% fat)  |  Glass = 1 glass (200 ml) / 1  (200 ml)  |  174 kcal  |  no INDB link
+D093  Milk - double toned (1.5% fat)  |  Glass = 1 glass (200 ml) / 1  (200 ml)  |  92 kcal  |  no INDB link
+D096  Vegetable upma  |  Plate = 1 plate / 1  (175 g)  |  239 kcal  |  INDB BFP043
+D098  Daliya - namkeen (vegetable)  |  Plate = 1 plate / 1  (175 g)  |  178 kcal  |  INDB BFP577 energy 295 vs 102/100 g - skipped
+D099  Daliya - sweet (with milk)  |  Plate = 1 plate / 1  (175 g)  |  171 kcal  |  INDB ASC047
+D100  Oats porridge (with milk & sugar)  |  Plate = 1 plate / 1  (175 g)  |  159 kcal  |  INDB ASC050
+D101  Masala oats  |  Plate = 1 plate / 1  (175 g)  |  152 kcal  |  no INDB link
+D102  Besan chilla  |  Piece = 1 medium chilla (~75 g) / 1  (75 g)  |  132 kcal  |  INDB OSR100
+D103  Moong dal chilla  |  Piece = 1 medium chilla (~75 g) / 1  (75 g)  |  120 kcal  |  INDB BFP046
+D104  Paneer stuffed chilla  |  Piece = 1 medium chilla (~100 g) / 1  (100 g)  |  200 kcal  |  INDB BFP047
+D108  Mooli paratha  |  Piece = 1 medium paratha (~120 g) / 1  (120 g)  |  253 kcal  |  INDB ASC099
+D109  Methi paratha  |  Piece = 1 medium paratha (~70 g) / 1  (70 g)  |  170 kcal  |  INDB BFP110
+D110  Pyaaz paratha  |  Piece = 1 medium paratha (~110 g) / 1  (110 g)  |  262 kcal  |  INDB BFP108
+D111  Plain paratha (tawa)  |  Piece = 1 medium paratha (~60 g) / 1  (60 g)  |  183 kcal  |  INDB ASC097
+D112  Thepla (methi)  |  Piece = 1 medium thepla (~40 g) / 1  (40 g)  |  118 kcal  |  INDB OSR104
+D113  Thalipeeth  |  Piece = 1 medium thalipeeth (~80 g) / 1  (80 g)  |  208 kcal  |  no INDB link
+D115  Bread omelette  |  Serve = 2 eggs + 2 slices / 1  (180 g)  |  395 kcal  |  no INDB link
+D116  Bread butter toast  |  Serve = 2 slices + 10 g butter / 1  (60 g)  |  196 kcal  |  no INDB link
+D117  Veg sandwich (Bombay style)  |  Piece = 1 medium sandwich (~140 g) / 1  (140 g)  |  266 kcal  |  INDB BFP460
+D118  Veg grilled cheese sandwich  |  Piece = 1 medium sandwich (~160 g) / 1  (160 g)  |  368 kcal  |  no INDB link
+D119  Cheese sandwich (grilled)  |  Piece = 1 medium sandwich (~130 g) / 1  (130 g)  |  337 kcal  |  INDB ASC023
+D120  Egg sandwich  |  Piece = 1 medium sandwich (~140 g) / 1  (140 g)  |  303 kcal  |  INDB ASC024
+D121  Chicken sandwich  |  Piece = 1 medium sandwich (~150 g) / 1  (150 g)  |  327 kcal  |  INDB ASC028
+D123  Bedmi poori  |  Piece = 1 medium poori (~45 g) / 1  (45 g)  |  147 kcal  |  no INDB link
+D124  Litti (baked, ghee-dipped)  |  Piece = 1 medium litti (~75 g) / 1  (75 g)  |  219 kcal  |  no INDB link
+D125  Chokha (baingan-aloo-tomato)  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  82 kcal  |  no INDB link
+D126  Puran poli  |  Piece = 1 medium puran poli (~80 g) / 1  (80 g)  |  262 kcal  |  INDB ASC467
+D127  Misal (usal + farsan, without pav)  |  Bowl = 1 bowl / 1  (200 g)  |  358 kcal  |  no INDB link
+D129  Pyaaz kachori  |  Piece = 1 medium kachori (~80 g) / 1  (80 g)  |  307 kcal  |  no INDB link
+D130  Matar kachori  |  Piece = 1 medium kachori (~45 g) / 1  (45 g)  |  157 kcal  |  INDB BFP118
+D132  Rava dhokla  |  Piece = 1 medium piece (~40 g) / 1  (40 g)  |  66 kcal  |  INDB OSR115
+D133  Khandvi  |  Serve = ~6 rolls / 1  (100 g)  |  167 kcal  |  no INDB link
+D134  Handvo  |  Piece = 1 medium slice (~100 g) / 1  (100 g)  |  202 kcal  |  INDB OSR146
+D135  Khakhra (plain/methi)  |  Piece = 1 medium khakhra (~20 g) / 1  (20 g)  |  78 kcal  |  INDB OSR102 energy 178 vs 391/100 g - skipped
+D136  Fafda  |  Serve = 5 strips / 1  (50 g)  |  233 kcal  |  no INDB link
+D137  Bun maska  |  Piece = 1 medium bun (~80 g) / 1  (80 g)  |  273 kcal  |  no INDB link
+D139  Rava idli  |  Piece = 1 medium idli (~55 g) / 1  (55 g)  |  98 kcal  |  INDB BFP579
+D140  Mini ghee podi idli  |  Serve = ~8 mini idli / 1  (100 g)  |  178 kcal  |  no INDB link
+D141  Plain dosa  |  Piece = 1 medium dosa (~85 g) / 1  (85 g)  |  148 kcal  |  INDB BFP148 energy 381 vs 174/100 g - skipped
+D142  Paper dosa  |  Piece = 1 medium dosa (~100 g) / 1  (100 g)  |  187 kcal  |  no INDB link
+D144  Ghee roast dosa  |  Piece = 1 medium dosa (~100 g) / 1  (100 g)  |  224 kcal  |  no INDB link
+D145  Mysore masala dosa  |  Piece = 1 medium dosa (~180 g) / 1  (180 g)  |  344 kcal  |  no INDB link
+D147  Onion rava dosa  |  Piece = 1 medium dosa (~110 g) / 1  (110 g)  |  229 kcal  |  no INDB link
+D148  Set dosa  |  Piece = 1 medium dosa (~55 g) / 1  (55 g)  |  93 kcal  |  no INDB link
+D149  Neer dosa  |  Piece = 1 medium dosa (~50 g) / 1  (50 g)  |  66 kcal  |  no INDB link
+D150  Cheese dosa  |  Piece = 1 medium dosa (~140 g) / 1  (140 g)  |  300 kcal  |  no INDB link
+D151  Paneer dosa  |  Piece = 1 medium dosa (~170 g) / 1  (170 g)  |  344 kcal  |  INDB BFP151
+D152  Egg dosa  |  Piece = 1 medium dosa (~120 g) / 1  (120 g)  |  206 kcal  |  no INDB link
+D153  Pesarattu (green moong dosa)  |  Piece = 1 medium dosa (~100 g) / 1  (100 g)  |  157 kcal  |  INDB OSR103
+D154  Adai (mixed dal dosa)  |  Piece = 1 medium adai (~100 g) / 1  (100 g)  |  182 kcal  |  no INDB link
+D155  Ragi dosa  |  Piece = 1 medium dosa (~85 g) / 1  (85 g)  |  130 kcal  |  no INDB link
+D158  Idiyappam  |  Piece = 1 medium idiyappam (~40 g) / 1  (40 g)  |  50 kcal  |  no INDB link
+D159  Puttu (rice, with coconut)  |  Serve = 1 cylinder / 1  (150 g)  |  253 kcal  |  INDB OSR105 energy 82 vs 168/100 g - skipped
+D160  Kerala parotta  |  Piece = 1 medium parotta (~90 g) / 1  (90 g)  |  307 kcal  |  no INDB link
+D162  Sambar vada (vada soaked in sambar)  |  Serve = 2 vada + sambar / 1  (250 g)  |  348 kcal  |  no INDB link
+D163  Masala vada (chana dal)  |  Piece = 1 medium vada (~40 g) / 1  (40 g)  |  118 kcal  |  INDB ASC378 energy 826 vs 294/100 g - skipped
+D164  Ven pongal  |  Plate = 1 plate / 1  (175 g)  |  273 kcal  |  no INDB link
+D165  Sakkarai pongal (sweet)  |  Bowl = 1 katori / 1  (150 g)  |  347 kcal  |  no INDB link
+D166  Kesari bath  |  Bowl = Small katori / 1  (100 g)  |  298 kcal  |  INDB OSR014
+D167  Bisi bele bath  |  Plate = 1 plate (home) / 1  (250 g)  |  385 kcal  |  no INDB link
+D168  Ragi mudde  |  Serve = 1 ball / 1  (150 g)  |  169 kcal  |  no INDB link
+D169  Akki roti  |  Piece = 1 medium roti (~80 g) / 1  (80 g)  |  166 kcal  |  no INDB link
+D170  Kuzhi paniyaram  |  Plate = ~6 pieces / 1  (100 g)  |  180 kcal  |  no INDB link
+D171  Mysore bonda  |  Piece = 1 medium bonda (~35 g) / 1  (35 g)  |  103 kcal  |  no INDB link
+D172  Pazham pori  |  Piece = 1 medium piece (~70 g) / 1  (70 g)  |  192 kcal  |  no INDB link
+D173  Unniyappam  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  95 kcal  |  no INDB link
+D175  Chapati with ghee  |  Piece = 1 medium roti (~40 g) / 1  (40 g)  |  115 kcal  |  no INDB link
+D177  Butter tandoori roti  |  Piece = 1 medium roti (~60 g) / 1  (60 g)  |  177 kcal  |  no INDB link
+D180  Garlic naan  |  Piece = 1 medium naan (~95 g) / 1  (95 g)  |  296 kcal  |  no INDB link
+D181  Cheese naan  |  Piece = 1 medium naan (~120 g) / 1  (120 g)  |  392 kcal  |  no INDB link
+D182  Keema naan  |  Piece = 1 medium naan (~140 g) / 1  (140 g)  |  421 kcal  |  no INDB link
+D184  Amritsari kulcha (stuffed, butter)  |  Piece = 1 medium kulcha (~140 g) / 1  (140 g)  |  395 kcal  |  no INDB link
+D185  Lachha paratha  |  Piece = 1 medium paratha (~80 g) / 1  (80 g)  |  260 kcal  |  no INDB link
+D187  Makki di roti (with ghee)  |  Piece = 1 medium roti (~70 g) / 1  (70 g)  |  201 kcal  |  INDB ASC150
+D189  Jowar roti / bhakri  |  Piece = 1 medium roti (~55 g) / 1  (55 g)  |  129 kcal  |  no INDB link
+D190  Ragi roti  |  Piece = 1 medium roti (~55 g) / 1  (55 g)  |  129 kcal  |  no INDB link
+D191  Rumali roti  |  Piece = 1 medium roti (~55 g) / 1  (55 g)  |  146 kcal  |  no INDB link
+D192  Luchi  |  Piece = 1 medium luchi (~25 g) / 1  (25 g)  |  92 kcal  |  no INDB link
+D194  Baati (ghee-dipped)  |  Piece = 1 medium baati (~80 g) / 1  (80 g)  |  306 kcal  |  no INDB link
+D196  Butter pav (toasted)  |  Piece = 1 medium pav (~45 g) / 1  (45 g)  |  140 kcal  |  no INDB link
+D197  White bread  |  Piece = 1 medium slice (~25 g) / 1  (25 g)  |  64 kcal  |  no INDB link
+D198  Brown bread  |  Piece = 1 medium slice (~25 g) / 1  (25 g)  |  59 kcal  |  no INDB link
+D199  Steamed white rice  |  Bowl = 1 katori / 1 cup / 1  (150 g)  |  188 kcal  |  INDB ASC113
+D202  Ghee rice  |  Plate = 1 plate (home) / 1  (250 g)  |  473 kcal  |  no INDB link
+D204  Matar pulao  |  Plate = 1 plate (home) / 1  (250 g)  |  386 kcal  |  INDB BFP136
+D205  Kashmiri pulao (with dry fruits)  |  Plate = 1 plate (home) / 1  (250 g)  |  505 kcal  |  no INDB link
+D207  Tamarind rice  |  Plate = 1 plate (home) / 1  (250 g)  |  526 kcal  |  INDB ASC127
+D209  Tomato rice  |  Plate = 1 plate (home) / 1  (250 g)  |  438 kcal  |  no INDB link
+D210  Coconut rice  |  Plate = 1 plate (home) / 1  (250 g)  |  502 kcal  |  no INDB link
+D211  Vangi bath  |  Plate = 1 plate (home) / 1  (250 g)  |  438 kcal  |  INDB BFP132
+D213  Masala / vegetable khichdi  |  Plate = 1 plate (home) / 1  (250 g)  |  278 kcal  |  INDB ASC487
+D214  Chicken pulao  |  Plate = 1 plate / 1  (300 g)  |  484 kcal  |  INDB BFP142
+D215  Mutton pulao / yakhni pulao  |  Plate = 1 plate / 1  (300 g)  |  545 kcal  |  INDB BFP141
+D217  Paneer biryani  |  Plate = 1 plate / 1  (300 g)  |  567 kcal  |  no INDB link
+D218  Mushroom biryani  |  Plate = 1 plate / 1  (300 g)  |  497 kcal  |  no INDB link
+D220  Hyderabadi chicken dum biryani  |  Plate = 1 plate / 1  (300 g)  |  583 kcal  |  no INDB link
+D222  Lucknowi (Awadhi) mutton biryani  |  Plate = 1 plate / 1  (300 g)  |  596 kcal  |  no INDB link
+D223  Kolkata chicken biryani (with aloo & egg)  |  Plate = 1 plate / 1  (300 g)  |  574 kcal  |  no INDB link
+D224  Malabar / Thalassery chicken biryani  |  Plate = 1 plate / 1  (300 g)  |  601 kcal  |  no INDB link
+D225  Ambur / Dindigul chicken biryani  |  Plate = 1 plate / 1  (300 g)  |  582 kcal  |  no INDB link
+D226  Egg biryani  |  Plate = 1 plate / 1  (300 g)  |  537 kcal  |  no INDB link
+D227  Prawn biryani  |  Plate = 1 plate / 1  (300 g)  |  529 kcal  |  no INDB link
+D228  Fish biryani  |  Plate = 1 plate / 1  (300 g)  |  535 kcal  |  no INDB link
+D235  Urad dal (dhuli)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  141 kcal  |  INDB ASC152
+D236  Whole moong dal  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  154 kcal  |  INDB BFP178
+D237  Mixed dal / Panchmel dal  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  155 kcal  |  INDB OSR144
+D238  Dal makhani (restaurant)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  220 kcal  |  no INDB link
+D239  Dal makhani (home, light)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  159 kcal  |  INDB OSR139
+D241  Chole / Chana masala  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  218 kcal  |  INDB ASC162
+D242  Pindi chole (dry style)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  259 kcal  |  no INDB link
+D243  Kala chana curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  190 kcal  |  INDB ASC161
+D244  Kadala curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  219 kcal  |  no INDB link
+D245  Lobia curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  178 kcal  |  INDB ASC163
+D246  Kadhi pakora (Punjabi)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  160 kcal  |  INDB ASC168 energy 403 vs 106/100 g - skipped
+D247  Gujarati kadhi  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  86 kcal  |  no INDB link
+D248  Gujarati dal (sweet-sour)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  134 kcal  |  no INDB link
+D249  Dal dhokli  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  157 kcal  |  INDB OSR145
+D252  Dalma (Odia)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  135 kcal  |  INDB OSR141
+D253  Cholar dal (Bengali)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  200 kcal  |  no INDB link
+D254  Kulthi (horse gram) dal  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  136 kcal  |  INDB OSR143
+D255  Usal (sprouted matki curry)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  174 kcal  |  no INDB link
+D256  Ghugni  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  171 kcal  |  no INDB link
+D257  Ragda (white peas curry)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  170 kcal  |  no INDB link
+D258  Soya chunks curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  166 kcal  |  INDB BFP206
+D259  Gatte ki sabzi  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  234 kcal  |  INDB BFP187
+D262  Kadai paneer  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  253 kcal  |  INDB ASC226
+D265  Paneer tikka masala  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  284 kcal  |  no INDB link
+D266  Paneer do pyaza  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  250 kcal  |  INDB OSR074
+D267  Paneer lababdar  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  281 kcal  |  INDB OSR077
+D268  Methi malai paneer  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  273 kcal  |  INDB ASC223
+D269  Methi malai matar  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  243 kcal  |  no INDB link
+D270  Malai kofta  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  319 kcal  |  INDB ASC200 energy 671 vs 213/100 g - skipped
+D271  Dum aloo  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  205 kcal  |  INDB ASC214 energy 682 vs 137/100 g - skipped
+D273  Aloo tamatar (rasedar aloo)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  131 kcal  |  INDB BFP239
+D274  Mix veg curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  157 kcal  |  no INDB link
+D275  Veg kolhapuri  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  190 kcal  |  no INDB link
+D276  Navratan korma  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  266 kcal  |  no INDB link
+D278  Malai kofta - lauki  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  208 kcal  |  INDB ASC205 energy 639 vs 138/100 g - skipped
+D279  Sarson ka saag  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  132 kcal  |  INDB ASC217
+D281  Kathal (jackfruit) curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  176 kcal  |  no INDB link
+D282  Undhiyu  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  255 kcal  |  no INDB link
+D283  Sev tamatar  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  241 kcal  |  no INDB link
+D284  Pav bhaji - bhaji only  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  185 kcal  |  INDB OSR112
+D285  Mirchi ka salan  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  242 kcal  |  no INDB link
+D286  Bagara baingan  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  254 kcal  |  no INDB link
+D287  Gutti vankaya (stuffed brinjal curry)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  210 kcal  |  no INDB link
+D288  Avial  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  169 kcal  |  INDB ASC219
+D289  Kerala vegetable stew  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  148 kcal  |  no INDB link
+D290  Olan  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  105 kcal  |  no INDB link
+D291  Kootu  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  133 kcal  |  no INDB link
+D292  Shukto  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  128 kcal  |  no INDB link
+D293  Dahi aloo  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  124 kcal  |  INDB BFP242
+D295  Jeera aloo  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  126 kcal  |  INDB ASC178
+D296  Aloo methi  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  123 kcal  |  INDB ASC175
+D297  Bhindi masala / bhindi fry  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  106 kcal  |  INDB BFP269
+D298  Kurkuri bhindi  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  259 kcal  |  INDB BFP270 energy 658 vs 259/100 g - skipped
+D299  Cabbage matar sabzi  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  66 kcal  |  INDB ASC173
+D300  Gajar matar  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  74 kcal  |  no INDB link
+D302  Tinda masala  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  57 kcal  |  INDB ASC185
+D303  Karela sabzi (fry / bharwa)  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  128 kcal  |  INDB BFP273
+D304  Arbi masala  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  137 kcal  |  INDB BFP264
+D305  Palak aloo  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  85 kcal  |  INDB BFP257
+D306  Mix veg dry  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  85 kcal  |  no INDB link
+D307  Beans / carrot poriyal  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  84 kcal  |  no INDB link
+D308  Cabbage thoran  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  106 kcal  |  INDB ASC181
+D309  Aloo posto  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  159 kcal  |  no INDB link
+D310  Begun bhaja  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  140 kcal  |  no INDB link
+D311  Zunka / pithla  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  152 kcal  |  no INDB link
+D312  Ker sangri  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  133 kcal  |  no INDB link
+D313  Soya chunks dry / chilli soya  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  159 kcal  |  no INDB link
+D314  Paneer bhurji  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  214 kcal  |  no INDB link
+D317  Kadai chicken  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  239 kcal  |  no INDB link
+D318  Chicken curry (home style)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  207 kcal  |  INDB ASC240
+D319  Chicken curry (restaurant / dhaba)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  248 kcal  |  no INDB link
+D320  Chicken korma  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  274 kcal  |  INDB BFP222
+D321  Chicken do pyaza  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  235 kcal  |  no INDB link
+D322  Chicken handi  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  254 kcal  |  INDB OSR066
+D323  Palak chicken / chicken saagwala  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  213 kcal  |  no INDB link
+D324  Chicken chettinad  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  252 kcal  |  no INDB link
+D325  Andhra chicken curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  243 kcal  |  no INDB link
+D326  Gongura chicken / mutton  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  260 kcal  |  no INDB link
+D327  Chicken stew (Kerala)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  208 kcal  |  INDB BFP090
+D328  Chicken keema  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  244 kcal  |  no INDB link
+D329  Chicken vindaloo  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  240 kcal  |  no INDB link
+D330  Chicken xacuti  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  264 kcal  |  no INDB link
+D331  Chicken kolhapuri  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  267 kcal  |  no INDB link
+D332  Kosha chicken / kosha mangsho (mutton)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  308 kcal  |  no INDB link
+D333  Afghani chicken (creamy)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  255 kcal  |  INDB OSR062
+D335  Mutton rogan josh  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  271 kcal  |  INDB ASC227
+D336  Mutton korma  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  297 kcal  |  INDB BFP194
+D337  Bhuna gosht  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  305 kcal  |  no INDB link
+D338  Keema matar (mutton)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  284 kcal  |  INDB ASC229
+D339  Laal maas  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  307 kcal  |  no INDB link
+D340  Mutton yakhni  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  217 kcal  |  INDB ASC232
+D341  Nihari  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  282 kcal  |  no INDB link
+D342  Haleem  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  246 kcal  |  no INDB link
+D343  Mutton sukka  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  214 kcal  |  no INDB link
+D344  Kerala beef fry  |  Bowl = ¾ katori (1 serving) / 1  (100 g)  |  220 kcal  |  no INDB link
+D345  Beef curry (Kerala)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  254 kcal  |  no INDB link
+D346  Pork vindaloo  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  342 kcal  |  no INDB link
+D348  Macher jhol (Bengali fish curry)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  192 kcal  |  INDB BFP223
+D349  Goan fish curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  205 kcal  |  no INDB link
+D350  Fish moilee  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  204 kcal  |  INDB BFP229
+D351  Prawn masala  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  218 kcal  |  no INDB link
+D352  Prawn curry (coconut)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  193 kcal  |  INDB BFP230
+D353  Chingri malai curry  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  237 kcal  |  no INDB link
+D354  Crab masala  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  188 kcal  |  no INDB link
+D355  Boiled egg  |  Piece = 1 medium egg (~50 g) / 1  (50 g)  |  75 kcal  |  INDB ASC056 energy 45 vs 150/100 g - skipped
+D356  Boiled egg white  |  Piece = 1 medium egg white / 1  (33 g)  |  16 kcal  |  no INDB link
+D357  Fried egg / half fry  |  Piece = 1 medium egg fried / 1  (55 g)  |  105 kcal  |  INDB ASC057
+D360  Kerala egg roast  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  220 kcal  |  no INDB link
+D361  Paneer tikka  |  Plate = ~6 pieces / 1  (150 g)  |  333 kcal  |  INDB ASC381 energy 94 vs 222/100 g - skipped
+D362  Malai paneer tikka  |  Plate = ~6 pieces / 1  (150 g)  |  376 kcal  |  no INDB link
+D363  Hara bhara kebab  |  Plate = ~6 pieces / 1  (150 g)  |  274 kcal  |  no INDB link
+D364  Veg seekh kebab  |  Plate = ~6 pieces / 1  (150 g)  |  254 kcal  |  INDB ASC377 energy 691 vs 169/100 g - skipped
+D365  Dahi ke kebab  |  Plate = ~6 pieces / 1  (150 g)  |  371 kcal  |  no INDB link
+D366  Tandoori aloo  |  Plate = ~6 pieces / 1  (150 g)  |  197 kcal  |  no INDB link
+D367  Mushroom tikka  |  Plate = ~6 pieces / 1  (150 g)  |  163 kcal  |  no INDB link
+D368  Tandoori soya chaap  |  Plate = ~6 pieces / 1  (150 g)  |  262 kcal  |  no INDB link
+D369  Malai soya chaap  |  Plate = ~6 pieces / 1  (150 g)  |  320 kcal  |  no INDB link
+D371  Gobi 65  |  Plate = ~6 pieces / 1  (150 g)  |  326 kcal  |  INDB OSR076
+D372  Veg cutlet  |  Piece = 1 medium cutlet (~60 g) / 1  (60 g)  |  120 kcal  |  INDB ASC366 energy 665 vs 200/100 g - skipped
+D374  Corn cheese balls  |  Serve = ~5 balls / 1  (100 g)  |  277 kcal  |  no INDB link
+D376  Paneer pakora  |  Plate = ~4 pieces / 1  (100 g)  |  302 kcal  |  INDB ASC359 energy 718 vs 302/100 g - skipped
+D379  Chicken malai / reshmi tikka  |  Plate = ~6 pieces / 1  (150 g)  |  338 kcal  |  no INDB link
+D380  Chicken Afghani / kalmi kebab  |  Plate = ~6 pieces / 1  (150 g)  |  325 kcal  |  no INDB link
+D381  Chicken seekh kebab  |  Plate = ~2 seekh / 1  (100 g)  |  194 kcal  |  INDB ASC243 energy 729 vs 194/100 g - skipped
+D382  Mutton seekh kebab  |  Plate = ~2 seekh / 1  (100 g)  |  244 kcal  |  INDB BFP199
+D383  Galouti kebab  |  Piece = 1 medium kebab (~40 g) / 1  (40 g)  |  105 kcal  |  no INDB link
+D384  Shami kebab  |  Piece = 1 medium kebab (~50 g) / 1  (50 g)  |  112 kcal  |  INDB ASC237 energy 686 vs 225/100 g - skipped
+D385  Mutton boti kebab  |  Plate = ~6 pieces / 1  (150 g)  |  310 kcal  |  INDB BFP198
+D386  Chicken 65  |  Plate = ~6 pieces / 1  (150 g)  |  380 kcal  |  no INDB link
+D387  Chilli chicken (dry)  |  Plate = ~6 pieces / 1  (150 g)  |  334 kcal  |  INDB ASC244
+D388  Chicken lollipop  |  Plate = 4 pieces (edible ~160 g) / 1  (160 g)  |  422 kcal  |  no INDB link
+D389  Drums of heaven  |  Plate = ~6 pieces / 1  (150 g)  |  388 kcal  |  no INDB link
+D390  Chicken pakora  |  Plate = ~6 pieces / 1  (150 g)  |  380 kcal  |  INDB BFP420 energy 590 vs 253/100 g - skipped
+D391  Fish tikka  |  Plate = ~6 pieces / 1  (150 g)  |  218 kcal  |  INDB ASC251
+D393  Amritsari fish (batter fried)  |  Plate = ~6 pieces / 1  (150 g)  |  346 kcal  |  no INDB link
+D394  Fish pakora  |  Plate = ~6 pieces / 1  (150 g)  |  354 kcal  |  INDB BFP421 energy 577 vs 236/100 g - skipped
+D395  Tandoori prawns  |  Plate = ~6 pieces / 1  (150 g)  |  205 kcal  |  no INDB link
+D396  Prawn koliwada / prawn fry  |  Plate = ~6 pieces / 1  (150 g)  |  353 kcal  |  no INDB link
+D397  Chicken cutlet  |  Piece = 1 medium cutlet (~60 g) / 1  (60 g)  |  133 kcal  |  INDB BFP430 energy 532 vs 222/100 g - skipped
+D398  Fish cutlet  |  Piece = 1 medium cutlet (~60 g) / 1  (60 g)  |  123 kcal  |  INDB ASC369 energy 655 vs 205/100 g - skipped
+D399  Egg pakora  |  Serve = 4 halves / 1  (100 g)  |  228 kcal  |  INDB ASC357 energy 711 vs 228/100 g - skipped
+D401  Keema samosa  |  Piece = 1 medium samosa (~50 g) / 1  (50 g)  |  154 kcal  |  INDB ASC362 energy 621 vs 307/100 g - skipped
+D402  Onion samosa (patti samosa)  |  Piece = 1 medium samosa (~25 g) / 1  (25 g)  |  83 kcal  |  no INDB link
+D403  Onion pakora / bhajji  |  Plate = ~8 pieces / 1  (100 g)  |  285 kcal  |  INDB ASC352 energy 675 vs 285/100 g - skipped
+D404  Mixed veg pakora  |  Plate = ~8 pieces / 1  (100 g)  |  265 kcal  |  INDB ASC354 energy 674 vs 265/100 g - skipped
+D405  Aloo pakora  |  Plate = ~8 pieces / 1  (100 g)  |  269 kcal  |  INDB ASC351 energy 677 vs 269/100 g - skipped
+D406  Palak pakora  |  Plate = ~8 pieces / 1  (100 g)  |  248 kcal  |  INDB ASC355 energy 713 vs 248/100 g - skipped
+D407  Gobi pakora  |  Plate = ~8 pieces / 1  (100 g)  |  238 kcal  |  INDB ASC353 energy 672 vs 238/100 g - skipped
+D408  Mirchi bajji / mirchi vada  |  Piece = 1 medium mirchi (~45 g) / 1  (45 g)  |  104 kcal  |  INDB BFP416 energy 669 vs 231/100 g - skipped
+D410  Batata vada / aloo bonda  |  Piece = 1 medium vada (~60 g) / 1  (60 g)  |  155 kcal  |  INDB ASC360 energy 633 vs 258/100 g - skipped
+D411  Sabudana vada  |  Piece = 1 medium vada (~45 g) / 1  (45 g)  |  134 kcal  |  INDB ASC379 energy 750 vs 298/100 g - skipped
+D412  Dahi vada / dahi bhalla  |  Serve = 2 vada with curd / 1  (150 g)  |  231 kcal  |  INDB ASC279 energy 668 vs 154/100 g - skipped
+D413  Veg puff (bakery)  |  Piece = 1 medium puff (~80 g) / 1  (80 g)  |  258 kcal  |  no INDB link
+D414  Egg puff (bakery)  |  Piece = 1 medium puff (~90 g) / 1  (90 g)  |  299 kcal  |  no INDB link
+D415  Chicken puff (bakery)  |  Piece = 1 medium puff (~90 g) / 1  (90 g)  |  286 kcal  |  no INDB link
+D417  Pani puri / golgappa / puchka  |  Plate = 6 pieces (1 plate) / 1  (150 g)  |  218 kcal  |  no INDB link
+D419  Jhal muri  |  Serve = 1 cone / thonga / 1  (80 g)  |  240 kcal  |  no INDB link
+D423  Aloo tikki chaat  |  Plate = 1 plate / 1  (150 g)  |  256 kcal  |  no INDB link
+D424  Samosa chaat  |  Plate = 1 plate / 1  (150 g)  |  312 kcal  |  no INDB link
+D425  Raj kachori  |  Plate = 1 plate / 1  (200 g)  |  424 kcal  |  no INDB link
+D426  Ragda pattice  |  Plate = 1 plate / 1  (150 g)  |  218 kcal  |  no INDB link
+D428  Dabeli  |  Piece = 1 medium dabeli (~130 g) / 1  (130 g)  |  311 kcal  |  no INDB link
+D429  Paneer kathi roll  |  Piece = 1 medium roll (~200 g) / 1  (200 g)  |  462 kcal  |  INDB ASC149
+D430  Chicken kathi roll  |  Piece = 1 medium roll (~200 g) / 1  (200 g)  |  454 kcal  |  no INDB link
+D431  Egg roll (Kolkata)  |  Piece = 1 medium roll (~160 g) / 1  (160 g)  |  382 kcal  |  no INDB link
+D432  Chicken shawarma roll  |  Piece = 1 medium roll (~200 g) / 1  (200 g)  |  448 kcal  |  no INDB link
+D433  Corn chaat / masala bhutta  |  Plate = 1 plate / 1  (150 g)  |  186 kcal  |  no INDB link
+D434  Sprouts chaat  |  Plate = 1 plate / 1  (150 g)  |  104 kcal  |  INDB ASC170 energy 32 vs 69/100 g - skipped
+D435  Chana chaat (kabuli)  |  Plate = 1 plate / 1  (150 g)  |  184 kcal  |  no INDB link
+D436  Boiled peanut chaat  |  Plate = 1 plate / 1  (150 g)  |  321 kcal  |  no INDB link
+D437  Fruit chaat  |  Plate = 1 plate / 1  (150 g)  |  92 kcal  |  no INDB link
+D438  Momos - veg, steamed  |  Plate = 6 pieces (half plate) / 1  (150 g)  |  214 kcal  |  no INDB link
+D439  Momos - veg, fried  |  Plate = 6 pieces (half plate) / 1  (150 g)  |  328 kcal  |  no INDB link
+D440  Momos - paneer, steamed  |  Plate = 6 pieces (half plate) / 1  (150 g)  |  262 kcal  |  no INDB link
+D441  Momos - chicken, steamed  |  Plate = 6 pieces (half plate) / 1  (150 g)  |  256 kcal  |  no INDB link
+D442  Momos - chicken, fried  |  Plate = 6 pieces (half plate) / 1  (150 g)  |  356 kcal  |  no INDB link
+D443  Maggi / instant masala noodles (cooked)  |  Serve = 1 pack (70 g dry) / 1  (240 g)  |  303 kcal  |  no INDB link
+D444  Thukpa (veg / chicken)  |  Glass = 1 soup bowl (250 ml) / 1  (250 ml)  |  165 kcal  |  no INDB link
+D446  Egg fried rice  |  Plate = 1 plate (home) / 1  (250 g)  |  462 kcal  |  no INDB link
+D447  Chicken fried rice  |  Plate = 1 plate (home) / 1  (250 g)  |  478 kcal  |  no INDB link
+D448  Schezwan fried rice (veg)  |  Plate = 1 plate (home) / 1  (250 g)  |  476 kcal  |  no INDB link
+D449  Veg hakka noodles  |  Plate = 1 plate / 1  (250 g)  |  452 kcal  |  INDB ASC134
+D450  Chicken hakka noodles  |  Plate = 1 plate / 1  (250 g)  |  470 kcal  |  INDB ASC135
+D451  Egg noodles  |  Plate = 1 plate / 1  (250 g)  |  465 kcal  |  no INDB link
+D452  Schezwan noodles (veg)  |  Plate = 1 plate / 1  (250 g)  |  486 kcal  |  no INDB link
+D453  American chopsuey  |  Plate = 1 plate / 1  (250 g)  |  469 kcal  |  no INDB link
+D454  Gobi manchurian (dry)  |  Plate = ~6 pieces / 1  (150 g)  |  310 kcal  |  no INDB link
+D455  Veg manchurian (dry)  |  Plate = ~6 pieces / 1  (150 g)  |  326 kcal  |  INDB OSR111 energy 586 vs 217/100 g - skipped
+D456  Veg manchurian (gravy)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  207 kcal  |  no INDB link
+D457  Chilli paneer (dry)  |  Plate = ~6 pieces / 1  (150 g)  |  350 kcal  |  INDB ASC224 energy 778 vs 234/100 g - skipped
+D458  Chilli paneer (gravy)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  267 kcal  |  no INDB link
+D459  Chilli chicken (gravy)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  245 kcal  |  no INDB link
+D460  Chicken manchurian (gravy)  |  Bowl = 1 standard katori (150 ml) / 1  (150 g)  |  239 kcal  |  INDB OSR065
+D461  Crispy corn (salt & pepper)  |  Plate = ~6 pieces / 1  (150 g)  |  363 kcal  |  no INDB link
+D462  Honey chilli potato  |  Plate = ~6 pieces / 1  (150 g)  |  376 kcal  |  no INDB link
+D463  Chilli mushroom (dry)  |  Plate = ~6 pieces / 1  (150 g)  |  225 kcal  |  no INDB link
+D464  Baby corn chilli / manchurian  |  Plate = ~6 pieces / 1  (150 g)  |  270 kcal  |  no INDB link
+D465  Tomato soup (restaurant)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  154 kcal  |  INDB ASC082
+D466  Sweet corn soup (veg)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  145 kcal  |  INDB OSR133
+D467  Chicken sweet corn soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  152 kcal  |  INDB ASC087 energy 28 vs 61/100 g - skipped
+D468  Hot & sour soup (veg)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  105 kcal  |  INDB ASC092
+D469  Hot & sour soup (chicken)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  123 kcal  |  no INDB link
+D470  Manchow soup (veg)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  149 kcal  |  no INDB link
+D471  Manchow soup (chicken)  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  164 kcal  |  no INDB link
+D472  Lemon coriander soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  76 kcal  |  INDB OSR137 energy 108 vs 30/100 g - skipped
+D473  Clear vegetable soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  46 kcal  |  no INDB link
+D474  Chicken clear soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  66 kcal  |  INDB ASC081
+D475  Mulligatawny soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  154 kcal  |  INDB BFP076
+D476  Cream of mushroom soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  199 kcal  |  no INDB link
+D477  Dal shorba / lentil soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  126 kcal  |  INDB ASC080
+D478  Palak (spinach) soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  102 kcal  |  INDB BFP073
+D479  Mutton paya soup  |  Bowl = 1 soup bowl (250 ml) / 1  (250 ml)  |  224 kcal  |  no INDB link
+D480  Plain curd (dahi, whole milk)  |  Bowl = 1 katori / 1  (150 g)  |  98 kcal  |  no INDB link
+D481  Low-fat curd  |  Bowl = 1 katori / 1  (150 g)  |  72 kcal  |  no INDB link
+D482  Boondi raita  |  Bowl = Small katori / 1  (100 g)  |  103 kcal  |  INDB ASC277 energy 688 vs 103/100 g - skipped
+D483  Cucumber raita  |  Bowl = Small katori / 1  (100 g)  |  55 kcal  |  INDB ASC273
+D484  Mixed veg raita  |  Bowl = Small katori / 1  (100 g)  |  57 kcal  |  INDB ASC269
+D485  Pineapple raita  |  Bowl = Small katori / 1  (100 g)  |  78 kcal  |  INDB BFP325
+D486  Pachadi (South curd pachadi)  |  Bowl = Small katori / 1  (100 g)  |  73 kcal  |  no INDB link
+D487  Green salad  |  Bowl = Small bowl / 1  (100 g)  |  25 kcal  |  no INDB link
+D488  Kachumber salad  |  Bowl = Small bowl / 1  (100 g)  |  26 kcal  |  no INDB link
+D489  Sprouts salad  |  Bowl = Small bowl / 1  (100 g)  |  45 kcal  |  INDB ASC259
+D491  Koshimbir  |  Bowl = Small bowl / 1  (100 g)  |  50 kcal  |  no INDB link
+D493  Tomato chutney (South)  |  Spoon = 2 tbsp / 6  (5 g)  |  5 kcal  |  INDB BFP442 energy 45 vs 106/100 g - skipped
+D494  Peanut chutney  |  Spoon = 2 tbsp / 6  (5 g)  |  12 kcal  |  INDB ASC385
+D495  Green chutney (mint-coriander)  |  Spoon = 2 tbsp / 6  (5 g)  |  2 kcal  |  INDB ASC387 energy 103 vs 41/100 g - skipped
+D496  Imli / saunth chutney (sweet tamarind)  |  Spoon = 2 tbsp / 6  (5 g)  |  7 kcal  |  INDB ASC281
+D497  Gunpowder (podi)  |  Spoon = 2 tsp / 2  (5 g)  |  16 kcal  |  INDB BFP448
+D498  Dry garlic chutney  |  Spoon = 2 tsp / 2  (5 g)  |  15 kcal  |  no INDB link
+D499  Mango pickle (in oil)  |  Spoon = 2 tsp / 2  (5 g)  |  8 kcal  |  INDB ASC507
+D500  Lime pickle  |  Spoon = 2 tsp / 2  (5 g)  |  4 kcal  |  no INDB link
+D501  Papad (roasted)  |  Piece = 1 medium papad (~12 g) / 1  (12 g)  |  38 kcal  |  no INDB link
+D502  Papad (fried)  |  Piece = 1 medium papad (~15 g) / 1  (15 g)  |  69 kcal  |  no INDB link
+D503  Masala papad  |  Piece = 1 medium papad (~35 g) / 1  (35 g)  |  100 kcal  |  no INDB link
+D504  Aloo bhujia  |  Handful = 1 handful / small bowl / 1  (30 g)  |  165 kcal  |  no INDB link
+D505  Mixture / mixed namkeen  |  Handful = 1 handful / small bowl / 1  (30 g)  |  154 kcal  |  no INDB link
+D506  Poha chivda (light)  |  Handful = 1 handful / small bowl / 1  (30 g)  |  134 kcal  |  no INDB link
+D507  Sev (besan)  |  Handful = 1 handful / small bowl / 1  (30 g)  |  158 kcal  |  INDB OSR147
+D508  Mathri  |  Piece = 1 medium mathri (~15 g) / 1  (15 g)  |  75 kcal  |  INDB ASC364
+D509  Namak para  |  Handful = 1 handful / small bowl / 1  (30 g)  |  145 kcal  |  no INDB link
+D510  Chakli / murukku  |  Piece = 1 medium piece (~15 g) / 1  (15 g)  |  76 kcal  |  INDB OSR113
+D511  Banana chips (Kerala)  |  Handful = 1 handful / small bowl / 1  (30 g)  |  160 kcal  |  INDB OSR119
+D513  Roasted makhana (lightly salted, ghee)  |  Bowl = 2 cups / 1  (20 g)  |  73 kcal  |  no INDB link
+D514  Roasted peanuts (salted)  |  Handful = 1 handful / 1  (30 g)  |  180 kcal  |  no INDB link
+D515  Chana jor garam  |  Handful = 1 handful / 1  (30 g)  |  115 kcal  |  no INDB link
+D516  Murmura (puffed rice, plain)  |  Handful = 1 handful / 1  (30 g)  |  102 kcal  |  no INDB link
+D520  Cham cham  |  Piece = 1 medium piece (~60 g) / 1  (60 g)  |  135 kcal  |  INDB BFP388
+D521  Sandesh  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  81 kcal  |  no INDB link
+D522  Mishti doi  |  Bowl = 1 cup / 1  (100 g)  |  136 kcal  |  no INDB link
+D523  Chhena poda  |  Piece = 1 medium slice (~60 g) / 1  (60 g)  |  177 kcal  |  INDB OSR022
+D525  Imarti  |  Piece = 1 medium piece (~45 g) / 1  (45 g)  |  179 kcal  |  no INDB link
+D526  Kaju katli  |  Piece = 1 medium piece (~15 g) / 1  (15 g)  |  72 kcal  |  INDB ASC339
+D527  Besan ladoo  |  Piece = 1 medium ladoo (~35 g) / 1  (35 g)  |  173 kcal  |  INDB ASC343
+D528  Motichoor ladoo  |  Piece = 1 medium ladoo (~40 g) / 1  (40 g)  |  174 kcal  |  no INDB link
+D529  Boondi ladoo  |  Piece = 1 medium ladoo (~40 g) / 1  (40 g)  |  172 kcal  |  no INDB link
+D530  Coconut ladoo  |  Piece = 1 medium ladoo (~30 g) / 1  (30 g)  |  122 kcal  |  no INDB link
+D531  Rava ladoo  |  Piece = 1 medium ladoo (~35 g) / 1  (35 g)  |  148 kcal  |  INDB BFP407
+D532  Til ladoo  |  Piece = 1 medium ladoo (~25 g) / 1  (25 g)  |  120 kcal  |  INDB ASC344
+D533  Dry fruit / dates ladoo (no sugar)  |  Piece = 1 medium ladoo (~30 g) / 1  (30 g)  |  125 kcal  |  no INDB link
+D534  Peda (milk)  |  Piece = 1 medium peda (~25 g) / 1  (25 g)  |  98 kcal  |  no INDB link
+D535  Milk barfi (plain)  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  121 kcal  |  INDB ASC335
+D536  Kalakand  |  Piece = 1 medium piece (~40 g) / 1  (40 g)  |  139 kcal  |  no INDB link
+D537  Besan barfi  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  140 kcal  |  INDB ASC340
+D538  Soan papdi  |  Piece = 1 medium piece (~25 g) / 1  (25 g)  |  122 kcal  |  no INDB link
+D539  Mysore pak  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  162 kcal  |  no INDB link
+D540  Malpua  |  Piece = 1 medium malpua (~60 g) / 1  (60 g)  |  216 kcal  |  INDB ASC349
+D541  Ghewar  |  Serve = ½ ghewar / 1  (100 g)  |  443 kcal  |  no INDB link
+D542  Churma  |  Bowl = Small katori / 1  (100 g)  |  436 kcal  |  no INDB link
+D543  Balushahi  |  Piece = 1 medium piece (~45 g) / 1  (45 g)  |  194 kcal  |  no INDB link
+D545  Shahi tukda / double ka meetha  |  Piece = 1 medium piece (~90 g) / 1  (90 g)  |  277 kcal  |  INDB ASC350
+D546  Qubani ka meetha  |  Bowl = Small katori / 1  (100 g)  |  209 kcal  |  no INDB link
+D547  Modak (steamed)  |  Piece = 1 medium modak (~40 g) / 1  (40 g)  |  95 kcal  |  no INDB link
+D548  Modak (fried)  |  Piece = 1 medium modak (~40 g) / 1  (40 g)  |  141 kcal  |  no INDB link
+D549  Chikki (peanut)  |  Piece = 1 medium piece (~25 g) / 1  (25 g)  |  122 kcal  |  INDB ASC382
+D550  Petha (Agra)  |  Piece = 1 medium piece (~35 g) / 1  (35 g)  |  112 kcal  |  no INDB link
+D551  Karachi halwa (Bombay ice halwa)  |  Piece = 1 medium piece (~30 g) / 1  (30 g)  |  125 kcal  |  no INDB link
+D552  Bebinca  |  Piece = 1 medium slice (~60 g) / 1  (60 g)  |  213 kcal  |  no INDB link
+D553  Patishapta / pitha  |  Piece = 1 medium piece (~60 g) / 1  (60 g)  |  148 kcal  |  no INDB link
+D555  Moong dal halwa  |  Bowl = Small katori / 1  (100 g)  |  390 kcal  |  INDB ASC299
+D556  Sooji halwa / sheera  |  Bowl = Small katori / 1  (100 g)  |  288 kcal  |  INDB ASC293
+D557  Atta halwa / kada prasad  |  Bowl = Small katori / 1  (100 g)  |  385 kcal  |  no INDB link
+D558  Lauki halwa  |  Bowl = Small katori / 1  (100 g)  |  161 kcal  |  no INDB link
+D559  Badam halwa  |  Bowl = Small katori / 1  (100 g)  |  479 kcal  |  no INDB link
+D560  Besan halwa  |  Bowl = Small katori / 1  (100 g)  |  362 kcal  |  INDB OSR026
+D561  Rice kheer  |  Bowl = 1 katori / 1  (150 g)  |  194 kcal  |  INDB ASC282
+D562  Seviyan kheer  |  Bowl = 1 katori / 1  (150 g)  |  195 kcal  |  INDB ASC285
+D563  Sheer khurma  |  Bowl = 1 katori / 1  (150 g)  |  270 kcal  |  no INDB link
+D564  Phirni  |  Bowl = 1 katori / 1  (150 g)  |  176 kcal  |  INDB ASC292
+D565  Semiya payasam  |  Bowl = 1 katori / 1  (150 g)  |  211 kcal  |  no INDB link
+D566  Palada payasam  |  Bowl = 1 katori / 1  (150 g)  |  219 kcal  |  no INDB link
+D567  Ada pradhaman  |  Bowl = 1 katori / 1  (150 g)  |  295 kcal  |  no INDB link
+D568  Parippu payasam  |  Bowl = 1 katori / 1  (150 g)  |  274 kcal  |  no INDB link
+D569  Sabudana kheer  |  Bowl = 1 katori / 1  (150 g)  |  197 kcal  |  no INDB link
+D570  Rabri  |  Bowl = Small katori / 1  (100 g)  |  242 kcal  |  INDB OSR025 energy 103 vs 242/100 g - skipped
+D571  Basundi  |  Bowl = Small katori / 1  (100 g)  |  193 kcal  |  no INDB link
+D573  Kulfi (malai)  |  Piece = 1 medium kulfi (~70 g) / 1  (70 g)  |  150 kcal  |  INDB ASC321 energy 98 vs 215/100 g - skipped
+D574  Ice cream (vanilla)  |  Serve = 1 regular scoop / 1  (75 g)  |  157 kcal  |  INDB BFP346
+D575  Fruit custard  |  Bowl = 1 katori / 1  (150 g)  |  164 kcal  |  no INDB link
+D576  Caramel custard  |  Bowl = 1 katori / 1  (150 g)  |  201 kcal  |  INDB ASC300
+D580  White sugar  |  Spoon = 2 tsp / 2  (5 g)  |  20 kcal  |  no INDB link
+D583  Fresh cream / malai  |  Spoon = 2 tsp / 2  (5 g)  |  12 kcal  |  no INDB link
+D585  Paneer (raw, full-fat)  |  Serve = 100 g / 1  (100 g)  |  264 kcal  |  no INDB link
+COMBO  Idli sambar (2 idli)  |  260 g total  |  285 kcal  |  3 parts
+COMBO  Masala dosa with sambar & chutney  |  350 g total  |  466 kcal  |  3 parts
+COMBO  Medu vada sambar (2 vada)  |  280 g total  |  459 kcal  |  3 parts
+COMBO  Pongal vada  |  355 g total  |  554 kcal  |  4 parts
+COMBO  Upma with filter coffee  |  325 g total  |  367 kcal  |  2 parts
+COMBO  Poha with masala chai  |  325 g total  |  373 kcal  |  2 parts
+COMBO  Aloo paratha breakfast (2 parathas, curd, butter, pickle)  |  360 g total  |  716 kcal  |  4 parts
+COMBO  Poori bhaji (4 poori)  |  270 g total  |  519 kcal  |  2 parts
+COMBO  Misal pav (2 pav)  |  280 g total  |  570 kcal  |  2 parts
+COMBO  Vada pav with cutting chai  |  215 g total  |  402 kcal  |  2 parts
+COMBO  Samosa with masala chai  |  235 g total  |  296 kcal  |  3 parts
+COMBO  Bread omelette with chai  |  330 g total  |  478 kcal  |  2 parts
+COMBO  Rajma chawal  |  400 g total  |  437 kcal  |  3 parts
+COMBO  Dal chawal with ghee  |  355 g total  |  421 kcal  |  3 parts
+COMBO  Kadhi chawal  |  400 g total  |  464 kcal  |  2 parts
+COMBO  Curd rice with pickle  |  260 g total  |  313 kcal  |  2 parts
+COMBO  Sarson da saag & makki di roti (2)  |  360 g total  |  689 kcal  |  4 parts
+COMBO  Dal baati churma (2 baati)  |  360 g total  |  985 kcal  |  3 parts
+COMBO  Litti chokha (2 litti)  |  250 g total  |  520 kcal  |  2 parts
+COMBO  Paneer butter masala with 2 roti  |  220 g total  |  463 kcal  |  2 parts
+COMBO  Butter chicken with 2 butter naan  |  440 g total  |  1038 kcal  |  2 parts
+COMBO  Chicken biryani meal (half plate + salan + raita)  |  550 g total  |  864 kcal  |  3 parts
+COMBO  Egg curry rice  |  400 g total  |  512 kcal  |  2 parts
+COMBO  Kerala fish curry meal  |  550 g total  |  662 kcal  |  3 parts
+COMBO  Bengali fish meal  |  750 g total  |  903 kcal  |  5 parts
+COMBO  North Indian veg thali  |  867 g total  |  1316 kcal  |  9 parts
+COMBO  North Indian non-veg thali  |  815 g total  |  1321 kcal  |  7 parts
+COMBO  South Indian veg meals  |  970 g total  |  928 kcal  |  9 parts
+COMBO  Kerala sadya (simplified)  |  885 g total  |  1107 kcal  |  10 parts
+COMBO  Gujarati thali  |  1112 g total  |  1379 kcal  |  9 parts
+
+Skipped (already in the catalogue):
+  Masala chai (milk + sugar)
+  Coconut water (tender coconut)
+  Poha (kanda/Indori, with peanuts)
+  Upma (rava)
+  Sabudana khichdi
+  Aloo paratha
+  Gobi paratha
+  Paneer paratha
+  Masala omelette (2 eggs)
+  Poori (wheat, deep fried)
+  Kachori (khasta, dal)
+  Dhokla (khaman)
+  Idli
+  Masala dosa
+  Rava dosa
+  Uttapam (onion/vegetable)
+  Appam
+  Medu vada
+  Chapati / phulka (no ghee)
+  Tandoori roti (plain)
+  Plain naan
+  Butter naan
+  Kulcha (plain)
+  Missi roti
+  Bajra roti
+  Bhatura
+  Pav (ladi pav)
+  Brown rice (cooked)
+  Jeera rice
+  Veg pulao
+  Lemon rice
+  Curd rice
+  Khichdi (moong dal, plain)
+  Veg biryani
+  Chicken biryani
+  Mutton biryani
+  Toor / arhar dal (home, light tadka)
+  Dal tadka (restaurant)
+  Dal fry
+  Moong dal (yellow)
+  Masoor dal (red lentil)
+  Chana dal
+  Rajma masala
+  Sambar
+  Rasam
+  Paneer butter masala
+  Shahi paneer
+  Palak paneer
+  Matar paneer
+  Aloo matar
+  Mushroom masala
+  Baingan bharta
+  Aloo gobi
+  Lauki sabzi
+  Butter chicken
+  Chicken tikka masala
+  Mutton curry (home style)
+  Fish curry (Kerala / coconut)
+  Egg bhurji
+  Egg curry
+  Paneer 65
+  Aloo tikki
+  Veg spring roll (fried)
+  Chicken tikka
+  Tandoori chicken
+  Fish fry (masala / rava, shallow fried)
+  Samosa (aloo)
+  Bread pakora (aloo stuffed)
+  Veg burger (aloo tikki burger)
+  Bhel puri
+  Sev puri
+  Dahi puri
+  Papdi chaat
+  Vada pav
+  Veg fried rice
+  Fruit salad (plain)
+  Coconut chutney
+  Roasted chana (bhuna chana)
+  Gulab jamun
+  Rasgulla
+  Rasmalai
+  Jalebi
+  Gujiya
+  Gajar halwa
+  Shrikhand
+  Ghee
+  Cooking oil (any)
+  Butter (salted)
+  Jaggery
+  Honey
+  Cheese slice (processed)

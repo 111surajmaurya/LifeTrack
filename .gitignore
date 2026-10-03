@@ -1,0 +1,19 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+/build
+/app/build
+.DS_Store
+
+# USDA bulk datasets and the index built from them - see tools/foodseed/README.md
+/tools/foodseed/*.zip
+/tools/foodseed/nutrient_index.json
+
+/tools/foodseed/__pycache__
+
+# Screenshots for design review
+/screenshots
+
+# Kotlin compiler caches
+.kotlin

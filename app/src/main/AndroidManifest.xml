@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Reminders and alarms -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.TURN_SCREEN_ON" />
+
+    <!-- An alarm has to be able to take over the lock screen, not just drop a notification -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <!--
+      SCHEDULE_EXACT_ALARM has to be granted by hand and is denied by default on Android 13+.
+      USE_EXACT_ALARM is granted at install time, which is what actually makes a reminder
+      arrive at the minute you set instead of whenever Doze feels like it.
+    -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!-- So the app can ask to be left alone by battery optimisation, which otherwise eats alarms -->
+    <uses-permission
+        android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
+        tools:ignore="BatteryLife" />
+
+    <!-- Screen time: special permission granted by the user in Settings > Usage access -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Activity: Health Connect (read only) and the hardware sensor fallback -->
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!-- Lets the 15-minute job read Health Connect while LifeTrack is closed -->
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
+
+    <!-- Lets us resolve labels/icons for the tracked apps on Android 11+ -->
+    <queries>
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.instagram.android" />
+        <package android:name="com.linkedin.android" />
+        <package android:name="com.android.chrome" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.google.android.apps.healthdata" />
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".LifeTrackApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LifeTrack">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Health Connect opens this when the user taps "privacy policy" in its permission dialog (Android 13 and below) -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          The ringing alarm screen. It has to come up over the lock screen and wake the display,
+          which is what showOnLockScreen + turnScreenOn buy. singleInstance and noHistory keep
+          exactly one of these alive and stop it lingering in Recents once dismissed.
+        -->
+        <activity
+            android:name=".reminders.AlarmActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:showWhenLocked="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=".alarm"
+            android:theme="@style/Theme.LifeTrack.Alarm" />
+
+        <!--
+          Keeps the ringtone playing while the alarm is up. A plain BroadcastReceiver gets
+          about ten seconds before the system reclaims it, which is not enough for a 20s ring.
+        -->
+        <service
+            android:name=".reminders.AlarmService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <!-- Same rationale entry point for Android 14+ -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
+        <receiver android:name=".reminders.AlarmReceiver" android:exported="false" />
+
+        <!-- Done / Skip on routine notifications -->
+        <receiver android:name=".reminders.RoutineActions" android:exported="false" />
+
+        <!-- Steps and screen time every 15 minutes, app open or not -->
+        <service
+            android:name=".steps.StepSyncJob"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!--
+          Enforces screen-time limits. The user switches it on in Settings > Accessibility; the
+          BIND permission means only the system can bind to it.
+        -->
+        <service
+            android:name=".screentime.LimitGuardService"
+            android:exported="true"
+            android:label="@string/limit_guard_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/limit_guard" />
+        </service>
+
+        <!-- What you see instead of the app once its limit is spent -->
+        <activity
+            android:name=".screentime.LimitReachedActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=".limit"
+            android:theme="@style/Theme.LifeTrack" />
+
+        <receiver android:name=".reminders.BootReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
