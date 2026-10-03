@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Repository
+import com.lifetrack.app.data.TrackingStart
 import kotlinx.coroutines.flow.first
 
 /**
@@ -57,7 +58,8 @@ object UsageSync {
             val stored = repo.usageTotalPerDay(from, today).first().map { it.date }.toSet()
             var written = 0
             UsageReader.dailyBuckets(app, packages, days).forEach { (date, byPackage) ->
-                if (date in stored) return@forEach
+                // Android keeps weeks of usage; a fresh install still starts on its own first day.
+                if (date in stored || date < TrackingStart.date(app)) return@forEach
                 val minutes = packages.associateWith { toMinutes(byPackage[it] ?: 0L) }
                 repo.recordUsage(date, minutes)
                 written += minutes.size

@@ -144,6 +144,7 @@ class ScreenTimeViewModel(private val repo: Repository) : ViewModel() {
     companion object {
         const val DEFAULT_LIMIT_MIN = 30
         const val MIN_LIMIT_MIN = 5
-        const val MAX_LIMIT_MIN = 12 * 60
+        /** A hard ceiling: an hour a day per app is the most LifeTrack will allow. */
+        const val MAX_LIMIT_MIN = Repository.MAX_APP_LIMIT_MIN
     }
 }

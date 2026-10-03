@@ -65,7 +65,7 @@ private data class Inputs(
 )
 
 /**
- * [startedAt] is when tracking began ([com.lifetrack.app.data.RoutineStart]): days before it are
+ * [startedAt] is when tracking began ([com.lifetrack.app.data.TrackingStart]): days before it are
  * left out, and on the first day anything scheduled before it is "off" rather than missed.
  */
 class RoutineViewModel(private val repo: Repository, private val startedAt: Long) : ViewModel() {

@@ -3,7 +3,7 @@ package com.lifetrack.app
 import android.app.Application
 import com.lifetrack.app.data.AppDatabase
 import com.lifetrack.app.data.Repository
-import com.lifetrack.app.data.RoutineStart
+import com.lifetrack.app.data.TrackingStart
 import com.lifetrack.app.reminders.Notifications
 import com.lifetrack.app.reminders.ReminderScheduler
 import com.lifetrack.app.screentime.UsageSync
@@ -25,7 +25,9 @@ class LifeTrackApp : Application() {
 
         scope.launch {
             repository.ensureSeeded()
-            RoutineStart.ensure(this@LifeTrackApp)
+            // Nothing from before this install counts; drop anything that was imported from earlier.
+            val start = TrackingStart.date(this@LifeTrackApp)
+            repository.pruneBeforeStart(start)
 
             // Six months is the window; anything older goes. See Retention and the README.
             repository.prune()

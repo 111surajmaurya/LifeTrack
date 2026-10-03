@@ -226,6 +226,10 @@ interface TrackedAppDao {
     @Query("SELECT packageName AS date, CAST(SUM(minutes) AS REAL) AS value FROM app_usage_days WHERE date BETWEEN :from AND :to GROUP BY packageName ORDER BY value DESC")
     fun totalPerApp(from: String, to: String): Flow<List<DayValue>>
 
+    /** Pulls any limit above [max] down to it - for limits saved before the ceiling existed. */
+    @Query("UPDATE tracked_apps SET dailyLimitMin = :max WHERE dailyLimitMin > :max")
+    suspend fun capLimits(max: Int): Int
+
     @Query("SELECT minutes FROM app_usage_days WHERE date = :date AND packageName = :pkg")
     suspend fun minutesOn(pkg: String, date: String): Int?
 

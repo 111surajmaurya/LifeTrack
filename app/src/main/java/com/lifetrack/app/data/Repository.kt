@@ -8,6 +8,11 @@ import kotlinx.coroutines.sync.withLock
 /** Thin layer over the DAOs so screens never touch Room directly. */
 class Repository(private val db: AppDatabase) {
 
+    companion object {
+        /** The highest daily limit a tracked app can have. Mirrored by ScreenTimeViewModel.MAX_LIMIT_MIN. */
+        const val MAX_APP_LIMIT_MIN = 60
+    }
+
     // ---------------------------------------------------------------- seeding
 
     suspend fun ensureSeeded() {
@@ -25,14 +30,17 @@ class Repository(private val db: AppDatabase) {
         if (db.trackedAppDao().count() == 0) {
             db.trackedAppDao().upsertAll(
                 listOf(
-                    TrackedApp("com.google.android.youtube", "YouTube", 60, seeded = true),
+                    TrackedApp("com.google.android.youtube", "YouTube", 30, seeded = true),
                     TrackedApp("com.instagram.android", "Instagram", 30, seeded = true),
                     TrackedApp("com.linkedin.android", "LinkedIn", 30, seeded = true),
-                    TrackedApp("com.android.chrome", "Chrome", 60, seeded = true),
-                    TrackedApp("com.whatsapp", "WhatsApp", 45, seeded = true)
+                    TrackedApp("com.android.chrome", "Chrome", 30, seeded = true),
+                    TrackedApp("com.whatsapp", "WhatsApp", 30, seeded = true)
                 )
             )
         }
+        // An app limit can be at most an hour; older installs may have saved more.
+        db.trackedAppDao().capLimits(MAX_APP_LIMIT_MIN)
+
         // Keyed by `key`, so items added in a later release join an existing routine and an
         // edited time or title is never put back.
         val haveRoutine = db.routineDao().keys().toSet()
@@ -85,6 +93,18 @@ class Repository(private val db: AppDatabase) {
         routine = db.routineDao().deletePlansBefore(cutoff) + db.routineDao().deleteLogsBefore(cutoff),
         hourlySteps = db.stepDao().deleteHoursBefore(cutoff)
     )
+
+    /**
+     * Removes synced history from before this install started tracking ([TrackingStart]): steps,
+     * activity metrics and screen time that came from Health Connect or Android's usage records.
+     * Meals are left alone - those are only ever typed in here.
+     */
+    suspend fun pruneBeforeStart(start: String) {
+        db.metricDao().deleteBefore(start)
+        db.stepDao().deleteBefore(start)
+        db.stepDao().deleteHoursBefore(start)
+        db.trackedAppDao().deleteUsageBefore(start)
+    }
 
     // ---------------------------------------------------------------- meals
 
@@ -374,7 +394,8 @@ class Repository(private val db: AppDatabase) {
     // ---------------------------------------------------------------- screen time
 
     val trackedApps: Flow<List<TrackedApp>> = db.trackedAppDao().all()
-    suspend fun upsertTrackedApp(app: TrackedApp) = db.trackedAppDao().upsert(app)
+    suspend fun upsertTrackedApp(app: TrackedApp) =
+        db.trackedAppDao().upsert(app.copy(dailyLimitMin = app.dailyLimitMin.coerceAtMost(MAX_APP_LIMIT_MIN)))
 
     /** Only apps the user added themselves can be removed; the starter five stay put. */
     suspend fun removeTrackedApp(app: TrackedApp): Boolean {

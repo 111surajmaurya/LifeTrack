@@ -560,7 +560,8 @@ internal fun LimitDialog(
         text = {
             Column {
                 Text(
-                    "How long in $label is reasonable on a normal day?",
+                    "How long in $label is reasonable on a normal day? " +
+                        "Anything from ${ScreenTimeViewModel.MIN_LIMIT_MIN} minutes up to 1 hour.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -569,7 +570,7 @@ internal fun LimitDialog(
                     Modifier.horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(Space.xs)
                 ) {
-                    listOf(15, 30, 45, 60, 90, 120).forEach { preset ->
+                    listOf(15, 30, 45, 60).forEach { preset ->
                         FilterChip(
                             selected = parsed == preset,
                             onClick = { minutes = preset.toString() },
@@ -585,7 +586,11 @@ internal fun LimitDialog(
                 Spacer(Modifier.height(Space.md))
                 OutlinedTextField(
                     value = minutes,
-                    onValueChange = { entry -> minutes = entry.filter { it.isDigit() }.take(4) },
+                    onValueChange = { entry -> minutes = entry.filter { it.isDigit() }.take(2) },
+                    isError = parsed > ScreenTimeViewModel.MAX_LIMIT_MIN,
+                    supportingText = {
+                        if (parsed > ScreenTimeViewModel.MAX_LIMIT_MIN) Text("1 hour is the most a limit can be")
+                    },
                     singleLine = true,
                     shape = MaterialTheme.shapes.medium,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -596,7 +601,7 @@ internal fun LimitDialog(
         },
         confirmButton = {
             TextButton(
-                enabled = parsed >= ScreenTimeViewModel.MIN_LIMIT_MIN,
+                enabled = parsed in ScreenTimeViewModel.MIN_LIMIT_MIN..ScreenTimeViewModel.MAX_LIMIT_MIN,
                 onClick = { onSave(parsed) }
             ) { Text("Save") }
         },

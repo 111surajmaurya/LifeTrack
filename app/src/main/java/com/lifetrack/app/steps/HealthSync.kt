@@ -8,6 +8,7 @@ import com.lifetrack.app.data.HourlySteps
 import com.lifetrack.app.data.Metric
 import com.lifetrack.app.data.Repository
 import com.lifetrack.app.data.Retention
+import com.lifetrack.app.data.TrackingStart
 import kotlinx.coroutines.flow.first
 import java.io.IOException
 import java.time.LocalDate
@@ -94,7 +95,7 @@ class HealthSync(private val context: Context, private val repo: Repository) {
         if (days <= 0 || !ready()) return false
         return try {
             val today = LocalDate.now()
-            val first = today.minusDays((days - 1).toLong())
+            val first = startClamp(today.minusDays((days - 1).toLong()))
             val have = repo.datesWithHourlySteps(Dates.format(first), Dates.format(today)).toSet()
             val fresh = setOf(Dates.format(today), Dates.format(today.minusDays(1)))
             var start: LocalDate? = null
@@ -129,7 +130,7 @@ class HealthSync(private val context: Context, private val repo: Repository) {
         if (days <= 0 || !ready()) return false
         return try {
             val today = LocalDate.now()
-            val rows = health.totalsByDay(today.minusDays((days - 1).toLong()), today).flatMap { (date, totals) ->
+            val rows = health.totalsByDay(startClamp(today.minusDays((days - 1).toLong())), today).flatMap { (date, totals) ->
                 totals.map { (metric, value) -> DailyMetric(date, metric.key, value) }
             }
             if (rows.isNotEmpty()) repo.putMetrics(rows)
@@ -158,7 +159,7 @@ class HealthSync(private val context: Context, private val repo: Repository) {
         return try {
             val today = LocalDate.now()
             val todayIso = Dates.today()
-            val first = today.minusDays((days - 1).toLong())
+            val first = startClamp(today.minusDays((days - 1).toLong()))
             val stored = storedKeys(Dates.format(first), todayIso)
             val touched = HashSet<String>()
             var rows = 0
@@ -190,6 +191,10 @@ class HealthSync(private val context: Context, private val repo: Repository) {
             0
         }
     }
+
+    /** Never reach back past the day this install started tracking. */
+    private fun startClamp(day: LocalDate): LocalDate =
+        maxOf(day, Dates.parse(TrackingStart.date(context)))
 
     /** Sets [lastError] and returns false when Health Connect can't be read at all. */
     private suspend fun ready(): Boolean {

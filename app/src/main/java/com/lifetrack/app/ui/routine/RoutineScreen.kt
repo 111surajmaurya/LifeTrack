@@ -35,7 +35,7 @@ import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Routine
 import com.lifetrack.app.data.RoutineKind
 import com.lifetrack.app.data.RoutineSlot
-import com.lifetrack.app.data.RoutineStart
+import com.lifetrack.app.data.TrackingStart
 import com.lifetrack.app.data.RoutineStatus
 import com.lifetrack.app.ui.appViewModel
 import com.lifetrack.app.ui.components.DotSeparated
@@ -95,7 +95,7 @@ fun RoutineScreen(
 @Composable
 internal fun routineViewModel(): RoutineViewModel {
     val context = LocalContext.current
-    return appViewModel { RoutineViewModel(it, RoutineStart.ensure(context)) }
+    return appViewModel { RoutineViewModel(it, TrackingStart.ensure(context)) }
 }
 
 // ---------------------------------------------------------------- score
