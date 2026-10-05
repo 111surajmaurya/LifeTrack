@@ -22,6 +22,10 @@ object Dates {
     fun format(date: LocalDate): String = date.format(iso)
     fun shift(date: String, days: Long): String = parse(date).plusDays(days).format(iso)
     fun isToday(date: String) = date == today()
+
+    /** The local day an instant falls on. */
+    fun ofMillis(epochMillis: Long): String =
+        Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).toLocalDate().format(iso)
     fun isFuture(date: String) = parse(date).isAfter(LocalDate.now())
 
     fun label(date: String): String = when (date) {

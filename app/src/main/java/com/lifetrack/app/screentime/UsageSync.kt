@@ -33,9 +33,21 @@ object UsageSync {
         if (packages.isEmpty() || !UsageReader.hasPermission(app)) {
             false
         } else {
+            val today = Dates.today()
             val millis = UsageReader.foregroundTodayMillis(app, packages)
             val minutes = packages.associateWith { toMinutes(millis[it] ?: 0L) }
-            repo.recordUsage(Dates.today(), minutes)
+            repo.recordUsage(today, minutes)
+            // Yesterday's last stretch - after its final snapshot, up to midnight - can only be
+            // picked up from here, while the event stream still has it.
+            val yesterday = Dates.shift(today, -1)
+            if (yesterday >= TrackingStart.date(app)) {
+                val late = UsageReader.foregroundMillisBetween(
+                    app, packages, Dates.startOfDayMillis(yesterday), Dates.startOfDayMillis(today)
+                )
+                if (late.isNotEmpty()) {
+                    repo.recordUsage(yesterday, packages.associateWith { toMinutes(late[it] ?: 0L) })
+                }
+            }
             true
         }
     } catch (t: Throwable) {

@@ -51,8 +51,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -1054,12 +1056,14 @@ private fun CustomFoodDialog(
                         label = "Protein (g)",
                         value = protein,
                         onValue = { protein = it },
+                        decimal = true,
                         modifier = Modifier.weight(1f)
                     )
                     NumberField(
                         label = "Fibre (g)",
                         value = fiber,
                         onValue = { fiber = it },
+                        decimal = true,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -1108,7 +1112,17 @@ private fun CalorieSettingsDialog(
     var proteinGoal by rememberSaveable { mutableStateOf(settings.proteinGoal.toString()) }
     var fiberGoal by rememberSaveable { mutableStateOf(settings.fiberGoal.toString()) }
 
-    val slotGoals = remember {
+    // Saved as a plain list in Slot order, so half-typed budgets survive a rotation too.
+    val slotGoals = rememberSaveable(
+        saver = listSaver<SnapshotStateMap<Slot, String>, String>(
+            save = { map -> Slot.entries.map { map[it].orEmpty() } },
+            restore = { saved ->
+                mutableStateMapOf<Slot, String>().apply {
+                    Slot.entries.forEachIndexed { i, slot -> put(slot, saved.getOrElse(i) { "" }) }
+                }
+            }
+        )
+    ) {
         mutableStateMapOf<Slot, String>().apply {
             Slot.entries.forEach { put(it, settings.goalFor(it).toString()) }
         }
@@ -1256,21 +1270,38 @@ private fun ChoiceChip(
     }
 }
 
-/** Digits only, so a stray letter can never turn a goal into zero. */
+/**
+ * Digits only, so a stray letter can never turn a goal into zero. [decimal] also lets one '.'
+ * through, for grams of protein or fibre where "2.5" must not collapse into 25.
+ */
 @Composable
 private fun NumberField(
     label: String,
     value: String,
     onValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    decimal: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { text -> onValue(text.filter { it.isDigit() }.take(5)) },
+        onValueChange = { text ->
+            onValue(if (decimal) decimalText(text) else text.filter { it.isDigit() }.take(5))
+        },
         label = { Text(label) },
         singleLine = true,
         shape = MaterialTheme.shapes.medium,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = if (decimal) KeyboardType.Decimal else KeyboardType.Number
+        ),
         modifier = modifier
     )
+}
+
+/** Digits plus the first '.' only; any later dots are dropped, so "2.5." stays 2.5. */
+internal fun decimalText(text: String): String {
+    val clean = text.filter { it.isDigit() || it == '.' }
+    val dot = clean.indexOf('.')
+    val kept = if (dot < 0) clean
+    else clean.substring(0, dot + 1) + clean.substring(dot + 1).filter { it != '.' }
+    return kept.take(6)
 }

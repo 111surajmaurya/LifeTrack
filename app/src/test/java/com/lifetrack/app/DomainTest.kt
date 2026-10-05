@@ -455,4 +455,14 @@ class DomainTest {
         assertEquals(21, p.total)
         assertTrue(p.any)
     }
+
+    @Test fun `walking burn is the net cost of the distance, not the resting burn`() {
+        // 7.5 km at 70 kg: about 260 kcal, nowhere near the 2,000 a "total" reading shows.
+        assertEquals(262.5, BodyMath.walkingKcal(7_500.0, 10_000.0, 70f), 0.01)
+    }
+
+    @Test fun `walking burn falls back to steps and a default weight`() {
+        assertEquals(262.5, BodyMath.walkingKcal(0.0, 10_000.0, 0f), 0.01)
+        assertEquals(0.0, BodyMath.walkingKcal(0.0, 0.0, 70f), 0.0)
+    }
 }

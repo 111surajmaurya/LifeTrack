@@ -46,8 +46,7 @@ it can be switched off; Android never lets an app revoke its own access). Sectio
 themselves: when something they need is off they show a one-line link to Settings.
 
 A fresh install opens on Settings with a welcome card (`FirstRun`), and nothing requests a
-permission on launch. Note: reinstalling a build over itself can switch the Limit blocking
-accessibility service off; it then reads Off in Settings and needs turning on again. Routes are in
+permission on launch. Routes are in
 `Nav.kt` (`Sections`); the grid is `ui/all/AllScreen.kt`.
 
 ## Things worth knowing
@@ -153,12 +152,14 @@ charts are useful immediately. If Health Connect is unavailable, steps fall back
 every exception, so a permission problem looked identical to "0 steps".
 
 ### Screen time
-**Limits are enforced** once *LifeTrack screen time limits* is switched on in Settings →
-Accessibility. `LimitGuardService` listens only for window changes in the tracked apps (the
-package list is narrowed at runtime), never reads content, and sends an app over its limit back
-to the home screen with a toast and `LimitReachedActivity`, worded differently for "didn't open" and "was
-closed" (limit ran out mid-use). While under the limit it re-checks when the
-remaining time runs out. Without that switch a limit only colours the bar.
+**Limits are enforced** with Usage access plus *Display over other apps* (Settings → Limit
+blocking) - no accessibility service, so nothing on screen is ever read. `LimitWatchService` is
+a foreground service (quiet, minimum-priority notification) that runs only while at least one
+limit is set and both accesses are on. Every 2 s while the screen is on it reads the newest
+usage events to see which app is in front; a tracked app past its limit is sent to the home
+screen with a toast and `LimitReachedActivity`. Blocking can lag a couple of seconds. It is
+started from app start, on resume, on boot, by the 15-minute job and whenever limits change.
+Without the overlay access a limit only colours the bar.
 
 Foreground time comes from `UsageStatsManager`'s event stream (RESUMED/PAUSED pairs) rather
 than `queryUsageStats`, which is bucketed and over-counts. Chrome is counted as a whole; Android

@@ -2,6 +2,7 @@ package com.lifetrack.app.steps
 
 import android.content.Context
 import android.os.RemoteException
+import com.lifetrack.app.data.BodyMath
 import com.lifetrack.app.data.DailyMetric
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.HourlySteps
@@ -60,8 +61,11 @@ class HealthSync(private val context: Context, private val repo: Repository) {
         lastError = null
         if (!ready()) return false
         return try {
-            val totals = health.totalsFor(LocalDate.now())
-            val today = Dates.today()
+            // One date for both the query and the key, so a read that crosses midnight
+            // can't file yesterday's totals under today.
+            val date = LocalDate.now()
+            val totals = withBurn(health.totalsFor(date), weightKg(), workouts(date, date)[Dates.format(date)])
+            val today = Dates.format(date)
             totals.forEach { (metric, value) -> repo.putMetric(today, metric, value) }
             totals.isNotEmpty()
         } catch (cancelled: CancellationException) {
@@ -130,8 +134,11 @@ class HealthSync(private val context: Context, private val repo: Repository) {
         if (days <= 0 || !ready()) return false
         return try {
             val today = LocalDate.now()
-            val rows = health.totalsByDay(startClamp(today.minusDays((days - 1).toLong())), today).flatMap { (date, totals) ->
-                totals.map { (metric, value) -> DailyMetric(date, metric.key, value) }
+            val weight = weightKg()
+            val first = startClamp(today.minusDays((days - 1).toLong()))
+            val gym = workouts(first, today)
+            val rows = health.totalsByDay(first, today).flatMap { (date, totals) ->
+                withBurn(totals, weight, gym[date]).map { (metric, value) -> DailyMetric(date, metric.key, value) }
             }
             if (rows.isNotEmpty()) repo.putMetrics(rows)
             true
@@ -162,14 +169,16 @@ class HealthSync(private val context: Context, private val repo: Repository) {
             val first = startClamp(today.minusDays((days - 1).toLong()))
             val stored = storedKeys(Dates.format(first), todayIso)
             val touched = HashSet<String>()
+            val weight = weightKg()
             var rows = 0
 
             var start = first
             while (!start.isAfter(today)) {
                 val end = minOf(start.plusDays(CHUNK - 1L), today)
                 val batch = ArrayList<DailyMetric>()
+                val gym = workouts(start, end)
                 health.totalsByDay(start, end).forEach { (date, totals) ->
-                    totals.forEach { (metric, value) ->
+                    withBurn(totals, weight, gym[date]).forEach { (metric, value) ->
                         if (date == todayIso || (date to metric.key) !in stored) {
                             batch += DailyMetric(date, metric.key, value)
                         }
@@ -190,6 +199,31 @@ class HealthSync(private val context: Context, private val repo: Repository) {
             lastError = reason(e)
             0
         }
+    }
+
+    private suspend fun weightKg(): Float = repo.settings.first().weightKg
+
+    /** Workout calories by day; a refused read costs the workouts, not the whole sync. */
+    private suspend fun workouts(from: LocalDate, to: LocalDate): Map<String, Double> = try {
+        health.workoutKcalByDay(from, to)
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (e: Exception) {
+        emptyMap()
+    }
+
+    /**
+     * Calories burned by moving: the walking estimate from the day's steps, plus whatever logged
+     * workouts other than walks and runs burned. Not the phone's all-day "active calories",
+     * which on Samsung come out around three times what the walking costs.
+     */
+    private fun withBurn(totals: Map<Metric, Double>, weightKg: Float, workoutKcal: Double?): Map<Metric, Double> {
+        val walked = BodyMath.walkingKcal(
+            totals[Metric.Distance] ?: 0.0, totals[Metric.Steps] ?: 0.0, weightKg
+        )
+        val burn = walked + (workoutKcal ?: 0.0)
+        if (burn <= 0) return totals
+        return totals + (Metric.Burn to burn)
     }
 
     /** Never reach back past the day this install started tracking. */

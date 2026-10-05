@@ -15,10 +15,10 @@ import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
-import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.request.AggregateGroupByDurationRequest
 import androidx.health.connect.client.request.AggregateGroupByPeriodRequest
 import androidx.health.connect.client.request.AggregateRequest
+import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import com.lifetrack.app.data.Metric
 import java.time.Duration
@@ -90,7 +90,8 @@ class HealthConnectSteps(private val context: Context) {
             val steps = bucket.result[StepsRecord.COUNT_TOTAL] ?: return@forEach
             if (steps <= 0) return@forEach
             val at = bucket.startTime.atZone(zone)
-            out[at.toLocalDate().toString() to at.hour] = steps.toDouble()
+            // merge: on the autumn DST day two real hours share one clock hour.
+            out.merge(at.toLocalDate().toString() to at.hour, steps.toDouble(), Double::plus)
         }
         return out
     }
@@ -98,7 +99,10 @@ class HealthConnectSteps(private val context: Context) {
     /** Metrics with no granted source, so the UI can name them instead of showing an empty tile. */
     suspend fun missingMetrics(): List<Metric> {
         val granted = grantedPermissions()
-        return Metric.entries.filter { m -> SOURCES.none { it.metric == m && it.permission in granted } }
+        val covered = SOURCES.filter { it.permission in granted }.mapTo(HashSet()) { it.metric }
+        // Burn falls back to an estimate from the steps, so steps alone are enough for it.
+        if (Metric.Steps in covered) covered += Metric.Burn
+        return Metric.entries.filter { it !in covered }
     }
 
     /** Every metric that has data on [date]. Metrics with no records that day are simply absent. */
@@ -161,6 +165,46 @@ class HealthConnectSteps(private val context: Context) {
         return out
     }
 
+    /**
+     * Active calories burned inside logged workouts (gym, cycling, swimming...), per ISO date of
+     * the workout's start, over [from]..[to] inclusive. Walks and runs are left out - the steps
+     * already count them. Empty when either permission is missing.
+     */
+    suspend fun workoutKcalByDay(from: LocalDate, to: LocalDate): Map<String, Double> {
+        val granted = grantedPermissions()
+        val needed = setOf(
+            HealthPermission.getReadPermission(ExerciseSessionRecord::class),
+            HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class)
+        )
+        if (!granted.containsAll(needed) || from.isAfter(to)) return emptyMap()
+        val zone = ZoneId.systemDefault()
+        val out = LinkedHashMap<String, Double>()
+        var page: String? = null
+        do {
+            val response = client.readRecords(
+                ReadRecordsRequest(
+                    ExerciseSessionRecord::class,
+                    TimeRangeFilter.between(from.atStartOfDay(), to.plusDays(1).atStartOfDay()),
+                    pageToken = page
+                )
+            )
+            response.records.filter { it.exerciseType !in ON_FOOT }.forEach { session ->
+                val kcal = client.aggregate(
+                    AggregateRequest(
+                        setOf(ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL),
+                        TimeRangeFilter.between(session.startTime, session.endTime)
+                    )
+                )[ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL]?.inKilocalories ?: 0.0
+                if (kcal > 0) {
+                    val day = session.startTime.atZone(zone).toLocalDate().toString()
+                    out.merge(day, kcal, Double::plus)
+                }
+            }
+            page = response.pageToken
+        } while (page != null)
+        return out
+    }
+
     private suspend fun buckets(
         sources: List<Source>,
         filter: TimeRangeFilter
@@ -204,10 +248,7 @@ class HealthConnectSteps(private val context: Context) {
         return SOURCES.filter { it.permission in granted }
     }
 
-    /**
-     * One way to pull one [Metric] out of Health Connect. [Metric.Burn] has two, tried in order,
-     * because a phone that only logs workouts has active calories but no all-day total.
-     */
+    /** One way to pull one [Metric] out of Health Connect. */
     private class Source(
         val metric: Metric,
         val aggregate: AggregateMetric<*>,
@@ -237,16 +278,10 @@ class HealthConnectSteps(private val context: Context) {
                 HealthPermission.getReadPermission(DistanceRecord::class)
             ) { it[DistanceRecord.DISTANCE_TOTAL]?.inMeters },
 
-            Source(
-                Metric.Burn, TotalCaloriesBurnedRecord.ENERGY_TOTAL,
-                HealthPermission.getReadPermission(TotalCaloriesBurnedRecord::class)
-            ) { it[TotalCaloriesBurnedRecord.ENERGY_TOTAL]?.inKilocalories },
-
-            // Fallback for the same metric: preferred order means this only lands if the total is absent.
-            Source(
-                Metric.Burn, ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL,
-                HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class)
-            ) { it[ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL]?.inKilocalories },
+            // No Source for Metric.Burn on purpose. "Total" calories include the resting burn
+            // (Health Connect even fills in hours not yet lived), and Samsung's all-day "active"
+            // calories read ~335 kcal for 3,700 steps - three times what that walk costs.
+            // HealthSync builds Burn from the steps plus [workoutKcalByDay] instead.
 
             Source(
                 Metric.ActiveMinutes, ExerciseSessionRecord.EXERCISE_DURATION_TOTAL,
@@ -267,7 +302,19 @@ class HealthConnectSteps(private val context: Context) {
         )
 
         /** Read permission for every metric the Activity tab charts. */
-        val READ_PERMISSIONS: Set<String> = SOURCES.map { it.permission }.toSet()
+        val READ_PERMISSIONS: Set<String> = SOURCES.map { it.permission }.toSet() +
+            HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class)
+
+        /**
+         * Workouts the step count already covers. Their calories would count the same walk twice,
+         * once from the steps and once from the session.
+         */
+        private val ON_FOOT = setOf(
+            ExerciseSessionRecord.EXERCISE_TYPE_WALKING,
+            ExerciseSessionRecord.EXERCISE_TYPE_RUNNING,
+            ExerciseSessionRecord.EXERCISE_TYPE_RUNNING_TREADMILL,
+            ExerciseSessionRecord.EXERCISE_TYPE_HIKING
+        )
 
         /** Lets the 15-minute background job read steps while LifeTrack is closed. */
         const val BACKGROUND_PERMISSION: String = HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND

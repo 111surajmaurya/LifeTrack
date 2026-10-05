@@ -68,6 +68,12 @@ data class AppDetailState(
     val overToday: Boolean get() = limitMin > 0 && minutesToday > limitMin
     val progressToday: Float get() = if (limitMin > 0) minutesToday / limitMin.toFloat() else 0f
     val hasHistory: Boolean get() = series.any { it.value > 0.0 }
+
+    /**
+     * The percent chip, which needs more than [hasPrevious]: today is still under way, so
+     * against all of yesterday it would show "-80%" every morning.
+     */
+    val hasDelta: Boolean get() = hasPrevious && window != DetailWindow.Today
 }
 
 /** The pair that decides which rows to read; kept as a type so [combine] stays typed. */

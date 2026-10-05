@@ -16,6 +16,7 @@ import com.lifetrack.app.data.RoutinePlan
  * uses lives in its own band so a routine item can never cancel or ring as a reminder row.
  *
  * Re-armed after each fire, on every cold start, on boot, and whenever an item or a plan is saved.
+ * Pending snoozes are kept in [SnoozeStore] and re-armed along with everything else.
  */
 object RoutineScheduler {
     const val EXTRA_ROUTINE_ID = "routine_id"
@@ -37,8 +38,15 @@ object RoutineScheduler {
     suspend fun rescheduleAll(context: Context, repo: Repository) {
         val today = Dates.today()
         val plans = repo.routinePlansOnce(today, Dates.shift(today, 2))
-        repo.routineItemsOnce().forEach { item ->
+        val items = repo.routineItemsOnce()
+        items.forEach { item ->
             schedule(context, item, plans.filter { it.itemId == item.id }.associateBy { it.date })
+        }
+        // Snoozes too, which a reboot would otherwise lose. AlarmReceiver re-checks the plan.
+        val am = context.getSystemService(AlarmManager::class.java) ?: return
+        val ids = items.map { it.id }.toSet()
+        SnoozeStore.routines(context).filter { it.itemId in ids }.forEach { s ->
+            ReminderScheduler.fire(context, am, s.at, pending(context, s.itemId, s.date, snooze = true))
         }
     }
 
@@ -61,7 +69,9 @@ object RoutineScheduler {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
         val pi = pending(context, itemId, date, snooze = true)
         am.cancel(pi)
-        ReminderScheduler.fire(context, am, System.currentTimeMillis() + Routine.SNOOZE_MINUTES * 60_000L, pi)
+        val at = System.currentTimeMillis() + Routine.SNOOZE_MINUTES * 60_000L
+        SnoozeStore.saveRoutine(context, itemId, at, date)
+        ReminderScheduler.fire(context, am, at, pi)
     }
 
     /**

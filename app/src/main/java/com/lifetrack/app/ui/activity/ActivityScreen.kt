@@ -261,8 +261,8 @@ private fun WeekCard(ui: ActivityUi, onOpenMetric: (Metric) -> Unit) {
 
 /**
  * Twenty-four bars, one per clock hour: *when* the walking happened, not just how much.
- * The arrows walk back through earlier days; there is no tap-for-detail here because every
- * other chart's detail sheet is keyed by date, and these bars are hours.
+ * The arrows walk back through earlier days. Tapping a bar reads that hour out in the line
+ * above the chart rather than opening a detail sheet - those are keyed by date, these by hour.
  */
 @Composable
 private fun HoursCard(ui: ActivityUi, onShift: (Long) -> Unit) {
@@ -298,7 +298,25 @@ private fun HoursCard(ui: ActivityUi, onShift: (Long) -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
-            BarChart(points = points, accent = a.activity, height = 120.dp)
+            // Tap a bar to read its hour; until then the busiest hour is the one spelled out.
+            var picked by remember(day) { mutableStateOf<Int?>(null) }
+            val shown = picked ?: peak?.key
+            if (shown != null) {
+                Text(
+                    "${hourRange(shown)}  ·  %,.0f steps".format(byHour[shown] ?: 0.0),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = a.activity
+                )
+                Spacer(Modifier.height(Space.xs))
+            }
+            BarChart(
+                points = points,
+                accent = a.activity,
+                height = 120.dp,
+                selectedKey = shown?.let { "h$it" },
+                onSelect = { p -> picked = p.key.removePrefix("h").toInt() },
+                showFocus = false
+            )
             // The bars are too narrow for their own labels, so the axis is drawn once, every 6 hours.
             Row(Modifier.fillMaxWidth()) {
                 listOf(0, 6, 12, 18).forEach { h ->

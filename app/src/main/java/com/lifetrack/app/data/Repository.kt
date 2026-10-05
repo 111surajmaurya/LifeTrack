@@ -173,7 +173,14 @@ class Repository(private val db: AppDatabase) {
 
     val settings: Flow<Settings> = db.settingsDao().settings().map { it ?: Settings() }
     private suspend fun settingsOnce() = db.settingsDao().settingsOnce() ?: Settings()
-    private suspend fun edit(block: (Settings) -> Settings) = db.settingsDao().upsert(block(settingsOnce()))
+    /**
+     * Every change to the single settings row is read-modify-write, so they take turns: two at
+     * once (a double tap on Stop, a goal edit landing mid-timer) would otherwise each write back
+     * a stale copy - or bank the same timer session twice.
+     */
+    private val settingsLock = Mutex()
+    private suspend fun edit(block: (Settings) -> Settings) =
+        settingsLock.withLock { db.settingsDao().upsert(block(settingsOnce())) }
 
     /**
      * Typing a goal by hand takes the profile out of the driving seat. Anything else would let
@@ -261,21 +268,27 @@ class Repository(private val db: AppDatabase) {
     // ---- the running timer ----
 
     /** Only one timer runs at a time; starting a new one banks the old one first. */
-    suspend fun startTimer(habitId: Long) {
-        stopTimer()
-        edit { it.copy(runningHabitId = habitId, runningSince = System.currentTimeMillis()) }
+    suspend fun startTimer(habitId: Long) = settingsLock.withLock {
+        bankTimer()
+        db.settingsDao().upsert(
+            settingsOnce().copy(runningHabitId = habitId, runningSince = System.currentTimeMillis())
+        )
     }
 
     /**
      * Bank the running timer at its real length in milliseconds and return what was saved.
-     * Stopping after three seconds records three seconds, not a minute.
+     * Stopping after three seconds records three seconds, not a minute. The session belongs to
+     * the day it was started on, so reading from 11:30 PM to 12:10 AM counts for the evening.
      */
-    suspend fun stopTimer(): Long {
+    suspend fun stopTimer(): Long = settingsLock.withLock { bankTimer() }
+
+    /** [stopTimer] for a caller already holding [settingsLock]. */
+    private suspend fun bankTimer(): Long {
         val s = settingsOnce()
         val id = s.runningHabitId ?: return 0
         val since = s.runningSince ?: return 0
         val millis = (System.currentTimeMillis() - since).coerceAtLeast(0)
-        addMillis(id, Dates.today(), millis)
+        addMillis(id, Dates.ofMillis(since), millis)
         db.settingsDao().upsert(s.copy(runningHabitId = null, runningSince = null))
         return millis
     }
@@ -284,12 +297,12 @@ class Repository(private val db: AppDatabase) {
     suspend fun discardTimer() = edit { it.copy(runningHabitId = null, runningSince = null) }
 
     /** Restarts the stopwatch from zero without leaving the habit, and reports what was dropped. */
-    suspend fun resetTimer(): Long {
+    suspend fun resetTimer(): Long = settingsLock.withLock {
         val s = settingsOnce()
-        val since = s.runningSince ?: return 0
+        val since = s.runningSince ?: return@withLock 0L
         val dropped = (System.currentTimeMillis() - since).coerceAtLeast(0)
         db.settingsDao().upsert(s.copy(runningSince = System.currentTimeMillis()))
-        return dropped
+        dropped
     }
 
     /** Wipes everything banked for a habit today - the "reset today" action. */
@@ -305,7 +318,10 @@ class Repository(private val db: AppDatabase) {
     fun checksOn(date: String) = db.habitDao().checksOn(date)
     fun checksBetween(habitId: Long, from: String, to: String) = db.habitDao().checksBetween(habitId, from, to)
 
-    suspend fun bumpCheck(habitId: Long, date: String, delta: Int) {
+    /** Two quick taps on +1 must both land, so the read and the write go together. */
+    private val checkLock = Mutex()
+
+    suspend fun bumpCheck(habitId: Long, date: String, delta: Int) = checkLock.withLock {
         val current = db.habitDao().checkOnce(habitId, date)?.count ?: 0
         db.habitDao().upsertCheck(HabitCheck(habitId, date, (current + delta).coerceAtLeast(0)))
     }
@@ -364,7 +380,11 @@ class Repository(private val db: AppDatabase) {
         db.stepDao().upsertHours(rows)
         parts.entries.groupBy({ it.key.first }, { it.value }).forEach { (date, added) ->
             val had = metricOnce(Metric.Steps, date) ?: 0.0
-            putMetric(date, Metric.Steps, had + added.sum(), source = "SENSOR")
+            val steps = had + added.sum()
+            putMetric(date, Metric.Steps, steps, source = "SENSOR")
+            // No Health Connect means no calorie reading at all, so burn comes from the steps.
+            val weight = settingsOnce().weightKg
+            putMetric(date, Metric.Burn, BodyMath.walkingKcal(0.0, steps, weight), source = "SENSOR")
         }
     }
 
@@ -401,6 +421,8 @@ class Repository(private val db: AppDatabase) {
     suspend fun removeTrackedApp(app: TrackedApp): Boolean {
         if (app.seeded) return false
         db.trackedAppDao().delete(app)
+        // Its minutes go too, or Home's totals and "top app" keep counting an app no longer tracked.
+        db.trackedAppDao().deleteUsageFor(app.packageName)
         return true
     }
 

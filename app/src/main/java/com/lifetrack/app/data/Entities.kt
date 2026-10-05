@@ -164,6 +164,22 @@ object BodyMath {
     /** 14 g of fibre per 1000 kcal, the standard guideline, so it scales with how much you eat. */
     fun fiber(kcalGoal: Int): Int =
         if (kcalGoal <= 0) 0 else (kcalGoal * 14f / 1000f).roundToInt()
+
+    /**
+     * Calories burned by walking, on top of the resting burn: about 0.5 kcal per kg per km,
+     * the net cost of walking at an ordinary pace. With no distance it assumes a 0.75 m step,
+     * and with no weight in the profile it assumes 70 kg rather than reporting nothing.
+     */
+    fun walkingKcal(distanceM: Double, steps: Double, weightKg: Float): Double {
+        val km = if (distanceM > 0) distanceM / 1000.0 else steps * STEP_M / 1000.0
+        if (km <= 0) return 0.0
+        val kg = if (weightKg > 0f) weightKg.toDouble() else DEFAULT_WEIGHT_KG
+        return km * kg * WALK_KCAL_PER_KG_KM
+    }
+
+    private const val STEP_M = 0.75
+    private const val DEFAULT_WEIGHT_KG = 70.0
+    private const val WALK_KCAL_PER_KG_KM = 0.5
 }
 
 /**
@@ -290,7 +306,8 @@ data class Settings(
     val snacksGoal: Int = 200,
     val dinnerGoal: Int = 600,
     val distanceGoalKm: Float = 5f,
-    val burnGoalKcal: Int = 400,
+    // About 8,000 steps at 80 kg, now that burn is the walk itself and not the phone's all-day figure.
+    val burnGoalKcal: Int = 250,
     /** Grams per day. One daily target, not four - protein is a whole-day number. */
     @ColumnInfo(defaultValue = "60") val proteinGoal: Int = 60,
     /** Grams per day. 30 g is the ICMR-NIN adult recommendation. */
@@ -341,11 +358,13 @@ data class Settings(
      */
     fun withCalculatedGoals(): Settings {
         if (!hasBodyProfile) return this
-        val kcal = tdee
+        // Held to the same bounds a hand-typed goal gets (CaloriesViewModel.GOAL_MIN and
+        // friends), so an extreme profile can never produce a goal the settings dialog refuses.
+        val kcal = tdee.coerceIn(800, 6000)
         var next = copy(
             calorieGoal = kcal,
-            proteinGoal = suggestedProtein,
-            fiberGoal = suggestedFiber
+            proteinGoal = suggestedProtein.coerceIn(10, 400),
+            fiberGoal = BodyMath.fiber(kcal).coerceIn(5, 100)
         )
         Slot.entries.forEach { slot ->
             next = next.withGoalFor(slot, (kcal * Slot.defaultShare(slot)).roundToInt())

@@ -7,6 +7,7 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import com.lifetrack.app.LifeTrackApp
+import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.screentime.UsageSync
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,8 @@ class StepSyncJob : JobService() {
             try {
                 StepRecorder.syncNow(this@StepSyncJob, repo)
                 runCatching { UsageSync.snapshotToday(this@StepSyncJob, repo) }
+                // Brings the limit watcher back if the system stopped it.
+                runCatching { LimitWatchService.sync(this@StepSyncJob) }
             } finally {
                 jobFinished(params, false)
             }

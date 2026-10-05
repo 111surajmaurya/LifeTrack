@@ -57,17 +57,21 @@ class AlarmService : Service() {
         when (intent?.action) {
             ACTION_SNOOZE -> {
                 guaranteeForeground()
-                snoozeThenStop(if (id >= 0) id else currentId)
+                // A late tap for an alarm that was already rung out by a newer one must not
+                // silence the newer one.
+                if (!isStale(id)) snoozeThenStop(if (id >= 0) id else currentId)
             }
             ACTION_STOP -> {
                 guaranteeForeground()
-                val target = if (id >= 0) id else currentId
-                if (RoutineScheduler.isRoutineRing(target)) {
-                    RoutineActions.alarmDismissed(
-                        this, RoutineScheduler.itemIdOf(target), currentRoutineDate ?: Dates.today()
-                    )
+                if (!isStale(id)) {
+                    val target = if (id >= 0) id else currentId
+                    if (RoutineScheduler.isRoutineRing(target)) {
+                        RoutineActions.alarmDismissed(
+                            this, RoutineScheduler.itemIdOf(target), currentRoutineDate ?: Dates.today()
+                        )
+                    }
+                    stop()
                 }
-                stop()
             }
             else -> if (id >= 0) ring(intent!!, id) else stop()
         }
@@ -75,8 +79,18 @@ class AlarmService : Service() {
         return START_NOT_STICKY
     }
 
-    /** Starts (or restarts) ringing. A second START replaces the first rather than stacking. */
+    /** True for a STOP/SNOOZE aimed at an alarm other than the one ringing now. */
+    private fun isStale(id: Long) = id >= 0 && ringJob != null && id != currentId
+
+    /**
+     * Starts (or restarts) ringing. A second START for the same alarm replaces the first rather
+     * than stacking; a START for a different one first rings the current one out, so it still
+     * leaves its missed notification (or routine check-in) behind instead of vanishing.
+     */
     private fun ring(intent: Intent, id: Long) {
+        if (ringJob != null && currentId >= 0 && currentId != id) {
+            ringOut("Missed - another alarm went off while this one was ringing.")
+        }
         silence()
 
         currentId = id
@@ -86,7 +100,7 @@ class AlarmService : Service() {
         val vibrate = intent.getBooleanExtra(EXTRA_VIBRATE, true)
         currentRoutineDate = intent.getStringExtra(EXTRA_ROUTINE_DATE)
 
-        AlarmState.ringing.value = id
+        AlarmState.ringing.value = AlarmState.Ringing(id, currentLabel, currentSnooze)
 
         // The user's own alarm volume is theirs. If they have muted the stream we say so in the
         // notification instead of overriding it - a silent alarm they chose beats a shock.
@@ -111,19 +125,21 @@ class AlarmService : Service() {
 
         ringJob = scope.launch {
             delay(ringSeconds * 1000L)
-            if (RoutineScheduler.isRoutineRing(currentId)) {
-                // A routine alarm that rang out still asks the question, so the tracker gets an answer.
-                RoutineActions.alarmRangOut(
-                    this@AlarmService, RoutineScheduler.itemIdOf(currentId), currentRoutineDate ?: Dates.today()
-                )
-            } else {
-                // Rang itself out: leave a plain notification behind so the miss is visible later.
-                Notifications.show(
-                    this@AlarmService, currentId.toInt(), currentLabel,
-                    "Missed - the alarm rang for ${ringSeconds}s with no answer."
-                )
-            }
+            ringOut("Missed - the alarm rang for ${ringSeconds}s with no answer.")
             stop()
+        }
+    }
+
+    /** What an unanswered alarm leaves behind. [missedBody] is for ordinary reminders. */
+    private fun ringOut(missedBody: String) {
+        if (RoutineScheduler.isRoutineRing(currentId)) {
+            // A routine alarm that rang out still asks the question, so the tracker gets an answer.
+            RoutineActions.alarmRangOut(
+                this, RoutineScheduler.itemIdOf(currentId), currentRoutineDate ?: Dates.today()
+            )
+        } else {
+            // Rang itself out: leave a plain notification behind so the miss is visible later.
+            Notifications.show(this, currentId.toInt(), currentLabel, missedBody)
         }
     }
 
@@ -142,7 +158,8 @@ class AlarmService : Service() {
         scope.launch {
             val reminder: Reminder? = withContext(Dispatchers.IO) { repo?.reminder(id) }
             if (reminder != null) ReminderScheduler.snooze(this@AlarmService, reminder)
-            stop()
+            // Another alarm may have started ringing during the lookup; leave that one alone.
+            if (ringJob == null) stop()
         }
     }
 

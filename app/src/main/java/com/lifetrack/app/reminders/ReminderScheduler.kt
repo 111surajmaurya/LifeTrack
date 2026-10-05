@@ -115,7 +115,9 @@ object ReminderScheduler {
         val pi = pendingSnooze(context, r.id)
         am.cancel(pi)
         val minutes = r.snoozeMinutes.coerceIn(1, 120)
-        fire(context, am, System.currentTimeMillis() + minutes * 60_000L, pi)
+        val at = System.currentTimeMillis() + minutes * 60_000L
+        SnoozeStore.saveReminder(context, r.id, at)   // so a reboot mid-snooze can re-arm it
+        fire(context, am, at, pi)
     }
 
     internal fun fire(context: Context, am: AlarmManager, at: Long, pi: PendingIntent) {
@@ -136,10 +138,20 @@ object ReminderScheduler {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
         am.cancel(pending(context, id))
         am.cancel(pendingSnooze(context, id))   // a pending snooze outlives the row otherwise
+        SnoozeStore.clearReminder(context, id)
     }
 
-    fun rescheduleAll(context: Context, reminders: List<Reminder>) =
+    /** Every recurring alarm, plus any snooze still due - reboots clear both. */
+    fun rescheduleAll(context: Context, reminders: List<Reminder>) {
         reminders.forEach { schedule(context, it) }
+        val am = context.getSystemService(AlarmManager::class.java) ?: return
+        val snoozes = SnoozeStore.reminders(context)
+        reminders.forEach { r ->
+            val at = snoozes[r.id] ?: return@forEach
+            // Same PendingIntent as the original, so an alarm that survived is just replaced.
+            fire(context, am, at, pendingSnooze(context, r.id))
+        }
+    }
 
     private fun pending(context: Context, id: Long): PendingIntent =
         PendingIntent.getBroadcast(

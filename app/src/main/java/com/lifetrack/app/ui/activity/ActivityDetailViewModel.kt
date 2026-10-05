@@ -52,6 +52,11 @@ data class ActivityDetailUi(
     val today: Double? = null,
     /** Percent change against the window before this one, on a like-for-like daily average. */
     val delta: Double = 0.0,
+    /**
+     * Whether [delta] means anything: there has to be a previous window to compare with, and
+     * a half-finished today against a whole yesterday would read as a collapse every morning.
+     */
+    val hasComparison: Boolean = false,
     val stats: DetailStats = DetailStats()
 ) {
     val isEmpty: Boolean get() = series.isEmpty()
@@ -107,6 +112,7 @@ class ActivityDetailViewModel(private val repo: Repository) : ViewModel() {
             series = series,
             today = series.firstOrNull { it.date == to }?.value,
             delta = delta,
+            hasComparison = before > 0.0 && request.window != DetailWindow.Today,
             stats = DetailStats(
                 average = average,
                 total = logged.sumOf { it.value },

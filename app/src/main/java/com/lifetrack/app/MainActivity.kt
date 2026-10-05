@@ -1,13 +1,18 @@
 package com.lifetrack.app
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Slot
+import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.screentime.UsageSync
 import com.lifetrack.app.ui.LifeTrackNav
 import com.lifetrack.app.ui.theme.LifeTrackTheme
@@ -17,9 +22,21 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    /**
+     * The day every screen was built for. Screens fix "today" when they are created, so a phone
+     * that kept the app in memory overnight would open on yesterday's numbers - instead the
+     * whole activity is rebuilt as soon as the date moves on.
+     */
+    private var builtFor: String = Dates.today()
+
+    private val dayWatcher = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) { restartIfNewDay() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        builtFor = Dates.today()
 
         // No permission dialogs here: every access is asked for from the Settings tab, which a
         // fresh install opens on, so nothing is requested before its purpose has been shown.
@@ -38,6 +55,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (isFinishing) {
+            // Already handed over to a fresh instance for the new day; pass the tap along.
+            if (intent.hasExtra(EXTRA_ROUTE)) {
+                startActivity(Intent(intent).setClass(this, MainActivity::class.java))
+            }
+            return
+        }
         setIntent(intent)
         handleDeepLink(intent)
     }
@@ -71,6 +95,35 @@ class MainActivity : ComponentActivity() {
                 .apply { if (slot != null) putExtra(EXTRA_SLOT, slot) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (restartIfNewDay()) return
+        // DATE_CHANGED covers midnight passing with the app on screen; the others a clock or zone change.
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_DATE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        }
+        ContextCompat.registerReceiver(this, dayWatcher, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+    }
+
+    override fun onStop() {
+        runCatching { unregisterReceiver(dayWatcher) }
+        super.onStop()
+    }
+
+    /** Rebuilds the activity, and with it every screen's view model, when today isn't [builtFor]. */
+    private fun restartIfNewDay(): Boolean {
+        if (Dates.today() == builtFor || isFinishing) return false
+        val next = Intent(this, MainActivity::class.java)
+        pendingRoute.value?.let { next.putExtra(EXTRA_ROUTE, it) }
+        startActivity(next)
+        finish()
+        @Suppress("DEPRECATION")
+        overridePendingTransition(0, 0)
+        return true
+    }
+
     /**
      * Screen time is the one figure that keeps moving while the app is closed, so take a
      * snapshot every time we come back rather than only when its own tab is opened.
@@ -80,6 +133,8 @@ class MainActivity : ComponentActivity() {
         val repo = (application as LifeTrackApp).repository
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching { UsageSync.snapshotToday(this@MainActivity, repo) }
+            // Back from a settings page, an access may have just been switched on or off.
+            runCatching { LimitWatchService.sync(this@MainActivity) }
         }
     }
 }

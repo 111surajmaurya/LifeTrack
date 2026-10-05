@@ -7,12 +7,14 @@ import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.HabitKind
 import com.lifetrack.app.data.Metric
 import com.lifetrack.app.data.Repository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlin.math.roundToInt
 
 // ---------------------------------------------------------------- helpers
@@ -354,17 +356,29 @@ class HomeViewModel(repo: Repository) : ViewModel() {
         )
     }
 
-    private val alarms: Flow<AlarmsCard> = repo.reminders.map { list ->
-        val next = list.filter { it.enabled }
-            .mapNotNull { r -> Dates.nextTrigger(r.hour, r.minute, r.daysMask)?.let { r to it } }
-            .minByOrNull { it.second }
-        AlarmsCard(
-            nextLabel = next?.first?.label,
-            nextClock = next?.first?.let { Dates.clockLabel(it.hour, it.minute) },
-            nextAt = next?.second,
-            enabledCount = list.count { it.enabled },
-            total = list.size
-        )
+    /**
+     * The next alarm is re-derived when it goes off, not only when the reminders change -
+     * otherwise the countdown would sit on "in under a minute" for an alarm already past.
+     * The wait is capped at a minute so a clock or time-zone change is picked up soon too.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val alarms: Flow<AlarmsCard> = repo.reminders.transformLatest { list ->
+        while (true) {
+            val next = list.filter { it.enabled }
+                .mapNotNull { r -> Dates.nextTrigger(r.hour, r.minute, r.daysMask)?.let { r to it } }
+                .minByOrNull { it.second }
+            emit(
+                AlarmsCard(
+                    nextLabel = next?.first?.label,
+                    nextClock = next?.first?.let { Dates.clockLabel(it.hour, it.minute) },
+                    nextAt = next?.second,
+                    enabledCount = list.count { it.enabled },
+                    total = list.size
+                )
+            )
+            val at = next?.second ?: break
+            delay((at - System.currentTimeMillis() + 1).coerceIn(1L, ALARM_RECHECK_MS))
+        }
     }
 
     val state: StateFlow<HomeState> =
@@ -381,3 +395,6 @@ class HomeViewModel(repo: Repository) : ViewModel() {
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
 }
+
+/** The longest the next-alarm card goes without re-deriving itself. */
+private const val ALARM_RECHECK_MS = 60_000L

@@ -6,6 +6,7 @@ import com.lifetrack.app.data.Repository
 import com.lifetrack.app.data.TrackingStart
 import com.lifetrack.app.reminders.Notifications
 import com.lifetrack.app.reminders.ReminderScheduler
+import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.screentime.UsageSync
 import com.lifetrack.app.reminders.RoutineScheduler
 import com.lifetrack.app.steps.StepRecorder
@@ -13,6 +14,8 @@ import com.lifetrack.app.steps.StepSyncJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class LifeTrackApp : Application() {
@@ -46,6 +49,14 @@ class LifeTrackApp : Application() {
             // Both are no-ops without their permission and neither throws.
             runCatching { UsageSync.snapshotToday(this@LifeTrackApp, repository) }
             runCatching { StepRecorder.syncNow(this@LifeTrackApp, repository) }
+        }
+
+        // Setting or clearing a limit starts or stops the limit watcher.
+        scope.launch {
+            repository.trackedApps
+                .map { apps -> apps.any { it.dailyLimitMin > 0 } }
+                .distinctUntilChanged()
+                .collect { runCatching { LimitWatchService.sync(this@LifeTrackApp) } }
         }
     }
 }

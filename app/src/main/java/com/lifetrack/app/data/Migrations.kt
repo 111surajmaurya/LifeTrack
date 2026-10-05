@@ -267,4 +267,13 @@ object Migrations {
             "`date` TEXT NOT NULL, `hour` INTEGER NOT NULL, `steps` REAL NOT NULL, " +
             "`source` TEXT NOT NULL, PRIMARY KEY(`date`, `hour`))"
     )
+
+    /**
+     * v11: the burn goal's default drops from 400 to 250 kcal. Burn used to be the phone's all-day
+     * "active calories" (~3x the walk); it is now the walk itself, so 400 meant ~22,000 steps.
+     * Only the untouched default moves - a goal the user typed in stays as it is. No schema change.
+     */
+    val V10_TO_V11: List<String> = listOf(
+        "UPDATE `settings` SET `burnGoalKcal` = 250 WHERE `burnGoalKcal` = 400"
+    )
 }

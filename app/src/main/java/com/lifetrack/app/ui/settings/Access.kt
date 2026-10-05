@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.Settings
 import com.lifetrack.app.reminders.Notifications
 import com.lifetrack.app.reminders.ReminderScheduler
-import com.lifetrack.app.screentime.LimitGuardService
+import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.screentime.UsageReader
 import com.lifetrack.app.steps.HealthConnectSteps
 import com.lifetrack.app.steps.HealthSync
@@ -42,7 +42,7 @@ enum class Access(val title: String, val purpose: String, val group: String) {
         "Usage access", "Reads how long each tracked app was open today. Nothing else.", GROUP_SCREEN
     ),
     LimitBlocking(
-        "Limit blocking", "Closes a tracked app once it passes its daily limit. Never reads the screen.", GROUP_SCREEN
+        "Limit blocking", "Display over other apps: lets LifeTrack put the limit screen over a tracked app once its daily limit is used up.", GROUP_SCREEN
     );
 }
 
@@ -74,7 +74,7 @@ suspend fun readAccess(context: Context): Map<Access, AccessState> {
         },
         Access.PhysicalActivity to on(StepRecorder.sensorGranted(app)),
         Access.UsageAccess to on(UsageReader.hasPermission(app)),
-        Access.LimitBlocking to on(LimitGuardService.isEnabled(app))
+        Access.LimitBlocking to on(LimitWatchService.canShowOverApps(app))
     )
 }
 
@@ -93,7 +93,7 @@ fun manageIntent(context: Context, access: Access): Intent? {
         Access.HealthConnect, Access.HealthBackground -> HealthConnectSteps.openIntent()
         Access.PhysicalActivity -> appDetails
         Access.UsageAccess -> UsageReader.settingsIntent()
-        Access.LimitBlocking -> LimitGuardService.settingsIntent()
+        Access.LimitBlocking -> LimitWatchService.overlaySettingsIntent(context)
     }?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 }
 

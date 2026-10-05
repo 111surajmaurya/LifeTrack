@@ -225,4 +225,16 @@ object Routine {
     }
 
     fun tomorrow(today: LocalDate = LocalDate.now()): String = Dates.format(today.plusDays(1))
+
+    /** Before this hour the night isn't over yet, so "tomorrow" still means the coming day. */
+    const val PLAN_DAY_ROLLOVER_HOUR = 4
+
+    /**
+     * The day the plan screen plans. Answering the 10 PM nudge at half past midnight is still
+     * planning the day about to start - which by the calendar is already today. Saving a plan
+     * for that day credits the night before it, as always (see [RoutineEvidence.planSavedForNextDay]).
+     */
+    fun planDate(now: LocalDateTime = LocalDateTime.now()): String =
+        if (now.hour < PLAN_DAY_ROLLOVER_HOUR) Dates.format(now.toLocalDate())
+        else Dates.format(now.toLocalDate().plusDays(1))
 }

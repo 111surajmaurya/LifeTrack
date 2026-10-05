@@ -62,9 +62,12 @@ fun PlanScreen(
     val context = LocalContext.current
     val rows = remember { mutableStateListOf<RoutinePlan>() }
     var editing by remember { mutableStateOf<Int?>(null) }
-    val date = Dates.shift(ui.today, 1)
+    // Tomorrow - or today, if this is the 10 PM job done after midnight. Fixed by the seed, so a
+    // screen left open across 4 AM still saves to the day it showed.
+    val date = rows.firstOrNull()?.date ?: ui.planDate
+    val forToday = date == ui.today
 
-    // Seed once from what tomorrow currently looks like (a saved plan, or the defaults).
+    // Seed once from what that day currently looks like (a saved plan, or the defaults).
     LaunchedEffect(ui.loaded) {
         if (ui.loaded && rows.isEmpty()) {
             rows += ui.tomorrow.map { RoutinePlan(date, it.item.id, it.hour, it.minute, it.enabled) }
@@ -84,7 +87,7 @@ fun PlanScreen(
                 }
                 Spacer(Modifier.width(Space.xs))
                 ScreenHeader(
-                    title = "Plan tomorrow",
+                    title = if (forToday) "Plan today" else "Plan tomorrow",
                     subtitle = Dates.longLabel(date),
                     modifier = Modifier.weight(1f)
                 )
@@ -92,7 +95,7 @@ fun PlanScreen(
         }
         item {
             Text(
-                "Tap a time to move it, or switch an item off for tomorrow only. Your usual times " +
+                "Tap a time to move it, or switch an item off for ${if (forToday) "today" else "tomorrow"} only. Your usual times " +
                     "stay as they are - change those in Alarms → Daily routine.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

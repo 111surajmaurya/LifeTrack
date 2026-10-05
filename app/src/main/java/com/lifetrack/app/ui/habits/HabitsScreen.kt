@@ -252,7 +252,7 @@ private fun TrackedTile(
     modifier: Modifier = Modifier
 ) {
     val tick by now.collectAsStateWithLifecycle()
-    val live = banked + if (runningSince != null) (tick - runningSince).coerceAtLeast(0L) else 0L
+    val live = banked + if (runningSince != null) runningToday(runningSince, tick) else 0L
     StatTile(
         label = "Tracked",
         value = Dates.formatDuration(live),
@@ -406,7 +406,7 @@ private fun RunningBlock(
     val a = accents()
     val tick by now.collectAsStateWithLifecycle()
     val elapsed = (tick - since).coerceAtLeast(0L)
-    val today = row.millisToday + elapsed
+    val today = row.millisToday + runningToday(since, tick)
     val progress = if (row.goal > 0) (today / row.goal).toFloat() else 0f
 
     Row(verticalAlignment = Alignment.CenterVertically) {

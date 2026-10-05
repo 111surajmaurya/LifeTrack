@@ -20,6 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val routineId = intent.getLongExtra(RoutineScheduler.EXTRA_ROUTINE_ID, -1)
         if (routineId >= 0) {
+            if (fromSnooze) SnoozeStore.clearRoutine(context, routineId)
             val date = intent.getStringExtra(RoutineScheduler.EXTRA_ROUTINE_DATE) ?: Dates.today()
             val pending = goAsync()
             CoroutineScope(Dispatchers.IO).launch {
@@ -40,6 +41,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val id = intent.getLongExtra(ReminderScheduler.EXTRA_ID, -1)
         if (id < 0) return
+        if (fromSnooze) SnoozeStore.clearReminder(context, id)
         // A receiver gets about ten seconds; the row read is off the main thread either way.
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
@@ -58,7 +60,7 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun fireRoutine(context: Context, item: RoutineItem, date: String) {
-        if (!item.isAlarm) {
+        if (!item.isAlarm || !Notifications.alarmsVisible(context)) {
             Notifications.showRoutine(context, item, date)
             return
         }
@@ -78,8 +80,16 @@ class AlarmReceiver : BroadcastReceiver() {
     /**
      * The exact alarm that woke us carries a short foreground-service exemption, which is what
      * makes starting the service legal from the background here.
+     *
+     * With notifications blocked the ring would have no screen and no shade controls, so it
+     * could only be waited out. The plain notification path is used instead, which posts if it
+     * can and is otherwise silent - the Alarms screen already flags notifications as the problem.
      */
     private fun startAlarm(context: Context, r: Reminder) {
+        if (!Notifications.alarmsVisible(context)) {
+            Notifications.showReminder(context, r.id, r.label)
+            return
+        }
         runCatching {
             ContextCompat.startForegroundService(context, AlarmService.startIntent(context, r))
         }.onFailure {

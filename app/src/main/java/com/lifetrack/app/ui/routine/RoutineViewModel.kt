@@ -43,7 +43,12 @@ data class RoutineUi(
     val today: String = Dates.today(),
     val items: List<RoutineItem> = emptyList(),
     val tracks: List<ItemTrack> = emptyList(),
-    /** Tomorrow as it stands - the plan if one was saved, the defaults otherwise. */
+    /**
+     * The day being planned: tomorrow, or today in the small hours ([Routine.planDate]) so a
+     * plan made after midnight lands on the day it was meant for.
+     */
+    val planDate: String = Routine.planDate(),
+    /** [planDate] as it stands - the plan if one was saved, the defaults otherwise. */
     val tomorrow: List<RoutineSlot> = emptyList(),
     val tomorrowPlanned: Boolean = false,
     /** Hit rate per day, oldest first, for the trend strip. */
@@ -126,8 +131,11 @@ class RoutineViewModel(private val repo: Repository, private val startedAt: Long
                 hitRate = Routine.hitRate(days)
             )
         }
+        // A plan for day D is what credits D-1's "Plan tomorrow" (the evidence above), so
+        // planning [planDate] after midnight ticks last night's item, not tonight's.
+        val planDate = Routine.planDate(now)
         val tomorrowSlots = i.items.map { item ->
-            Routine.resolve(item, tomorrow, plans[tomorrow to item.id], null, RoutineEvidence(), now)
+            Routine.resolve(item, planDate, plans[planDate to item.id], null, RoutineEvidence(), now)
         }.sortedBy { it.minuteOfDay }
 
         return RoutineUi(
@@ -135,8 +143,9 @@ class RoutineViewModel(private val repo: Repository, private val startedAt: Long
             today = today,
             items = i.items,
             tracks = tracks,
+            planDate = planDate,
             tomorrow = tomorrowSlots,
-            tomorrowPlanned = tomorrow in plannedDates,
+            tomorrowPlanned = planDate in plannedDates,
             dailyRates = dates.mapIndexed { index, d -> d to Routine.hitRate(tracks.map { it.days[index] }) }
         )
     }

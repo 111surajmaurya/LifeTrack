@@ -237,4 +237,10 @@ class DatesTest {
         assertEquals(0, local(start).hour)
         assertEquals(0, local(start).minute)
     }
+
+    @Test fun `a timer started before midnight belongs to the evening it started`() {
+        val zone = ZoneId.systemDefault()
+        val start = LocalDateTime.of(2026, 8, 10, 23, 30).atZone(zone).toInstant().toEpochMilli()
+        assertEquals("2026-08-10", Dates.ofMillis(start))
+    }
 }

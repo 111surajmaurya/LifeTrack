@@ -21,8 +21,10 @@ object UsageReader {
     private const val RESUMED = 1   // ACTIVITY_RESUMED / MOVE_TO_FOREGROUND
     private const val PAUSED = 2    // ACTIVITY_PAUSED / MOVE_TO_BACKGROUND
     private const val STOPPED = 23  // ACTIVITY_STOPPED (API 29+)
+    private const val DEVICE_SHUTDOWN = 26
+    private const val DEVICE_STARTUP = 27
 
-    private const val DAY_MILLIS = 24L * 60 * 60 * 1000
+    private const val LOOKBACK_MILLIS = 6L * 60 * 60 * 1000
 
     fun hasPermission(context: Context): Boolean {
         val ops = context.getSystemService(AppOpsManager::class.java)
@@ -56,61 +58,69 @@ object UsageReader {
     ): Map<String, Long> {
         if (!hasPermission(context) || packages.isEmpty() || endMillis <= startMillis) return emptyMap()
         val usm = context.getSystemService(UsageStatsManager::class.java) ?: return emptyMap()
-        // A session still open when the window closes counts only up to the window edge.
-        val cap = minOf(endMillis, System.currentTimeMillis())
-
-        val totals = HashMap<String, Long>()
-        val openSince = HashMap<String, Long>()
+        val events = ArrayList<Ev>()
         try {
-            val events = usm.queryEvents(startMillis, endMillis)
+            // Read from a few hours earlier so a session opened before the window (an app
+            // left open over midnight) is known to be running when the window starts.
+            val stream = usm.queryEvents(startMillis - LOOKBACK_MILLIS, endMillis)
             val e = UsageEvents.Event()
-            while (events.hasNextEvent()) {
-                events.getNextEvent(e)
+            while (stream.hasNextEvent()) {
+                stream.getNextEvent(e)
                 val pkg = e.packageName ?: continue
-                if (pkg !in packages) continue
-                when (e.eventType) {
-                    RESUMED -> openSince.putIfAbsent(pkg, e.timeStamp)
-                    PAUSED, STOPPED -> {
-                        openSince.remove(pkg)?.let { since ->
-                            totals[pkg] = (totals[pkg] ?: 0L) + (e.timeStamp - since).coerceAtLeast(0)
-                        }
-                    }
-                }
+                val kind = e.eventType
+                val device = kind == DEVICE_SHUTDOWN || kind == DEVICE_STARTUP
+                if (!device && pkg !in packages) continue
+                events += Ev(pkg, e.className, kind, e.timeStamp)
             }
         } catch (t: Throwable) {
             // Some OEM builds throw out of queryEvents even with the op allowed.
             return emptyMap()
         }
-        openSince.forEach { (pkg, since) ->
-            totals[pkg] = (totals[pkg] ?: 0L) + (cap - since).coerceAtLeast(0)
-        }
-        return totals
+        return tally(events, startMillis, minOf(endMillis, System.currentTimeMillis()))
     }
 
+    /** One raw usage event, kept apart from the framework type so [tally] can be tested. */
+    data class Ev(val pkg: String, val cls: String?, val type: Int, val at: Long)
+
     /**
-     * True when [pkg]'s last event in the past few hours is a RESUMED with no PAUSED after it,
-     * i.e. it is on screen right now. Used to re-check a limit only while the app is still open.
+     * Foreground time per package inside [startMillis]..[capMillis] from time-ordered events.
+     *
+     * Activities are tracked one by one, not per package: moving from screen A to screen B in
+     * the same app goes A paused, B resumed, then A *stopped* a moment later, and pairing by
+     * package let that late stop end B's session after a few hundred milliseconds. A package
+     * counts as in front while any of its activities is resumed.
      */
-    fun isForeground(context: Context, pkg: String): Boolean {
-        if (!hasPermission(context)) return false
-        val usm = context.getSystemService(UsageStatsManager::class.java) ?: return false
-        val now = System.currentTimeMillis()
-        var open = false
-        try {
-            val events = usm.queryEvents(now - 6 * 60 * 60 * 1000L, now)
-            val e = UsageEvents.Event()
-            while (events.hasNextEvent()) {
-                events.getNextEvent(e)
-                if (e.packageName != pkg) continue
-                when (e.eventType) {
-                    RESUMED -> open = true
-                    PAUSED, STOPPED -> open = false
+    fun tally(events: List<Ev>, startMillis: Long, capMillis: Long): Map<String, Long> {
+        val totals = HashMap<String, Long>()
+        val resumed = HashMap<String, MutableSet<String?>>()
+        val since = HashMap<String, Long>()
+
+        fun close(pkg: String, at: Long) {
+            val from = since.remove(pkg) ?: return
+            val ms = minOf(at, capMillis) - maxOf(from, startMillis)
+            if (ms > 0) totals[pkg] = (totals[pkg] ?: 0L) + ms
+        }
+
+        for (e in events) {
+            when (e.type) {
+                RESUMED -> {
+                    val open = resumed.getOrPut(e.pkg) { HashSet() }
+                    if (open.isEmpty()) since[e.pkg] = e.at
+                    open += e.cls
+                }
+                PAUSED, STOPPED -> {
+                    val open = resumed[e.pkg] ?: continue
+                    if (open.remove(e.cls) && open.isEmpty()) close(e.pkg, e.at)
+                }
+                DEVICE_SHUTDOWN, DEVICE_STARTUP -> {
+                    // Nothing survives a restart: whatever was open ended when the phone went down.
+                    since.keys.toList().forEach { close(it, e.at) }
+                    resumed.clear()
                 }
             }
-        } catch (t: Throwable) {
-            return false
         }
-        return open
+        since.keys.toList().forEach { close(it, capMillis) }
+        return totals
     }
 
     /**
@@ -131,20 +141,25 @@ object UsageReader {
         for (back in days downTo 1) {
             val date = Dates.shift(today, -back.toLong())
             val start = Dates.startOfDayMillis(date)
-            val end = start + DAY_MILLIS - 1
-            val perPackage = HashMap<String, Long>()
+            val end = Dates.startOfDayMillis(Dates.shift(date, 1))   // 23 or 25 h on a DST day
+            // A calendar day overlaps two of the OS's daily buckets, which don't start at local
+            // midnight. Adding both nearly doubled the day, so each package takes the one bucket
+            // that covers most of it.
+            val best = HashMap<String, Pair<Long, Long>>()   // package -> (overlap, foreground)
             try {
-                val stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, start, end)
+                val stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, start, end - 1)
                 stats?.forEach { s ->
                     val pkg = s.packageName ?: return@forEach
                     if (pkg !in packages) return@forEach
+                    val overlap = minOf(end, s.lastTimeStamp) - maxOf(start, s.firstTimeStamp)
                     val fg = s.totalTimeInForeground
-                    if (fg > 0) perPackage[pkg] = (perPackage[pkg] ?: 0L) + fg
+                    if (fg <= 0 || overlap <= 0) return@forEach
+                    if (overlap > (best[pkg]?.first ?: 0L)) best[pkg] = overlap to fg
                 }
             } catch (t: Throwable) {
                 continue
             }
-            if (perPackage.isNotEmpty()) out[date] = perPackage
+            if (best.isNotEmpty()) out[date] = best.mapValues { it.value.second }
         }
         return out
     }

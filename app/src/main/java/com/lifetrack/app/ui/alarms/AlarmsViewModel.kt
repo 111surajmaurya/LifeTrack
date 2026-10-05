@@ -74,7 +74,18 @@ class AlarmsViewModel(private val repo: Repository) : ViewModel() {
     /** Permissions can change while the app is backgrounded, so the screen re-checks on resume. */
     fun refreshHealth(context: Context) {
         Notifications.ensureChannels(context)
-        health.value = ReminderScheduler.health(context.applicationContext)
+        val app = context.applicationContext
+        val before = health.value
+        val now = ReminderScheduler.health(app)
+        health.value = now
+        // Just came back from granting exact alarms: everything armed so far is the inexact
+        // fallback, which Doze can push back by hours, so re-arm it all as exact.
+        if (before != null && !before.exactAlarms && now.exactAlarms) {
+            viewModelScope.launch {
+                runCatching { ReminderScheduler.rescheduleAll(app, repo.enabledReminders()) }
+                runCatching { RoutineScheduler.rescheduleAll(app, repo) }
+            }
+        }
     }
 
     fun save(context: Context, reminder: Reminder) {

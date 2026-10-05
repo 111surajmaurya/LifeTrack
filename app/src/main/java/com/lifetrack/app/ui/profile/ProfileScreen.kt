@@ -100,8 +100,12 @@ fun ProfileScreen(
     val preview = state.previewOf(heightValue, weightValue, ageValue, sex, level)
 
     // Saving on every keystroke would be noisy and would fight the auto-recalculation, so the
-    // profile commits when a field settles rather than on a Save button.
-    fun commit() = vm.save(heightValue, weightValue, ageValue, sex, level)
+    // profile commits when a field settles rather than on a Save button. The field that just
+    // changed passes its new text in: the state write has not recomposed yet, so reading the
+    // derived values here would save the previous keystroke ("175" would store 17).
+    fun commit(h: String = height, w: String = weight, a: String = age) = vm.save(
+        h.toFloatOrNull() ?: 0f, w.toFloatOrNull() ?: 0f, a.toIntOrNull() ?: 0, sex, level
+    )
 
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -133,9 +137,9 @@ fun ProfileScreen(
             Spacer(Modifier.height(Space.md))
             LifeCard {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    ProfileField("Height", "cm", height, { height = it }, ::commit, Modifier.weight(1f))
-                    ProfileField("Weight", "kg", weight, { weight = it }, ::commit, Modifier.weight(1f))
-                    ProfileField("Age", "years", age, { age = it }, ::commit, Modifier.weight(1f))
+                    ProfileField("Height", "cm", height, { height = it; commit(h = it) }, Modifier.weight(1f))
+                    ProfileField("Weight", "kg", weight, { weight = it; commit(w = it) }, Modifier.weight(1f))
+                    ProfileField("Age", "years", age, { age = it; commit(a = it) }, Modifier.weight(1f))
                 }
 
                 Spacer(Modifier.height(Space.lg))
@@ -345,15 +349,11 @@ private fun ProfileField(
     unit: String,
     value: String,
     onValue: (String) -> Unit,
-    onCommit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { text ->
-            onValue(text.filter { it.isDigit() }.take(3))
-            onCommit()
-        },
+        onValueChange = { text -> onValue(text.filter { it.isDigit() }.take(3)) },
         label = { Text(label) },
         suffix = { Text(unit, style = MaterialTheme.typography.labelSmall) },
         singleLine = true,

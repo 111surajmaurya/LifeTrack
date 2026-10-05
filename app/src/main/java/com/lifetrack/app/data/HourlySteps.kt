@@ -2,8 +2,9 @@ package com.lifetrack.app.data
 
 import androidx.room.Entity
 import java.time.Instant
-import java.time.LocalDateTime
+import java.time.Duration
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 /**
  * Steps in one clock hour of one day: what draws "when did I walk" on the Activity tab and
@@ -23,10 +24,11 @@ object StepSplit {
      * Steps the hardware counter gained since the last reading. The counter is cumulative since
      * boot, so a drop means the phone restarted and everything on it now is new. With no
      * previous reading there is nothing to subtract from, and guessing would invent a walk.
+     * [rebooted] covers a restart the numbers alone can't show (the new count already past the old).
      */
-    fun delta(previous: Long, current: Long): Long = when {
+    fun delta(previous: Long, current: Long, rebooted: Boolean = false): Long = when {
         previous < 0 -> 0
-        current < previous -> current
+        rebooted || current < previous -> current
         else -> current - previous
     }
 
@@ -43,17 +45,19 @@ object StepSplit {
         zone: ZoneId = ZoneId.systemDefault()
     ): Map<Pair<String, Int>, Double> {
         if (steps <= 0) return emptyMap()
-        val end = LocalDateTime.ofInstant(Instant.ofEpochMilli(toMillis), zone)
+        val end = Instant.ofEpochMilli(toMillis).atZone(zone)
         if (fromMillis <= 0 || toMillis <= fromMillis) {
             return mapOf((Dates.format(end.toLocalDate()) to end.hour) to steps.toDouble())
         }
+        // Walked in real instants, not local clock times, so a DST change or a time-zone hop
+        // neither stretches the gap (counting steps twice) nor runs it backwards (losing them).
         val total = (toMillis - fromMillis).toDouble()
         val out = LinkedHashMap<Pair<String, Int>, Double>()
-        var cursor = LocalDateTime.ofInstant(Instant.ofEpochMilli(fromMillis), zone)
-        while (cursor.isBefore(end)) {
-            val nextHour = cursor.withMinute(0).withSecond(0).withNano(0).plusHours(1)
-            val sliceEnd = if (nextHour.isBefore(end)) nextHour else end
-            val millis = java.time.Duration.between(cursor, sliceEnd).toMillis()
+        var cursor = Instant.ofEpochMilli(fromMillis).atZone(zone)
+        while (cursor.toInstant().isBefore(end.toInstant())) {
+            val nextHour = cursor.truncatedTo(ChronoUnit.HOURS).plusHours(1)
+            val sliceEnd = if (nextHour.toInstant().isBefore(end.toInstant())) nextHour else end
+            val millis = Duration.between(cursor.toInstant(), sliceEnd.toInstant()).toMillis()
             val key = Dates.format(cursor.toLocalDate()) to cursor.hour
             out[key] = (out[key] ?: 0.0) + steps * (millis / total)
             cursor = sliceEnd

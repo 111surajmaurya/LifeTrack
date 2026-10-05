@@ -37,6 +37,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -68,15 +70,15 @@ import java.time.LocalTime
  */
 class AlarmActivity : ComponentActivity() {
 
-    private var reminderId = -1L
-    private var snoozeMinutes = 5
+    // Compose state, because a second alarm can take this same window over (onNewIntent, or
+    // the service switching alarms under it) and the screen has to follow.
+    private var reminderId by mutableLongStateOf(-1L)
+    private var label by mutableStateOf("Alarm")
+    private var snoozeMinutes by mutableIntStateOf(5)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        reminderId = intent.getLongExtra(ReminderScheduler.EXTRA_ID, -1L)
-        val label = intent.getStringExtra(AlarmService.EXTRA_LABEL)?.takeIf { it.isNotBlank() }
-            ?: "Alarm"
-        snoozeMinutes = intent.getIntExtra(AlarmService.EXTRA_SNOOZE_MINUTES, 5)
+        readExtras(intent)
 
         showOverKeyguard()
 
@@ -89,9 +91,18 @@ class AlarmActivity : ComponentActivity() {
         setContent {
             LifeTrackTheme {
                 val ringing by AlarmState.ringing.collectAsStateWithLifecycle()
-                // Dismissed from the shade, rang itself out, or the service died: nothing left
-                // to show, so get out of the user's way.
-                LaunchedEffect(ringing) { if (ringing != reminderId) finish() }
+                LaunchedEffect(ringing) {
+                    val now = ringing
+                    // Dismissed from the shade, rang itself out, or the service died: nothing
+                    // left to show, so get out of the user's way.
+                    if (now == null) finish()
+                    // Another alarm took over before its own full-screen intent got here.
+                    else if (now.id != reminderId) {
+                        reminderId = now.id
+                        label = now.label
+                        snoozeMinutes = now.snoozeMinutes
+                    }
+                }
 
                 AlarmScreen(
                     label = label,
@@ -101,6 +112,19 @@ class AlarmActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    /** singleInstance: a second alarm's full-screen intent lands here, not in a new window. */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        readExtras(intent)
+    }
+
+    private fun readExtras(intent: Intent) {
+        reminderId = intent.getLongExtra(ReminderScheduler.EXTRA_ID, -1L)
+        label = intent.getStringExtra(AlarmService.EXTRA_LABEL)?.takeIf { it.isNotBlank() } ?: "Alarm"
+        snoozeMinutes = intent.getIntExtra(AlarmService.EXTRA_SNOOZE_MINUTES, 5)
     }
 
     private fun showOverKeyguard() {

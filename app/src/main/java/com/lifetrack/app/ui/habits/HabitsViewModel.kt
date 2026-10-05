@@ -256,6 +256,11 @@ class HabitsViewModel(private val repo: Repository) : ViewModel() {
                 )
                 say("$clean added")
             } else {
+                // A counted habit has no stop button, so a timer left running on it could never
+                // be stopped. Bank it while the habit is still timed.
+                if (kind != HabitKind.TIMED && state.value.runningHabitId == existing.id) {
+                    repo.stopTimer()
+                }
                 repo.updateHabit(
                     existing.copy(
                         name = clean, kind = kind.name, dailyGoalMin = minutes,
@@ -288,6 +293,14 @@ internal fun goalLabel(habit: Habit): String = when (habit.kindType) {
     HabitKind.TIMED -> "${Dates.formatMinutes(habit.dailyGoalMin)} a day"
     HabitKind.COUNT -> "${habit.dailyTarget}× a day"
 }
+
+/**
+ * How much of a running timer belongs to today's figures. A stopped session is banked to the
+ * day it started, so a timer begun before midnight adds nothing to today - the stopwatch
+ * still shows the whole run, but today's total must match what stopping will actually save.
+ */
+internal fun runningToday(since: Long, now: Long): Long =
+    if (Dates.ofMillis(since) == Dates.ofMillis(now)) (now - since).coerceAtLeast(0L) else 0L
 
 /** Formats a raw figure in the habit's own unit: "12m 30s" for timed, "5×" for counted. */
 internal fun amountLabel(habit: Habit, value: Double): String = when (habit.kindType) {

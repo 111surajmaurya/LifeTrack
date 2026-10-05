@@ -215,7 +215,7 @@ private fun TomorrowCard(ui: RoutineUi, onPlan: () -> Unit) {
     val a = accents()
     LifeCard(accent = if (ui.tomorrowPlanned) a.positive else a.caution, onClick = onPlan) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            SectionLabel("Tomorrow", Modifier.weight(1f))
+            SectionLabel(if (ui.planDate == ui.today) "Today" else "Tomorrow", Modifier.weight(1f))
             Text(
                 if (ui.tomorrowPlanned) "Planned ✓" else "Not planned yet",
                 style = MaterialTheme.typography.labelLarge,
@@ -225,7 +225,7 @@ private fun TomorrowCard(ui: RoutineUi, onPlan: () -> Unit) {
         Spacer(Modifier.height(Space.xs))
         val on = ui.tomorrow.filter { it.enabled }
         Text(
-            if (on.isEmpty()) "Everything is switched off for tomorrow."
+            if (on.isEmpty()) "Everything is switched off for ${if (ui.planDate == ui.today) "today" else "tomorrow"}."
             else on.joinToString("   ") { "${it.item.emoji} ${Dates.clockLabel(it.hour, it.minute)}" },
             style = MaterialTheme.typography.bodyMedium
         )

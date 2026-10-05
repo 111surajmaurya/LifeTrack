@@ -31,7 +31,10 @@ data class HabitDetailUiState(
     val habit: Habit? = null,
     /** First day of the month the calendar is showing. */
     val anchor: String = Dates.monthStart(Dates.today()),
+    /** The calendar's inline pick. */
     val selected: String? = null,
+    /** The chart's pick, kept apart so tapping the calendar never pops the chart's sheet. */
+    val chartSelected: String? = null,
     /** Day -> figure in the habit's own unit (millis for timed, ticks for counted). */
     val byDate: Map<String, Double> = emptyMap(),
     val calendar: Map<String, CalendarDay> = emptyMap(),
@@ -68,11 +71,13 @@ class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
     private val habitId = MutableStateFlow(0L)
     private val anchor = MutableStateFlow(Dates.monthStart(Dates.today()))
     private val selected = MutableStateFlow<String?>(null)
+    private val chartSelected = MutableStateFlow<String?>(null)
 
     fun load(habitId: Long) {
         if (this.habitId.value != habitId) {
             this.habitId.value = habitId
             selected.value = null
+            chartSelected.value = null
         }
     }
 
@@ -86,6 +91,10 @@ class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
 
     fun selectDay(date: String) {
         selected.value = if (selected.value == date) null else date
+    }
+
+    fun selectChartDay(date: String) {
+        chartSelected.value = if (chartSelected.value == date) null else date
     }
 
     fun deleteSession(session: Session) = viewModelScope.launch { repo.deleteSession(session) }
@@ -115,7 +124,7 @@ class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
                 }
             }
 
-    val state: StateFlow<HabitDetailUiState> = combine(data, selected) { d, pick ->
+    val state: StateFlow<HabitDetailUiState> = combine(data, selected, chartSelected) { d, pick, chartPick ->
         val habit = d.habit ?: return@combine HabitDetailUiState(anchor = d.anchor, ready = d.ready)
         val timed = habit.kindType == HabitKind.TIMED
         val byDate: Map<String, Double> =
@@ -144,6 +153,7 @@ class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
             habit = habit,
             anchor = d.anchor,
             selected = pick,
+            chartSelected = chartPick,
             byDate = byDate,
             calendar = calendar,
             weekPoints = Dates.lastDays(7).map { date ->

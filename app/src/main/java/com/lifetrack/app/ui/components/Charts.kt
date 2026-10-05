@@ -107,7 +107,9 @@ fun BarChart(
     valueLabel: (Double) -> String = { "%,.0f".format(it) },
     goalMeansGood: Boolean = true,
     selectedKey: String? = null,
-    onSelect: ((ChartPoint) -> Unit)? = null
+    onSelect: ((ChartPoint) -> Unit)? = null,
+    // Off when the keys aren't dates and the caller prints the selection itself.
+    showFocus: Boolean = true
 ) {
     if (points.isEmpty()) {
         EmptyChart(height, "No data yet")
@@ -195,7 +197,7 @@ fun BarChart(
         }
 
         val focus = points.firstOrNull { it.key == selectedKey }
-        if (focus != null) {
+        if (showFocus && focus != null) {
             Spacer(Modifier.height(Space.sm))
             Text(
                 "${Dates.label(focus.key)}  ·  ${valueLabel(focus.value)}",

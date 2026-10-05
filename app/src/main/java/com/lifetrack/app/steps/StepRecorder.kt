@@ -4,12 +4,14 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import com.lifetrack.app.data.Repository
 import com.lifetrack.app.data.StepSplit
 import com.lifetrack.app.steps.HealthConnectSteps.Status
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.math.abs
 
 /**
  * The one place that brings steps up to date, called by the 15-minute [StepSyncJob], on app
@@ -27,6 +29,10 @@ object StepRecorder {
     private const val PREFS = "step_sensor"
     private const val KEY_COUNT = "last_count"
     private const val KEY_AT = "last_at"
+    private const val KEY_BOOT = "boot_at"
+
+    /** Wall clock minus uptime drifts a little with clock corrections; a reboot moves it far more. */
+    private const val BOOT_TOLERANCE_MS = 60_000L
 
     private val lock = Mutex()
 
@@ -40,6 +46,10 @@ object StepRecorder {
                 val wrote = sync.syncToday()
                 sync.refreshRecent(hourDays)
                 sync.syncHours(hourDays)
+                // Health Connect owns these hours. Forget the sensor's last reading so falling back
+                // to it later counts from then, not from before Health Connect - which would add
+                // every step since on top of the Health Connect numbers already stored.
+                app.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().clear().apply()
                 wrote
             } else {
                 sampleSensor(app, repo)
@@ -58,10 +68,15 @@ object StepRecorder {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val lastCount = prefs.getLong(KEY_COUNT, -1L)
         val lastAt = prefs.getLong(KEY_AT, 0L)
-        val parts = StepSplit.spread(StepSplit.delta(lastCount, count), lastAt, now)
+        // The counter restarts at boot. A drop shows that, but a long gap can hide it (300 before,
+        // 1,200 after), so the boot time is compared too.
+        val bootAt = now - SystemClock.elapsedRealtime()
+        val lastBoot = prefs.getLong(KEY_BOOT, 0L)
+        val rebooted = lastBoot > 0 && abs(bootAt - lastBoot) > BOOT_TOLERANCE_MS
+        val parts = StepSplit.spread(StepSplit.delta(lastCount, count, rebooted), lastAt, now)
         repo.addSensorSteps(parts)
         // Saved after the write: a crash in between re-counts one window rather than losing it.
-        prefs.edit().putLong(KEY_COUNT, count).putLong(KEY_AT, now).apply()
+        prefs.edit().putLong(KEY_COUNT, count).putLong(KEY_AT, now).putLong(KEY_BOOT, bootAt).apply()
         parts.isNotEmpty()
     }
 

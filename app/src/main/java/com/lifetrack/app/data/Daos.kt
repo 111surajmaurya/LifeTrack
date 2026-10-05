@@ -235,6 +235,9 @@ interface TrackedAppDao {
 
     @Query("DELETE FROM app_usage_days WHERE date < :cutoff")
     suspend fun deleteUsageBefore(cutoff: String): Int
+
+    @Query("DELETE FROM app_usage_days WHERE packageName = :pkg")
+    suspend fun deleteUsageFor(pkg: String): Int
 }
 
 @Dao

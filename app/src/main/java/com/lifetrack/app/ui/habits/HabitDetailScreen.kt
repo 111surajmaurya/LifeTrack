@@ -138,7 +138,7 @@ fun HabitDetailScreen(
             )
         }
 
-        item { ChartCard(habit, state, span, accent, vm::selectDay) }
+        item { ChartCard(habit, state, span, accent, vm::selectChartDay) }
 
         item { CalendarCard(habit, state, accent, vm::shiftMonth, vm::selectDay) }
 
@@ -242,7 +242,7 @@ private fun ChartCard(
                 accent = accent,
                 goal = goal,
                 valueLabel = { amountLabel(habit, it) },
-                selectedKey = state.selected,
+                selectedKey = state.chartSelected,
                 onSelect = { point -> onSelect(point.key) }
             )
         } else {
@@ -250,7 +250,7 @@ private fun ChartCard(
                 points = state.monthPoints,
                 accent = accent,
                 goal = goal,
-                selectedKey = state.selected,
+                selectedKey = state.chartSelected,
                 onSelect = { point -> onSelect(point.key) }
             )
         }
@@ -265,7 +265,7 @@ private fun ChartCard(
     // The calendar below keeps its own inline selection; this sheet is for the charts, where
     // there is no room to say anything useful next to a bar.
     val points = if (span == Span.Week) state.weekPoints else state.monthPoints
-    val selectedDay = state.selected
+    val selectedDay = state.chartSelected
     val index = points.indexOfFirst { it.key == selectedDay }
     if (index >= 0 && selectedDay != null) {
         ChartDetailSheet(
@@ -276,7 +276,7 @@ private fun ChartCard(
                 format = { amountLabel(habit, it) },
                 goal = goal
             ),
-            // selectDay toggles, so re-selecting the same day is what clears it.
+            // selectChartDay toggles, so re-selecting the same day is what clears it.
             onDismiss = { onSelect(selectedDay) }
         )
     }

@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Lets the limit screen open over a tracked app while LifeTrack itself is closed -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!--
       SCHEDULE_EXACT_ALARM has to be granted by hand and is denied by default on Android 13+.
@@ -35,7 +38,6 @@
     <!-- Activity: Health Connect (read only) and the hardware sensor fallback -->
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_DISTANCE" />
-    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
     <uses-permission android:name="android.permission.health.READ_SLEEP" />
@@ -133,20 +135,16 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!--
-          Enforces screen-time limits. The user switches it on in Settings > Accessibility; the
-          BIND permission means only the system can bind to it.
+          Enforces screen-time limits from Usage access alone, in the foreground because Android
+          only lets a foreground service watch the app in front and open the limit screen.
         -->
         <service
-            android:name=".screentime.LimitGuardService"
-            android:exported="true"
-            android:label="@string/limit_guard_label"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/limit_guard" />
+            android:name=".screentime.LimitWatchService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Closes an app the user tracks once it passes the daily time limit they set" />
         </service>
 
         <!-- What you see instead of the app once its limit is spent -->
@@ -162,7 +160,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <!-- Not LOCKED_BOOT_COMPLETED: the DB is credential-encrypted, so alarms are
+                     restored at first unlock (BOOT_COMPLETED). -->
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
     </application>

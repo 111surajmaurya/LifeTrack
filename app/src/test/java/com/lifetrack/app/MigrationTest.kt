@@ -767,4 +767,18 @@ class MigrationTest {
             )
         }
     }
+
+    @Test fun `v11 lowers an untouched 400 burn goal and keeps a typed one`() {
+        db("v10.db").use { c ->
+            c.exec(
+                "CREATE TABLE `settings` (`id` INTEGER PRIMARY KEY NOT NULL, `burnGoalKcal` INTEGER NOT NULL)",
+                "INSERT INTO `settings` VALUES (1, 400), (2, 320)"
+            )
+            c.run(Migrations.V10_TO_V11)
+            assertEquals(
+                listOf(250, 320),
+                c.query("SELECT burnGoalKcal FROM settings ORDER BY id").map { (it[0] as Number).toInt() }
+            )
+        }
+    }
 }

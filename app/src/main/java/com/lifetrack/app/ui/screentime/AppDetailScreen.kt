@@ -152,7 +152,7 @@ fun AppDetailScreen(
             HeroPanel(accent = accent) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     SectionLabel("Today", Modifier.weight(1f))
-                    if (state.hasPrevious) DeltaChip(delta = state.deltaPct, higherIsBetter = false)
+                    if (state.hasDelta) DeltaChip(delta = state.deltaPct, higherIsBetter = false)
                 }
                 Spacer(Modifier.height(Space.xs))
                 Text(Dates.formatMinutes(state.minutesToday), style = MetricStyle, color = accent)

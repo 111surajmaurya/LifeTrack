@@ -61,7 +61,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.TrackedApp
-import com.lifetrack.app.screentime.LimitGuardService
+import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.ui.settings.AccessNeededCard
 import com.lifetrack.app.screentime.UsageSync
 import com.lifetrack.app.ui.appViewModel
@@ -104,15 +104,15 @@ fun ScreenTimeScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val a = accents()
 
-    // Switched on in another app's screen (Accessibility), so re-read it on every return.
-    var guardOn by remember { mutableStateOf(LimitGuardService.isEnabled(context)) }
+    // Switched on in a system screen (Display over other apps), so re-read it on every return.
+    var guardOn by remember { mutableStateOf(LimitWatchService.canShowOverApps(context)) }
 
     // The OS keeps usage data to itself; nothing is stored until we snapshot, so every resume does.
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 vm.refresh(context)
-                guardOn = LimitGuardService.isEnabled(context)
+                guardOn = LimitWatchService.canShowOverApps(context)
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)

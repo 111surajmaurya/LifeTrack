@@ -113,9 +113,15 @@ fun LifeTrackNav(pendingRoute: StateFlow<String?>, onRouteHandled: () -> Unit) {
     val backStack by nav.currentBackStackEntryAsState()
     val current = backStack?.destination
 
-    /** Tabs reset to their root: Home is Home, All is the grid. */
+    /**
+     * Tabs reset to their root: Home is Home, All is the grid. Everything pops back to Home -
+     * not to the graph's start destination, which on a fresh install is Settings and is gone
+     * from the stack once setup pops it, so popping to it would pop nothing and tabs would
+     * pile up. Until setup is finished Home was never pushed, and Settings is the bottom.
+     */
     fun switchTab(route: String) = nav.navigate(route) {
-        popUpTo(nav.graph.findStartDestination().id)
+        val homeOnStack = runCatching { nav.getBackStackEntry(Tab.Home.route) }.isSuccess
+        if (homeOnStack) popUpTo(Tab.Home.route) else popUpTo(nav.graph.findStartDestination().id)
         launchSingleTop = true
     }
 

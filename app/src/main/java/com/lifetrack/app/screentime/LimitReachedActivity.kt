@@ -27,7 +27,7 @@ import com.lifetrack.app.ui.theme.Space
 import com.lifetrack.app.ui.theme.accents
 
 /**
- * Shown on top of the home screen when [LimitGuardService] closes an app. There is no
+ * Shown on top of the home screen when [LimitWatchService] closes an app. There is no
  * "five more minutes" button on purpose: the way past a limit is to change it in LifeTrack,
  * which takes long enough to be a decision rather than a reflex.
  */
@@ -90,6 +90,15 @@ class LimitReachedActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * Gone once it's off screen. It is singleInstance, so a copy left behind by pressing Home
+     * would be brought back by the next block still naming the previous app.
+     */
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) finish()
     }
 
     companion object {

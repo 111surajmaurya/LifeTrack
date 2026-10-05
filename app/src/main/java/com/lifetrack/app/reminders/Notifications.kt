@@ -211,6 +211,18 @@ object Notifications {
             .build()
     }
 
+    /**
+     * Whether a ringing alarm's notification would actually be seen. Without it there is no
+     * full-screen screen and no Snooze/Dismiss in the shade - only a sound nobody can stop -
+     * so [AlarmReceiver] does not start [AlarmService] at all when this is false.
+     */
+    fun alarmsVisible(context: Context): Boolean {
+        if (!enabled(context) || !postAllowed(context)) return false
+        val nm = context.getSystemService(NotificationManager::class.java) ?: return true
+        val channel = nm.getNotificationChannel(CHANNEL_ALARMS) ?: return true   // created on first use
+        return channel.importance != NotificationManager.IMPORTANCE_NONE
+    }
+
     /** True when notify() will not throw. Foreground-service notifications post regardless. */
     fun postAllowed(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||

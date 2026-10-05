@@ -140,15 +140,17 @@ private fun DetailHero(ui: ActivityDetailUi) {
                 )
             }
         }
-        Spacer(Modifier.height(Space.sm))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // higherIsBetter comes from the metric: a falling heart rate is the good direction.
-            DeltaChip(ui.delta, higherIsBetter = metric.higherIsBetter)
-            Text(
-                "  vs previous ${ui.window.label.lowercase()}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        if (ui.hasComparison) {
+            Spacer(Modifier.height(Space.sm))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // higherIsBetter comes from the metric: a falling heart rate is the good direction.
+                DeltaChip(ui.delta, higherIsBetter = metric.higherIsBetter)
+                Text(
+                    "  vs previous ${ui.window.label.lowercase()}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         ui.goal?.let { goal ->
             Spacer(Modifier.height(Space.xs))

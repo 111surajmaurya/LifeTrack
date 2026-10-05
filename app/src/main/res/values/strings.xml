@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">LifeTrack</string>
-    <string name="limit_guard_label">LifeTrack screen time limits</string>
-    <string name="limit_guard_description">Closes an app you track in LifeTrack once it passes the daily limit you set. It only watches the apps on your Screen time list, only notices which one is open, and never reads what is on the screen.</string>
 </resources>

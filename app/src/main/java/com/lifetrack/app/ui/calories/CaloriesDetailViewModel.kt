@@ -64,7 +64,8 @@ data class CaloriesDetailState(
     val bestDay: DayValue? get() = logged.minByOrNull { it.value }
     val worstDay: DayValue? get() = logged.maxByOrNull { it.value }
 
-    val hasComparison: Boolean get() = previousAverage > 0
+    /** Not for Today: a half-eaten day against a whole yesterday always reads as a big drop. */
+    val hasComparison: Boolean get() = previousAverage > 0 && window != CalorieWindow.Today
 
     // ---- protein: averaged over the same logged days, and counted the other way round ----
 
