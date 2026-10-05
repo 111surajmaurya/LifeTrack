@@ -327,3 +327,8 @@ answer: nobody can know what was in them.
 re-points the seeded foods at the current figures when it is behind, adding any new ones.
 Foods you created yourself (`custom = 1`) are never touched, even if one shares a name with a
 catalogue entry.
+
+## License
+
+MIT - see [LICENSE](LICENSE). The bundled fonts (SIL Open Font License 1.1) and the food data
+sources are listed in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
