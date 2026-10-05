@@ -4,6 +4,17 @@ A personal Android app for tracking calories, activity, habits, a daily routine,
 Everything lives in one SQLite file on the phone. Nothing is uploaded anywhere, there is no
 account, and no network permission is requested.
 
+## Screenshots
+
+| Home | Calories | Activity |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/home.png" width="240" alt="Home: the day's goals and a card per section"> | <img src="docs/screenshots/calories.png" width="240" alt="Calories: eaten against the goal, protein, fibre, vitamins"> | <img src="docs/screenshots/activity.png" width="240" alt="Activity: steps ring and steps by the hour"> |
+| **Habits** | **Routine** | **Alarms** |
+| <img src="docs/screenshots/habits.png" width="240" alt="Habits: timed habits with today's progress and a 7-day trail"> | <img src="docs/screenshots/routine.png" width="240" alt="Routine: today's fixed day, done or missed"> | <img src="docs/screenshots/alarms.png" width="240" alt="Alarms: the daily routine's alarms and notifications"> |
+| **Screen time** | **Settings** | |
+| <img src="docs/screenshots/screen-time.png" width="240" alt="Screen time: today's time per tracked app and the last 7 days"> | <img src="docs/screenshots/settings.png" width="240" alt="Settings: every kind of access in one list"> | |
+
+
 ## Open it in Android Studio
 
 1. Android Studio → **Open** → pick this folder.
