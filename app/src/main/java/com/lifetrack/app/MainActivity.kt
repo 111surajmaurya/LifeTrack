@@ -35,6 +35,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Health Connect's "privacy policy" link (and Android 14+'s permission-usage screen) land
+        // here; what they want to show is the policy, not the app.
+        if (intent?.action in PRIVACY_ACTIONS) {
+            runCatching { startActivity(privacyPolicyIntent()) }
+            finish()
+            return
+        }
         enableEdgeToEdge()
         builtFor = Dates.today()
 
@@ -87,6 +94,19 @@ class MainActivity : ComponentActivity() {
         const val ROUTE_CALORIES = "calories"
         const val ROUTE_ROUTINE = "routine"
         const val ROUTE_PLAN = "routine/plan"
+
+        /** Published from docs/privacy-policy.md by GitHub Pages. */
+        const val PRIVACY_POLICY_URL = "https://111surajmaurya.github.io/LifeTrack/privacy-policy.html"
+
+        private val PRIVACY_ACTIONS = setOf(
+            "androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE",
+            "android.intent.action.VIEW_PERMISSION_USAGE"
+        )
+
+        /** Opens the policy in the browser; LifeTrack itself has no internet access. */
+        fun privacyPolicyIntent(): Intent =
+            Intent(Intent.ACTION_VIEW, android.net.Uri.parse(PRIVACY_POLICY_URL))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         fun deepLink(context: Context, route: String, slot: String? = null): Intent =
             Intent(context, MainActivity::class.java)

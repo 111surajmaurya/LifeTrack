@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,17 +12,34 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.lifetrack.app"
+        // Permanent once on Play. The Kotlin package (namespace) stays com.lifetrack.app.
+        applicationId = "io.github.surajmaurya.lifetrack"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
     }
 
+    // The upload key lives outside git: keystore.properties (see README, "Release build").
+    // Without it a release build is signed with the debug key - fine for trying it on a phone,
+    // refused by Play.
+    val keystoreFile = rootProject.file("keystore.properties")
+    val upload = if (keystoreFile.exists()) {
+        val props = Properties().apply { keystoreFile.inputStream().use { load(it) } }
+        signingConfigs.create("upload") {
+            storeFile = rootProject.file(props.getProperty("storeFile"))
+            storePassword = props.getProperty("storePassword")
+            keyAlias = props.getProperty("keyAlias")
+            keyPassword = props.getProperty("keyPassword")
+        }
+    } else null
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = upload ?: signingConfigs.getByName("debug")
         }
     }
     compileOptions {

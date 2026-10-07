@@ -135,8 +135,9 @@ a different Settings screen. The Alarms tab shows all of them with a fix button 
 plus a "send a test in 10s" button so the chain can be proven rather than assumed.
 
 - `POST_NOTIFICATIONS` — Android 13+.
-- `SCHEDULE_EXACT_ALARM` — **denied by default on Android 13+**. `USE_EXACT_ALARM` is also
-  declared, which is granted at install and is what actually makes alarms land on the minute.
+- `SCHEDULE_EXACT_ALARM` — **denied by default on Android 13+**, so it is switched on from
+  Settings → Exact alarms. `USE_EXACT_ALARM` (granted at install) is deliberately not declared:
+  Play only allows it for apps whose core purpose is an alarm clock or calendar.
 - Battery optimisation exemption — some OEMs drop alarms without it.
 - `USE_FULL_SCREEN_INTENT` — Android 14+. Without it an alarm degrades to a heads-up
   notification instead of taking over the lock screen.
@@ -327,6 +328,31 @@ answer: nobody can know what was in them.
 re-points the seeded foods at the current figures when it is behind, adding any new ones.
 Foods you created yourself (`custom = 1`) are never touched, even if one shares a name with a
 catalogue entry.
+
+## Release build (Play Store)
+
+App ID `io.github.surajmaurya.lifetrack`, target SDK 36. Release builds are shrunk with R8.
+
+1. Create the upload key once and keep it safe - losing it means asking Google to reset it:
+   ```
+   keytool -genkeypair -v -keystore upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+2. Next to `settings.gradle.kts`, create `keystore.properties` (git-ignored):
+   ```
+   storeFile=upload-key.jks
+   storePassword=...
+   keyAlias=upload
+   keyPassword=...
+   ```
+3. `./gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab`, the file Play wants.
+
+Without `keystore.properties` a release build is signed with the debug key: fine for trying the
+shrunk build on a phone, refused by Play. Bump `versionCode` in `app/build.gradle.kts` for every
+upload.
+
+The privacy policy is `docs/privacy-policy.md`, published by GitHub Pages (repo Settings → Pages →
+branch `main`, folder `/docs`) at https://111surajmaurya.github.io/LifeTrack/privacy-policy.html.
+Settings links to it, and so does Health Connect's permission screen.
 
 ## License
 

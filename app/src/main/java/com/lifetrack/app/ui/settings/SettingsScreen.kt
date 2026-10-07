@@ -1,5 +1,6 @@
 package com.lifetrack.app.ui.settings
 
+import com.lifetrack.app.MainActivity
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -168,6 +170,9 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = Space.xs)
             )
+            TextButton(onClick = { open(context, MainActivity.privacyPolicyIntent()) }) {
+                Text("Privacy policy")
+            }
         }
     }
 }

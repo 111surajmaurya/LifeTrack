@@ -81,9 +81,13 @@ object ReminderScheduler {
             Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
         else null
 
-    @Suppress("BatteryLife") // personal tracker: a missed reminder is the whole failure mode
+    /**
+     * The battery optimisation list, where LifeTrack is switched to "Not optimised". The one-tap
+     * "allow?" dialog needs REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, which Play restricts.
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun batterySettingsIntent(context: Context): Intent =
-        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:${context.packageName}"))
+        Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
 
     fun appNotificationSettingsIntent(context: Context): Intent =
         Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)

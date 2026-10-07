@@ -18,17 +18,11 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!--
-      SCHEDULE_EXACT_ALARM has to be granted by hand and is denied by default on Android 13+.
-      USE_EXACT_ALARM is granted at install time, which is what actually makes a reminder
-      arrive at the minute you set instead of whenever Doze feels like it.
+      SCHEDULE_EXACT_ALARM has to be granted by hand (Settings > Exact alarms) and is denied by
+      default on Android 13+. USE_EXACT_ALARM, granted at install, is left out on purpose: Play
+      only allows it for apps whose core purpose is an alarm clock or calendar.
     -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-
-    <!-- So the app can ask to be left alone by battery optimisation, which otherwise eats alarms -->
-    <uses-permission
-        android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
-        tools:ignore="BatteryLife" />
 
     <!-- Screen time: special permission granted by the user in Settings > Usage access -->
     <uses-permission

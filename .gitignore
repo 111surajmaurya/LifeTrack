@@ -1,6 +1,11 @@
 *.iml
 .gradle
 /local.properties
+
+# Release signing - the upload key and its passwords never go in git
+keystore.properties
+*.jks
+*.keystore
 /.idea
 /build
 /app/build
