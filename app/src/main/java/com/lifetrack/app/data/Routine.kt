@@ -1,5 +1,6 @@
 package com.lifetrack.app.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -40,12 +41,26 @@ data class RoutineItem(
     val kind: String = RoutineKind.MANUAL.name,
     /** For [RoutineKind.MEAL]: which [Slot] counts. Empty otherwise. */
     val slot: String = "",
-    val sortOrder: Int = 0
+    val sortOrder: Int = 0,
+    /**
+     * Taken off the routine by the user. Only seed items are kept like this - the row holds on
+     * to its [key] so the next launch's seeding doesn't add it back. Items the user added are
+     * deleted outright.
+     */
+    @ColumnInfo(defaultValue = "0") val removed: Boolean = false,
+    /**
+     * When the user added it (epoch millis); 0 for seed items. Anything scheduled before this
+     * counts as "off", so an item added at 9 PM for noon doesn't open as a miss.
+     */
+    @ColumnInfo(defaultValue = "0") val createdAt: Long = 0
 ) {
     val modeType: ReminderMode get() = ReminderMode.from(mode)
     val isAlarm: Boolean get() = modeType == ReminderMode.ALARM
     val kindType: RoutineKind get() = RoutineKind.from(kind)
     val minuteOfDay: Int get() = hour * 60 + minute
+
+    /** Added by the user rather than shipped in [Routine.SEED]. */
+    val custom: Boolean get() = key.startsWith(Routine.CUSTOM_KEY_PREFIX)
 }
 
 /** Tomorrow's (or any day's) override for one item: a different time, or the day off. */
@@ -94,6 +109,9 @@ data class RoutineEvidence(
 object Routine {
     const val DONE = "DONE"
     const val MISSED = "MISSED"
+
+    /** Keys of items the user added; seed keys never start with this. */
+    const val CUSTOM_KEY_PREFIX = "custom-"
 
     /** Steps in the two hours after "walk after lunch" that count as having walked. */
     const val WALK_STEPS = 1_000

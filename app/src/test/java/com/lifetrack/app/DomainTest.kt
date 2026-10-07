@@ -465,4 +465,20 @@ class DomainTest {
         assertEquals(262.5, BodyMath.walkingKcal(0.0, 10_000.0, 0f), 0.01)
         assertEquals(0.0, BodyMath.walkingKcal(0.0, 0.0, 70f), 0.0)
     }
+
+    @Test fun `editing an entry's amount carries the micronutrients along`() {
+        val meal = Meal(date = "2026-10-07", name = "Roti", kcal = 200, qty = 2f, serving = Serving.Piece.name,
+            protein = 6f, iron = 2f, vitC = 0f)
+        val edited = meal.edited("Roti", 3f, Portion.Medium, Serving.Piece, Slot.Lunch, kcal = 300, protein = 9f, fiber = 1f)
+        assertEquals(3f, edited.qty)
+        assertEquals(300, edited.kcal)
+        assertEquals(3f, edited.iron, 0.001f)
+        assertEquals(Slot.Lunch, edited.slotType)
+        assertEquals(meal.id, edited.id)
+    }
+
+    @Test fun `a sized helping counts its portion, a piece does not`() {
+        assertEquals(3f, Meal.helpingOf(2f, Portion.Large, Serving.Bowl), 0.001f)
+        assertEquals(2f, Meal.helpingOf(2f, Portion.Large, Serving.Piece), 0.001f)
+    }
 }

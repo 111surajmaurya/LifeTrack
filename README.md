@@ -167,9 +167,14 @@ every exception, so a permission problem looked identical to "0 steps".
 **Limits are enforced** with Usage access plus *Display over other apps* (Settings → Limit
 blocking) - no accessibility service, so nothing on screen is ever read. `LimitWatchService` is
 a foreground service (quiet, minimum-priority notification) that runs only while at least one
-limit is set and both accesses are on. Every 2 s while the screen is on it reads the newest
-usage events to see which app is in front; a tracked app past its limit is sent to the home
-screen with a toast and `LimitReachedActivity`. Blocking can lag a couple of seconds. It is
+limit is set and both accesses are on. Android can't tell it when an app opens, so it looks -
+but only when a limit could matter (`LimitSchedule`): if the app with the least time left has
+20 minutes to go, nothing can run out for 20 minutes, so it sleeps that long (15 min at most).
+Once an app is over its limit it looks every 5 s, to catch it being reopened. With the screen
+off it does nothing (paused on SCREEN_OFF, resumed on SCREEN_ON); a limit change re-plans at
+once. A tracked app past its limit is sent to the home screen with a toast and
+`LimitReachedActivity` - within ~2 s of running out, or up to 5 s after reopening one already over.
+Its notification can be hidden from the Screen time screen without stopping it. It is
 started from app start, on resume, on boot, by the 15-minute job and whenever limits change.
 Without the overlay access a limit only colours the bar.
 

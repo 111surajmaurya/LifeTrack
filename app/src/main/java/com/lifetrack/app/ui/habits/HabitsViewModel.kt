@@ -220,9 +220,11 @@ class HabitsViewModel(private val repo: Repository) : ViewModel() {
         repo.bumpCheck(habitId, Dates.today(), delta)
     }
 
-    fun addMinutes(habitId: Long, minutes: Int) = viewModelScope.launch {
-        repo.addMillis(habitId, Dates.today(), minutes * 60_000L)
-        say("Added ${Dates.formatMinutes(minutes)}")
+    /** Time done away from the stopwatch - "read for 20 minutes" - banked on [date]. */
+    fun addMinutes(habitId: Long, minutes: Int, date: String = Dates.today()) = viewModelScope.launch {
+        if (minutes <= 0) return@launch
+        repo.addMillis(habitId, date, minutes * 60_000L)
+        say("Added ${Dates.formatMinutes(minutes)}" + if (date != Dates.today()) " to ${Dates.label(date).lowercase()}" else "")
     }
 
     fun resetToday(habit: Habit) = viewModelScope.launch {

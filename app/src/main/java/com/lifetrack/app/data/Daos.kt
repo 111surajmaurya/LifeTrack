@@ -60,6 +60,7 @@ interface FoodDao {
     @Query("SELECT * FROM food_items WHERE custom = 0")
     suspend fun seededFoods(): List<FoodItem>
 
+    /** Hidden rows included: a food the user removed must still count as "already there". */
     @Query("SELECT name FROM food_items")
     suspend fun allNames(): List<String>
 
@@ -71,7 +72,7 @@ interface FoodDao {
     @Query(
         """
         SELECT * FROM food_items
-        WHERE name LIKE :q || '%' OR name LIKE '% ' || :q || '%'
+        WHERE hidden = 0 AND (name LIKE :q || '%' OR name LIKE '% ' || :q || '%')
         ORDER BY (CASE WHEN name LIKE :q || '%' THEN 0 ELSE 1 END),
                  useCount DESC, lastUsedAt DESC, name ASC
         LIMIT 30
@@ -80,10 +81,10 @@ interface FoodDao {
     fun search(q: String): Flow<List<FoodItem>>
 
     /** What to show before the user types: most-eaten first, then a stable alphabetical tail. */
-    @Query("SELECT * FROM food_items ORDER BY useCount DESC, lastUsedAt DESC, name ASC LIMIT 20")
+    @Query("SELECT * FROM food_items WHERE hidden = 0 ORDER BY useCount DESC, lastUsedAt DESC, name ASC LIMIT 20")
     fun suggestions(): Flow<List<FoodItem>>
 
-    @Query("SELECT * FROM food_items WHERE category = :category ORDER BY useCount DESC, name ASC")
+    @Query("SELECT * FROM food_items WHERE hidden = 0 AND category = :category ORDER BY useCount DESC, name ASC")
     fun byCategory(category: String): Flow<List<FoodItem>>
 
     @Query("SELECT * FROM food_items WHERE lower(name) = lower(:name) LIMIT 1")
@@ -307,20 +308,33 @@ interface StepDao {
 
 @Dao
 interface RoutineDao {
-    @Query("SELECT * FROM routine_items ORDER BY sortOrder, id")
+    @Query("SELECT * FROM routine_items WHERE removed = 0 ORDER BY sortOrder, id")
     fun items(): Flow<List<RoutineItem>>
 
-    @Query("SELECT * FROM routine_items ORDER BY sortOrder, id")
+    @Query("SELECT * FROM routine_items WHERE removed = 0 ORDER BY sortOrder, id")
     suspend fun itemsOnce(): List<RoutineItem>
 
-    @Query("SELECT * FROM routine_items WHERE id = :id")
+    /** Null for a removed item too, so an alarm armed before the removal rings for nothing. */
+    @Query("SELECT * FROM routine_items WHERE id = :id AND removed = 0")
     suspend fun item(id: Long): RoutineItem?
 
+    /** Removed items included, which is what stops seeding from bringing them back. */
     @Query("SELECT `key` FROM routine_items")
     suspend fun keys(): List<String>
 
+    @Query("SELECT COALESCE(MAX(sortOrder), -1) FROM routine_items")
+    suspend fun maxSortOrder(): Int
+
     @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun insertItems(items: List<RoutineItem>)
+    @Insert suspend fun insertItem(item: RoutineItem): Long
     @Update suspend fun updateItem(item: RoutineItem)
+    @Delete suspend fun deleteItem(item: RoutineItem)
+
+    @Query("DELETE FROM routine_plans WHERE itemId = :itemId")
+    suspend fun deletePlansFor(itemId: Long)
+
+    @Query("DELETE FROM routine_logs WHERE itemId = :itemId")
+    suspend fun deleteLogsFor(itemId: Long)
 
     // ---- per-day plans ----
     @Query("SELECT * FROM routine_plans WHERE date BETWEEN :from AND :to")

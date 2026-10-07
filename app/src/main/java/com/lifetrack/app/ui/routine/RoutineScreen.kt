@@ -1,6 +1,7 @@
 package com.lifetrack.app.ui.routine
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Routine
+import com.lifetrack.app.data.RoutineItem
 import com.lifetrack.app.data.RoutineKind
 import com.lifetrack.app.data.RoutineSlot
 import com.lifetrack.app.data.TrackingStart
@@ -63,6 +69,8 @@ fun RoutineScreen(
 ) {
     val ui by vm.state.collectAsStateWithLifecycle()
     val accent = accents().habits
+    val context = LocalContext.current
+    var editing by remember { mutableStateOf<RoutineItem?>(null) }
 
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -84,11 +92,23 @@ fun RoutineScreen(
                 slots = ui.todaySlots,
                 accent = accent,
                 onDone = { vm.mark(it, if (it.status == RoutineStatus.DONE && !it.auto) null else Routine.DONE) },
-                onMissed = { vm.mark(it, if (it.status == RoutineStatus.MISSED) null else Routine.MISSED) }
+                onMissed = { vm.mark(it, if (it.status == RoutineStatus.MISSED) null else Routine.MISSED) },
+                onEdit = { editing = it.item },
+                onAdd = { editing = RoutineEdits.blank() }
             )
         }
         item { TomorrowCard(ui, onPlan) }
         item { HistoryCard(ui) }
+    }
+
+    editing?.let { item ->
+        RoutineItemSheet(
+            initial = item,
+            accent = accent,
+            onDismiss = { editing = null },
+            onSave = { vm.saveItem(context, it); editing = null },
+            onRemove = { vm.removeItem(context, it); editing = null }
+        )
     }
 }
 
@@ -138,11 +158,23 @@ private fun TodayCard(
     slots: List<RoutineSlot>,
     accent: Color,
     onDone: (RoutineSlot) -> Unit,
-    onMissed: (RoutineSlot) -> Unit
+    onMissed: (RoutineSlot) -> Unit,
+    onEdit: (RoutineSlot) -> Unit,
+    onAdd: () -> Unit
 ) {
     val a = accents()
     LifeCard {
-        SectionLabel("Today")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            SectionLabel("Today", Modifier.weight(1f))
+            TextButton(onClick = onAdd) { Text("+ Add item") }
+        }
+        if (slots.isEmpty()) {
+            Text(
+                "Nothing in your routine. Add the fixed points of your day and tick them off here.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
         Spacer(Modifier.height(Space.sm))
         slots.forEachIndexed { index, slot ->
             if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
@@ -150,26 +182,32 @@ private fun TodayCard(
                 Modifier.fillMaxWidth().padding(vertical = Space.sm),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(slot.item.emoji, style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.width(Space.md))
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        slot.item.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = if (slot.status == RoutineStatus.OFF) MaterialTheme.colorScheme.onSurfaceVariant
-                        else MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        listOfNotNull(
-                            Dates.clockLabel(slot.hour, slot.minute),
-                            if (slot.item.isAlarm) "alarm" else null,
-                            statusNote(slot)
-                        ).joinToString("  ·  "),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = statusColor(slot.status, a.positive, a.negative)
-                    )
+                // Tapping the name opens the item to change its time or remove it.
+                Row(
+                    Modifier.weight(1f).clip(MaterialTheme.shapes.small).clickable { onEdit(slot) },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(slot.item.emoji, style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.width(Space.md))
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            slot.item.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = if (slot.status == RoutineStatus.OFF) MaterialTheme.colorScheme.onSurfaceVariant
+                            else MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            listOfNotNull(
+                                Dates.clockLabel(slot.hour, slot.minute),
+                                if (slot.item.isAlarm) "alarm" else null,
+                                statusNote(slot)
+                            ).joinToString("  ·  "),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = statusColor(slot.status, a.positive, a.negative)
+                        )
+                    }
                 }
                 if (slot.status != RoutineStatus.OFF) {
                     FilledTonalIconToggleButton(

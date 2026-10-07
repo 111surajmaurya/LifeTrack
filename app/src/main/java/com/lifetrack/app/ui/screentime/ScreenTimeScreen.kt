@@ -106,6 +106,8 @@ fun ScreenTimeScreen(
 
     // Switched on in a system screen (Display over other apps), so re-read it on every return.
     var guardOn by remember { mutableStateOf(LimitWatchService.canShowOverApps(context)) }
+    // Turned off in Android's own notification settings, so re-read on return as well.
+    var notificationShown by remember { mutableStateOf(LimitWatchService.notificationVisible(context)) }
 
     // The OS keeps usage data to itself; nothing is stored until we snapshot, so every resume does.
     DisposableEffect(lifecycleOwner) {
@@ -113,6 +115,7 @@ fun ScreenTimeScreen(
             if (event == Lifecycle.Event.ON_RESUME) {
                 vm.refresh(context)
                 guardOn = LimitWatchService.canShowOverApps(context)
+                notificationShown = LimitWatchService.notificationVisible(context)
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -159,6 +162,26 @@ fun ScreenTimeScreen(
         if (!guardOn) {
             item {
                 AccessNeededCard("Limits only turn the bar red until Limit blocking is on.", onOpenSettings)
+            }
+        }
+
+        if (guardOn && notificationShown && state.rows.any { it.limitMin > 0 }) {
+            item {
+                LifeCard {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text("Limit blocking notification", style = MaterialTheme.typography.titleSmall)
+                            Text(
+                                "Android needs it for blocking to run. Hiding it keeps blocking on.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        TextButton(onClick = {
+                            runCatching { context.startActivity(LimitWatchService.hideNotificationIntent(context)) }
+                        }) { Text("Hide") }
+                    }
+                }
             }
         }
 

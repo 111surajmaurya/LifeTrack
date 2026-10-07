@@ -781,4 +781,24 @@ class MigrationTest {
             )
         }
     }
+
+    @Test fun `v12 adds hidden foods and removed routine items, both off`() {
+        db("v11.db").use { c ->
+            c.exec(
+                "CREATE TABLE `food_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+                "CREATE TABLE `routine_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `key` TEXT NOT NULL, " +
+                    "`sortOrder` INTEGER NOT NULL)",
+                "INSERT INTO food_items VALUES (1, 'Roti')",
+                "INSERT INTO routine_items VALUES (1, 'wake', 0)"
+            )
+            c.run(Migrations.V11_TO_V12)
+            assertEquals("hidden", c.columns("food_items").last())
+            assertEquals("removed", c.columns("routine_items").last())
+            c.run(Migrations.V12_TO_V13)
+            assertEquals(listOf("removed", "createdAt"), c.columns("routine_items").takeLast(2))
+            assertEquals(0L, (c.query("SELECT createdAt FROM routine_items")[0][0] as Number).toLong())
+            assertEquals(0L, (c.query("SELECT hidden FROM food_items")[0][0] as Number).toLong())
+            assertEquals(0L, (c.query("SELECT removed FROM routine_items")[0][0] as Number).toLong())
+        }
+    }
 }

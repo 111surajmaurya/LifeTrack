@@ -217,7 +217,12 @@ data class FoodItem(
     val vitA: Float = 0f,
     val vitC: Float = 0f,
     val iron: Float = 0f,
-    val calcium: Float = 0f
+    val calcium: Float = 0f,
+    /**
+     * Removed from the list by the user. Kept as a row rather than deleted so a catalogue
+     * refresh (which adds any seed name it can't find) never brings it back.
+     */
+    @ColumnInfo(defaultValue = "0") val hidden: Boolean = false
 ) {
     val servingType: Serving get() = Serving.from(serving)
 
@@ -273,6 +278,31 @@ data class Meal(
     val slotType: Slot get() = Slot.from(slot)
 
     val nutrients: Nutrients get() = Nutrients(kcal, protein, fiber, vitA, vitC, iron, calcium)
+
+    /** How many medium servings this helping is: [qty], times the portion size for sized foods. */
+    val helping: Float get() = helpingOf(qty, Portion.from(portion), Serving.from(serving))
+
+    /**
+     * The same entry corrected by hand. [kcal], [protein] and [fiber] are taken as typed; the
+     * micronutrients nobody types follow the helping, so 2 rotis -> 3 rotis carries a third more
+     * iron along with the calories.
+     */
+    fun edited(
+        name: String, qty: Float, portion: Portion, serving: Serving, slot: Slot,
+        kcal: Int, protein: Float, fiber: Float
+    ): Meal {
+        val ratio = if (helping > 0f) helpingOf(qty, portion, serving) / helping else 1f
+        return copy(
+            name = name, qty = qty, portion = portion.name, serving = serving.name, slot = slot.name,
+            kcal = kcal, protein = protein, fiber = fiber,
+            vitA = vitA * ratio, vitC = vitC * ratio, iron = iron * ratio, calcium = calcium * ratio
+        )
+    }
+
+    companion object {
+        fun helpingOf(qty: Float, portion: Portion, serving: Serving): Float =
+            qty * if (serving.sized) portion.factor else 1f
+    }
 
     /** "2 rotis", "1 large bowl" - the line under the food name. */
     val detail: String

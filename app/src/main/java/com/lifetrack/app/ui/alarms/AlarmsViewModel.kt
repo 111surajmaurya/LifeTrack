@@ -12,6 +12,7 @@ import com.lifetrack.app.data.RoutineItem
 import com.lifetrack.app.reminders.Notifications
 import com.lifetrack.app.reminders.ReminderScheduler
 import com.lifetrack.app.reminders.RoutineScheduler
+import com.lifetrack.app.ui.routine.RoutineEdits
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -65,10 +66,12 @@ class AlarmsViewModel(private val repo: Repository) : ViewModel() {
     /** Changes the *usual* time, mode or switch of a routine item - every day from now on. */
     fun saveRoutineItem(context: Context, item: RoutineItem) {
         val app = context.applicationContext
-        viewModelScope.launch {
-            repo.updateRoutineItem(item)
-            RoutineScheduler.reschedule(app, repo, item.id)
-        }
+        viewModelScope.launch { RoutineEdits.save(app, repo, item) }
+    }
+
+    fun removeRoutineItem(context: Context, item: RoutineItem) {
+        val app = context.applicationContext
+        viewModelScope.launch { RoutineEdits.remove(app, repo, item) }
     }
 
     /** Permissions can change while the app is backgrounded, so the screen re-checks on resume. */

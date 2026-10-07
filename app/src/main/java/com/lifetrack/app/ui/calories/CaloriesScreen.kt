@@ -27,7 +27,7 @@ import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tune
@@ -127,6 +127,10 @@ fun CaloriesScreen(
     var picking by remember { mutableStateOf<FoodItem?>(null) }
     var addingCustom by remember { mutableStateOf(false) }
     var editingSettings by remember { mutableStateOf(false) }
+    var editingMeal by remember { mutableStateOf<Meal?>(null) }
+    var deletingMeal by remember { mutableStateOf<Meal?>(null) }
+    var editingFood by remember { mutableStateOf<FoodItem?>(null) }
+    var removingFood by remember { mutableStateOf<FoodItem?>(null) }
 
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -194,8 +198,8 @@ fun CaloriesScreen(
                         protein = state.proteinIn(slot),
                         goal = state.goalIn(slot),
                         warnKcal = state.settings.itemWarnKcal,
-                        onDelete = vm::delete,
-                        onMove = vm::move
+                        onEdit = { editingMeal = it },
+                        onDelete = { deletingMeal = it }
                     )
                 }
             }
@@ -217,7 +221,63 @@ fun CaloriesScreen(
             onConfirm = { qty, portion, slot ->
                 vm.log(item, qty, portion, slot)
                 picking = null
+            },
+            onEditFood = { editingFood = item; picking = null },
+            onRemoveFood = { removingFood = item; picking = null }
+        )
+    }
+
+    editingMeal?.let { meal ->
+        MealEditDialog(
+            meal = meal,
+            onDismiss = { editingMeal = null },
+            onSave = { vm.updateMeal(it); editingMeal = null },
+            onDelete = { deletingMeal = meal; editingMeal = null }
+        )
+    }
+
+    deletingMeal?.let { meal ->
+        AlertDialog(
+            onDismissRequest = { deletingMeal = null },
+            title = { Text("Delete ${meal.name}?") },
+            text = { Text("${meal.detail}  ·  ${kcalText(meal.kcal)} kcal comes off ${Dates.label(meal.date).lowercase()}.") },
+            confirmButton = {
+                TextButton(onClick = { vm.delete(meal); deletingMeal = null }) {
+                    Text("Delete", color = accents().negative)
+                }
+            },
+            dismissButton = { TextButton(onClick = { deletingMeal = null }) { Text("Cancel") } }
+        )
+    }
+
+    editingFood?.let { food ->
+        CustomFoodDialog(
+            defaultSlot = state.activeSlot,
+            initial = food,
+            onDismiss = { editingFood = null },
+            onAdd = { name, kcal, protein, fiber, serving, _ ->
+                vm.updateFood(food.copy(name = name, kcal = kcal, protein = protein, fiber = fiber, serving = serving.name))
+                editingFood = null
             }
+        )
+    }
+
+    removingFood?.let { food ->
+        AlertDialog(
+            onDismissRequest = { removingFood = null },
+            title = { Text("Remove ${food.name}?") },
+            text = {
+                Text(
+                    "It stops showing in search and suggestions. Anything already logged with it stays. " +
+                        "Adding a food with the same name later brings it back."
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { vm.removeFood(food); removingFood = null }) {
+                    Text("Remove", color = accents().negative)
+                }
+            },
+            dismissButton = { TextButton(onClick = { removingFood = null }) { Text("Cancel") } }
         )
     }
 
@@ -666,8 +726,8 @@ private fun SlotLogCard(
     protein: Float,
     goal: Int,
     warnKcal: Int,
-    onDelete: (Meal) -> Unit,
-    onMove: (Meal, Slot) -> Unit
+    onEdit: (Meal) -> Unit,
+    onDelete: (Meal) -> Unit
 ) {
     val a = accents()
     val over = goal > 0 && kcal > goal
@@ -705,8 +765,8 @@ private fun SlotLogCard(
             MealRow(
                 meal = meal,
                 warnKcal = warnKcal,
-                onDelete = { onDelete(meal) },
-                onMove = { onMove(meal, it) }
+                onEdit = { onEdit(meal) },
+                onDelete = { onDelete(meal) }
             )
         }
     }
@@ -732,10 +792,9 @@ private fun OverChip(text: String) {
  * was the thing that made the old log useless.
  */
 @Composable
-private fun MealRow(meal: Meal, warnKcal: Int, onDelete: () -> Unit, onMove: (Slot) -> Unit) {
+private fun MealRow(meal: Meal, warnKcal: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
     val a = accents()
     val heavy = warnKcal > 0 && meal.kcal >= warnKcal
-    var menu by remember { mutableStateOf(false) }
 
     Row(
         Modifier
@@ -743,6 +802,7 @@ private fun MealRow(meal: Meal, warnKcal: Int, onDelete: () -> Unit, onMove: (Sl
             .padding(vertical = 2.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(if (heavy) a.negative.copy(alpha = 0.09f) else Color.Transparent)
+            .clickable(onClick = onEdit)
             .padding(start = Space.sm, top = Space.sm, bottom = Space.sm),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -791,37 +851,23 @@ private fun MealRow(meal: Meal, warnKcal: Int, onDelete: () -> Unit, onMove: (Sl
                 )
             }
         }
-        Box {
-            IconButton(onClick = { menu = true }) {
-                Icon(
-                    Icons.Rounded.MoreVert,
-                    contentDescription = "Options for ${meal.name}",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                Slot.entries.filter { it != meal.slotType }.forEach { target ->
-                    DropdownMenuItem(
-                        text = { Text("Move to ${target.label}") },
-                        leadingIcon = { Text(target.emoji) },
-                        onClick = {
-                            menu = false
-                            onMove(target)
-                        }
-                    )
-                }
-                HorizontalDivider()
-                DropdownMenuItem(
-                    text = { Text("Delete", color = a.negative) },
-                    leadingIcon = {
-                        Icon(Icons.Rounded.Delete, contentDescription = null, tint = a.negative)
-                    },
-                    onClick = {
-                        menu = false
-                        onDelete()
-                    }
-                )
-            }
+        // Both in plain sight. The whole row opens the editor too, which is also where moving
+        // the entry to another meal lives now.
+        IconButton(onClick = onEdit, modifier = Modifier.size(36.dp)) {
+            Icon(
+                Icons.Rounded.Edit,
+                contentDescription = "Edit ${meal.name}",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+            Icon(
+                Icons.Rounded.Delete,
+                contentDescription = "Delete ${meal.name}",
+                tint = a.negative.copy(alpha = 0.8f),
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }
@@ -858,7 +904,9 @@ private fun FoodPickerSheet(
     item: FoodItem,
     activeSlot: Slot,
     onDismiss: () -> Unit,
-    onConfirm: (Float, Portion, Slot) -> Unit
+    onConfirm: (Float, Portion, Slot) -> Unit,
+    onEditFood: () -> Unit,
+    onRemoveFood: () -> Unit
 ) {
     val a = accents()
     val sheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -951,6 +999,19 @@ private fun FoodPickerSheet(
                     style = MaterialTheme.typography.labelLarge
                 )
             }
+            // The catalogue entry itself: wrong numbers get fixed once, here, not on every log.
+            Row(Modifier.fillMaxWidth().padding(top = Space.sm), horizontalArrangement = Arrangement.SpaceBetween) {
+                TextButton(onClick = onEditFood) {
+                    Icon(Icons.Rounded.Edit, contentDescription = null, Modifier.size(18.dp))
+                    Spacer(Modifier.width(Space.xs))
+                    Text("Edit food")
+                }
+                TextButton(onClick = onRemoveFood) {
+                    Icon(Icons.Rounded.Delete, contentDescription = null, Modifier.size(18.dp), tint = a.negative)
+                    Spacer(Modifier.width(Space.xs))
+                    Text("Remove from list", color = a.negative)
+                }
+            }
         }
     }
 }
@@ -1011,13 +1072,15 @@ private fun StepButton(
 private fun CustomFoodDialog(
     defaultSlot: Slot,
     onDismiss: () -> Unit,
-    onAdd: (String, Int, Float, Float, Serving, Slot) -> Unit
+    onAdd: (String, Int, Float, Float, Serving, Slot) -> Unit,
+    /** Editing this catalogue food instead of adding one: no meal to pick, nothing gets logged. */
+    initial: FoodItem? = null
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var kcal by rememberSaveable { mutableStateOf("") }
-    var protein by rememberSaveable { mutableStateOf("") }
-    var fiber by rememberSaveable { mutableStateOf("") }
-    var serving by rememberSaveable { mutableStateOf(Serving.Serve) }
+    var name by rememberSaveable { mutableStateOf(initial?.name.orEmpty()) }
+    var kcal by rememberSaveable { mutableStateOf(initial?.kcal?.toString().orEmpty()) }
+    var protein by rememberSaveable { mutableStateOf(initial?.protein?.takeIf { it > 0f }?.let(::numberText).orEmpty()) }
+    var fiber by rememberSaveable { mutableStateOf(initial?.fiber?.takeIf { it > 0f }?.let(::numberText).orEmpty()) }
+    var serving by rememberSaveable { mutableStateOf(initial?.servingType ?: Serving.Serve) }
     var slot by rememberSaveable { mutableStateOf(defaultSlot) }
     val kcalValue = kcal.toIntOrNull() ?: 0
     // Protein and fibre are optional - plenty of foods are close enough to zero that forcing
@@ -1027,11 +1090,12 @@ private fun CustomFoodDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New food") },
+        title = { Text(if (initial == null) "New food" else "Edit food") },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(
-                    "Saved to the catalogue, so you only type it once.",
+                    if (initial == null) "Saved to the catalogue, so you only type it once."
+                    else "Used for everything you log from now on. Meals already logged keep their numbers.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1053,14 +1117,14 @@ private fun CustomFoodDialog(
                         modifier = Modifier.weight(1f)
                     )
                     NumberField(
-                        label = "Protein (g)",
+                        label = "Protein",
                         value = protein,
                         onValue = { protein = it },
                         decimal = true,
                         modifier = Modifier.weight(1f)
                     )
                     NumberField(
-                        label = "Fibre (g)",
+                        label = "Fibre",
                         value = fiber,
                         onValue = { fiber = it },
                         decimal = true,
@@ -1068,7 +1132,8 @@ private fun CustomFoodDialog(
                     )
                 }
                 Text(
-                    "All per serving. Leave protein or fibre blank if you do not know them.",
+                    "All per ${if (serving.sized) "medium " else ""}${serving.unit}. " +
+                        "Protein and fibre in grams; leave them blank if you do not know them.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1084,20 +1149,165 @@ private fun CustomFoodDialog(
                         )
                     }
                 }
-                Spacer(Modifier.height(Space.lg))
-                SectionLabel("Goes to")
-                Spacer(Modifier.height(Space.sm))
-                SlotChips(selected = slot, onSelect = { slot = it })
+                if (initial == null) {
+                    Spacer(Modifier.height(Space.lg))
+                    SectionLabel("Goes to")
+                    Spacer(Modifier.height(Space.sm))
+                    SlotChips(selected = slot, onSelect = { slot = it })
+                }
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { onAdd(name.trim(), kcalValue, proteinValue, fiberValue, serving, slot) },
                 enabled = name.isNotBlank() && kcalValue > 0
-            ) { Text("Add & log") }
+            ) { Text(if (initial == null) "Add & log" else "Save") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
+}
+
+/**
+ * Fixes a logged entry: how many, what unit, what size, the numbers, and which meal. Changing
+ * the amount rescales the calories, protein and fibre from what was logged, so 2 rotis -> 3 is
+ * one edit; typing a number afterwards overrides that.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun MealEditDialog(
+    meal: Meal,
+    onDismiss: () -> Unit,
+    onSave: (Meal) -> Unit,
+    onDelete: () -> Unit
+) {
+    val a = accents()
+    var name by rememberSaveable { mutableStateOf(meal.name) }
+    var qty by rememberSaveable { mutableStateOf(numberText(meal.qty)) }
+    var serving by rememberSaveable { mutableStateOf(Serving.from(meal.serving)) }
+    var portion by rememberSaveable { mutableStateOf(Portion.from(meal.portion)) }
+    var slot by rememberSaveable { mutableStateOf(meal.slotType) }
+    var kcal by rememberSaveable { mutableStateOf(meal.kcal.toString()) }
+    var protein by rememberSaveable { mutableStateOf(numberText(meal.protein)) }
+    var fiber by rememberSaveable { mutableStateOf(numberText(meal.fiber)) }
+    val qtyValue = qty.toFloatOrNull() ?: 0f
+
+    /** Re-derive the three numbers from what was logged, for the helping now on screen. */
+    fun rescale(newQty: Float, newPortion: Portion, newServing: Serving) {
+        if (newQty <= 0f || meal.helping <= 0f) return
+        val ratio = Meal.helpingOf(newQty, newPortion, newServing) / meal.helping
+        kcal = (meal.kcal * ratio).roundToInt().toString()
+        protein = numberText(meal.protein * ratio)
+        fiber = numberText(meal.fiber * ratio)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit entry") },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(Space.md))
+                NumberField(
+                    label = "How many",
+                    value = qty,
+                    onValue = {
+                        qty = it
+                        rescale(it.toFloatOrNull() ?: 0f, portion, serving)
+                    },
+                    decimal = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(Space.md))
+                SectionLabel("Unit")
+                Spacer(Modifier.height(Space.sm))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalArrangement = Arrangement.spacedBy(Space.xs)
+                ) {
+                    Serving.entries.forEach { s ->
+                        ChoiceChip(
+                            label = s.unit.replaceFirstChar { it.uppercase() },
+                            selected = s == serving,
+                            onClick = { serving = s; rescale(qtyValue, portion, s) }
+                        )
+                    }
+                }
+                if (serving.sized) {
+                    Spacer(Modifier.height(Space.md))
+                    SectionLabel("Size")
+                    Spacer(Modifier.height(Space.sm))
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                        Portion.entries.forEach { p ->
+                            ChoiceChip(
+                                label = p.label,
+                                selected = p == portion,
+                                onClick = { portion = p; rescale(qtyValue, p, serving) },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(Space.md))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    NumberField("Calories", kcal, { kcal = it }, Modifier.weight(1f))
+                    NumberField("Protein", protein, { protein = it }, Modifier.weight(1f), decimal = true)
+                    NumberField("Fibre", fiber, { fiber = it }, Modifier.weight(1f), decimal = true)
+                }
+                Text(
+                    "For the whole entry, not one serving. Protein and fibre in grams.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(Space.md))
+                SectionLabel("Meal")
+                Spacer(Modifier.height(Space.sm))
+                // Wrapping, not four equal columns: "Breakfast" must fit in a dialog this narrow.
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalArrangement = Arrangement.spacedBy(Space.xs)
+                ) {
+                    Slot.entries.forEach { s ->
+                        ChoiceChip(label = s.label, selected = s == slot, onClick = { slot = s })
+                    }
+                }
+                Spacer(Modifier.height(Space.md))
+                TextButton(onClick = onDelete) {
+                    Icon(Icons.Rounded.Delete, contentDescription = null, Modifier.size(18.dp), tint = a.negative)
+                    Spacer(Modifier.width(Space.xs))
+                    Text("Delete entry", color = a.negative)
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onSave(
+                        meal.edited(
+                            name = name.trim(), qty = qtyValue, portion = portion, serving = serving, slot = slot,
+                            kcal = kcal.toIntOrNull() ?: 0,
+                            protein = protein.toFloatOrNull() ?: 0f,
+                            fiber = fiber.toFloatOrNull() ?: 0f
+                        )
+                    )
+                },
+                enabled = name.isNotBlank() && qtyValue > 0f && kcal.toIntOrNull() != null
+            ) { Text("Save") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+    )
+}
+
+/** 2 -> "2", 2.5 -> "2.5", 2.4567 -> "2.5": what a number field starts out showing. */
+internal fun numberText(value: Float): String {
+    val rounded = (value * 10f).roundToInt() / 10f
+    return if (rounded % 1f == 0f) rounded.toInt().toString() else rounded.toString()
 }
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -186,10 +186,17 @@ class CaloriesViewModel(private val repo: Repository) : ViewModel() {
 
     fun delete(meal: Meal) = viewModelScope.launch { repo.deleteMeal(meal) }
 
-    /** Filed it under the wrong meal — move it without retyping anything. */
-    fun move(meal: Meal, slot: Slot) = viewModelScope.launch {
-        repo.updateMeal(meal.copy(slot = slot.name))
+    /** A logged entry corrected by hand - amount, unit, calories, which meal. */
+    fun updateMeal(meal: Meal) = viewModelScope.launch {
+        repo.updateMeal(meal.copy(kcal = meal.kcal.coerceAtLeast(0)))
     }
+
+    /** A catalogue food corrected by hand; only what you log from now on uses the new figures. */
+    fun updateFood(item: FoodItem) = viewModelScope.launch { repo.updateFood(item) }
+
+    /** Takes a food out of search and suggestions. Meals already logged with it stay. */
+    fun removeFood(item: FoodItem) = viewModelScope.launch { repo.hideFood(item) }
+
 
     // ---------------------------------------------------------------- settings
 

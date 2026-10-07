@@ -69,6 +69,8 @@ import com.lifetrack.app.ui.components.ScreenHeader
 import com.lifetrack.app.ui.components.ScreenPadding
 import com.lifetrack.app.ui.components.SectionLabel
 import com.lifetrack.app.ui.components.SegmentedPicker
+import com.lifetrack.app.ui.routine.RoutineEdits
+import com.lifetrack.app.ui.routine.RoutineItemSheet
 import com.lifetrack.app.ui.settings.AccessNeededCard
 import com.lifetrack.app.ui.theme.Space
 import com.lifetrack.app.ui.theme.accents
@@ -124,14 +126,15 @@ fun AlarmsScreen(
             }
         }
 
-        if (state.routine.isNotEmpty()) {
+        if (state.loaded) {
             item {
                 RoutineCard(
                     rows = state.routine,
                     accent = accent,
                     onPlan = onPlan,
                     onToggle = { item, on -> vm.saveRoutineItem(context, item.copy(enabled = on)) },
-                    onEdit = { routineDraft = it }
+                    onEdit = { routineDraft = it },
+                    onAdd = { routineDraft = RoutineEdits.blank() }
                 )
             }
             item { SectionLabel("Your own alarms", Modifier.padding(top = Space.sm)) }
@@ -160,12 +163,16 @@ fun AlarmsScreen(
     }
 
     routineDraft?.let { editing ->
-        RoutineEditor(
+        RoutineItemSheet(
             initial = editing,
             accent = accent,
             onDismiss = { routineDraft = null },
             onSave = {
                 vm.saveRoutineItem(context, it)
+                routineDraft = null
+            },
+            onRemove = {
+                vm.removeRoutineItem(context, it)
                 routineDraft = null
             }
         )
@@ -199,7 +206,8 @@ private fun RoutineCard(
     accent: Color,
     onPlan: () -> Unit,
     onToggle: (RoutineItem, Boolean) -> Unit,
-    onEdit: (RoutineItem) -> Unit
+    onEdit: (RoutineItem) -> Unit,
+    onAdd: () -> Unit
 ) {
     LifeCard(accent = accent) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -207,7 +215,7 @@ private fun RoutineCard(
             TextButton(onClick = onPlan) { Text("Plan tomorrow") }
         }
         Text(
-            "Every day at these times unless tomorrow's plan says otherwise. Tap one to change its usual time.",
+            "Every day at these times unless tomorrow's plan says otherwise. Tap one to change or remove it.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -244,55 +252,10 @@ private fun RoutineCard(
                 Switch(checked = item.enabled, onCheckedChange = { onToggle(item, it) })
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RoutineEditor(
-    initial: RoutineItem,
-    accent: Color,
-    onDismiss: () -> Unit,
-    onSave: (RoutineItem) -> Unit
-) {
-    val context = LocalContext.current
-    val sheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var draft by remember { mutableStateOf(initial) }
-    val time = rememberTimePickerState(
-        initialHour = initial.hour,
-        initialMinute = initial.minute,
-        is24Hour = DateFormat.is24HourFormat(context)
-    )
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = ScreenPadding)
-                .padding(bottom = Space.xxl),
-            verticalArrangement = Arrangement.spacedBy(Space.md)
-        ) {
-            Text("${initial.emoji} ${initial.title}", style = MaterialTheme.typography.headlineSmall)
-            Text(
-                "The usual time, every day. To move just tomorrow, use Plan tomorrow instead.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { TimePicker(state = time) }
-            SectionLabel("How it arrives")
-            SegmentedPicker(
-                options = ReminderMode.entries.toList(),
-                selected = draft.modeType,
-                onSelect = { draft = draft.copy(mode = it.name) },
-                label = { it.label },
-                accent = accent,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Button(
-                onClick = { onSave(draft.copy(hour = time.hour, minute = time.minute)) },
-                shape = MaterialTheme.shapes.large,
-                modifier = Modifier.fillMaxWidth().height(52.dp)
-            ) { Text("Save", style = MaterialTheme.typography.titleMedium) }
+        TextButton(onClick = onAdd) {
+            Icon(Icons.Rounded.Add, contentDescription = null, Modifier.size(18.dp))
+            Spacer(Modifier.width(Space.xs))
+            Text("Add to routine")
         }
     }
 }

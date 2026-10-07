@@ -58,6 +58,14 @@ object RoutineScheduler {
         schedule(context, item, plans)
     }
 
+    /** Disarms a removed item: its next fire, any pending snooze, and the saved snooze. */
+    fun cancel(context: Context, itemId: Long) {
+        val am = context.getSystemService(AlarmManager::class.java) ?: return
+        am.cancel(pending(context, itemId, date = null, snooze = false))
+        am.cancel(pending(context, itemId, date = null, snooze = true))
+        SnoozeStore.clearRoutine(context, itemId)
+    }
+
     private fun schedule(context: Context, item: RoutineItem, plans: Map<String, RoutinePlan>) {
         val am = context.getSystemService(AlarmManager::class.java) ?: return
         am.cancel(pending(context, item.id, date = null, snooze = false))

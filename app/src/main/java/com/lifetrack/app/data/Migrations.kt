@@ -276,4 +276,24 @@ object Migrations {
     val V10_TO_V11: List<String> = listOf(
         "UPDATE `settings` SET `burnGoalKcal` = 250 WHERE `burnGoalKcal` = 400"
     )
+
+    /**
+     * v11 -> v12: foods and routine items the user can take off their lists.
+     *  - `food_items.hidden`: a removed food stays as a row so a catalogue refresh can't re-add it,
+     *  - `routine_items.removed`: the same for a removed seed item and the launch-time seeding.
+     * Both default to 0, so everything that exists today stays visible. Two plain ALTERs.
+     */
+    val V11_TO_V12: List<String> = listOf(
+        "ALTER TABLE `food_items` ADD COLUMN `hidden` INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE `routine_items` ADD COLUMN `removed` INTEGER NOT NULL DEFAULT 0"
+    )
+
+    /**
+     * v12 -> v13: `routine_items.createdAt`, when a user-added item joined, so the days and
+     * hours before it are "off" rather than misses. 0 (seed items, and anything older) keeps
+     * scoring exactly as before.
+     */
+    val V12_TO_V13: List<String> = listOf(
+        "ALTER TABLE `routine_items` ADD COLUMN `createdAt` INTEGER NOT NULL DEFAULT 0"
+    )
 }

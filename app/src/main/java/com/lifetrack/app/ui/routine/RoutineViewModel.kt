@@ -117,10 +117,14 @@ class RoutineViewModel(private val repo: Repository, private val startedAt: Long
         val evidenceByDate = dates.associateWith(::evidence)
 
         val tracks = i.items.map { item ->
+            // An item added later than tracking began starts counting from when it was added.
+            val itemStart = if (item.createdAt > startedAt)
+                java.time.Instant.ofEpochMilli(item.createdAt).atZone(java.time.ZoneId.systemDefault()).toLocalDateTime()
+            else start
             val days = dates.map { d ->
                 val slot = Routine.resolve(item, d, plans[d to item.id], logs[d to item.id], evidenceByDate.getValue(d), now)
-                val beforeStart = d == startDay && logs[d to item.id] == null &&
-                    Dates.parse(d).atTime(slot.hour, slot.minute).isBefore(start)
+                val beforeStart = logs[d to item.id] == null &&
+                    Dates.parse(d).atTime(slot.hour, slot.minute).isBefore(itemStart)
                 if (beforeStart) slot.copy(status = RoutineStatus.OFF) else slot
             }
             ItemTrack(
@@ -174,11 +178,14 @@ class RoutineViewModel(private val repo: Repository, private val startedAt: Long
         }
     }
 
-    fun updateItem(context: Context, item: RoutineItem) {
+    /** Saves a changed item, or adds a new one (id 0), and re-arms it. */
+    fun saveItem(context: Context, item: RoutineItem) {
         val app = context.applicationContext
-        viewModelScope.launch {
-            repo.updateRoutineItem(item)
-            RoutineScheduler.reschedule(app, repo, item.id)
-        }
+        viewModelScope.launch { RoutineEdits.save(app, repo, item) }
+    }
+
+    fun removeItem(context: Context, item: RoutineItem) {
+        val app = context.applicationContext
+        viewModelScope.launch { RoutineEdits.remove(app, repo, item) }
     }
 }

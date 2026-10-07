@@ -149,7 +149,14 @@ class Repository(private val db: AppDatabase) {
         qty: Float, portion: Portion, slot: Slot
     ): FoodItem {
         val clean = name.trim()
-        val existing = db.foodDao().byName(clean)
+        // A food the user once removed comes back with the figures just typed.
+        val existing = db.foodDao().byName(clean)?.let { old ->
+            if (!old.hidden) old
+            else old.copy(
+                kcal = kcal, protein = protein, fiber = fiber, serving = serving.name,
+                custom = true, hidden = false
+            ).also { db.foodDao().update(it) }
+        }
         val item = existing ?: run {
             val fresh = FoodItem(
                 name = clean, kcal = kcal, protein = protein, fiber = fiber,
@@ -166,8 +173,14 @@ class Repository(private val db: AppDatabase) {
     fun searchFoods(query: String): Flow<List<FoodItem>> = db.foodDao().search(query.trim())
     fun foodSuggestions(): Flow<List<FoodItem>> = db.foodDao().suggestions()
     fun foodsInCategory(category: String): Flow<List<FoodItem>> = db.foodDao().byCategory(category)
-    suspend fun updateFood(item: FoodItem) = db.foodDao().update(item)
-    suspend fun deleteFood(item: FoodItem) = db.foodDao().delete(item)
+    /**
+     * Saves a corrected food. It is marked custom, so the next catalogue refresh leaves the
+     * user's numbers alone. Meals already logged keep what they were logged with.
+     */
+    suspend fun updateFood(item: FoodItem) = db.foodDao().update(item.copy(custom = true))
+
+    /** Takes a food off the list. Hidden rather than deleted - see [FoodItem.hidden]. */
+    suspend fun hideFood(item: FoodItem) = db.foodDao().update(item.copy(hidden = true))
 
     // ---------------------------------------------------------------- settings
 
@@ -394,6 +407,28 @@ class Repository(private val db: AppDatabase) {
     suspend fun routineItemsOnce(): List<RoutineItem> = db.routineDao().itemsOnce()
     suspend fun routineItem(id: Long): RoutineItem? = db.routineDao().item(id)
     suspend fun updateRoutineItem(item: RoutineItem) = db.routineDao().updateItem(item)
+
+    /** Adds an item of the user's own, after everything else in the list. Returns its id. */
+    suspend fun addRoutineItem(item: RoutineItem): Long {
+        val key = Routine.CUSTOM_KEY_PREFIX + java.util.UUID.randomUUID()
+        return db.routineDao().insertItem(
+            item.copy(id = 0, key = key, kind = RoutineKind.MANUAL.name, slot = "",
+                sortOrder = db.routineDao().maxSortOrder() + 1, removed = false,
+                createdAt = System.currentTimeMillis())
+        )
+    }
+
+    /**
+     * Takes an item off the routine, with its plans and its done/missed history. A seed item
+     * keeps a row marked [RoutineItem.removed] so seeding doesn't re-add it; the user's own go.
+     * The caller cancels its alarm (RoutineScheduler.cancel) - this layer knows no Context.
+     */
+    suspend fun removeRoutineItem(item: RoutineItem) {
+        db.routineDao().deletePlansFor(item.id)
+        db.routineDao().deleteLogsFor(item.id)
+        if (item.custom) db.routineDao().deleteItem(item)
+        else db.routineDao().updateItem(item.copy(removed = true))
+    }
 
     fun routinePlans(from: String, to: String): Flow<List<RoutinePlan>> = db.routineDao().plansBetween(from, to)
     suspend fun routinePlansOnce(from: String, to: String): List<RoutinePlan> =

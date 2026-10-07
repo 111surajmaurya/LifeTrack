@@ -165,6 +165,7 @@ fun HabitsScreen(
                 now = vm.now,
                 onOpen = { onOpenHabit(row.habit.id) },
                 onStart = { vm.startTimer(row.habit.id) },
+                onAddTime = { minutesFor = row.habit },
                 onStop = vm::stopTimer,
                 onReset = vm::resetTimer,
                 onDiscard = vm::discardTimer,
@@ -206,7 +207,7 @@ fun HabitsScreen(
         AddMinutesDialog(
             habit = habit,
             onDismiss = { minutesFor = null },
-            onPick = { minutes -> vm.addMinutes(habit.id, minutes); minutesFor = null }
+            onAdd = { minutes, date -> vm.addMinutes(habit.id, minutes, date); minutesFor = null }
         )
     }
 
@@ -291,6 +292,7 @@ private fun HabitCard(
     now: StateFlow<Long>,
     onOpen: () -> Unit,
     onStart: () -> Unit,
+    onAddTime: () -> Unit,
     onStop: () -> Unit,
     onReset: () -> Unit,
     onDiscard: () -> Unit,
@@ -322,7 +324,7 @@ private fun HabitCard(
             row.timed && runningSince != null ->
                 RunningBlock(row, runningSince, now, accent, onReset, onDiscard, onStop)
 
-            row.timed -> TimedIdleBlock(row, accent, onStart)
+            row.timed -> TimedIdleBlock(row, accent, onStart, onAddTime)
             else -> CountBlock(row, accent, onBump)
         }
 
@@ -349,7 +351,7 @@ private fun HabitMenu(habit: Habit, onAction: (RowAction) -> Unit) {
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             if (habit.kindType == HabitKind.TIMED) {
                 DropdownMenuItem(
-                    text = { Text("Add minutes") },
+                    text = { Text("Add time") },
                     onClick = { open = false; onAction(RowAction.AddMinutes) }
                 )
             }
@@ -371,22 +373,30 @@ private fun HabitMenu(habit: Habit, onAction: (RowAction) -> Unit) {
 }
 
 @Composable
-private fun TimedIdleBlock(row: HabitRow, accent: Color, onStart: () -> Unit) {
+private fun TimedIdleBlock(row: HabitRow, accent: Color, onStart: () -> Unit, onAddTime: () -> Unit) {
     val a = accents()
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Row(Modifier.weight(1f)) {
+        // Stacked, so a long "16m 38s" still leaves room for both buttons.
+        Column(Modifier.weight(1f)) {
             Text(
                 Dates.formatDuration(row.millisToday),
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.alignByBaseline()
+                maxLines = 1
             )
             Text(
-                "  of ${Dates.formatMinutes(row.habit.dailyGoalMin)} today",
+                "of ${Dates.formatMinutes(row.habit.dailyGoalMin)} today",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.alignByBaseline()
+                maxLines = 1
             )
         }
+        // Two ways in: run the stopwatch now, or type in time already done ("read for 20 min").
+        OutlinedButton(onClick = onAddTime, contentPadding = PaddingValues(horizontal = Space.md)) {
+            Icon(Icons.Rounded.Add, contentDescription = null, Modifier.size(16.dp))
+            Spacer(Modifier.width(Space.xs))
+            Text("Time")
+        }
+        Spacer(Modifier.width(Space.sm))
         Button(onClick = onStart) { Text("Start") }
     }
     Spacer(Modifier.height(Space.md))
@@ -538,33 +548,85 @@ private fun ConfirmDialog(
     )
 }
 
+/**
+ * Banks time done away from the stopwatch. Hours and minutes are typed, the common lengths are
+ * one tap, and it can go on yesterday for a session you forgot to log before bed.
+ */
 @Composable
-private fun AddMinutesDialog(habit: Habit, onDismiss: () -> Unit, onPick: (Int) -> Unit) {
-    val options = listOf(5, 10, 15, 30, 45, 60)
+private fun AddMinutesDialog(habit: Habit, onDismiss: () -> Unit, onAdd: (Int, String) -> Unit) {
+    val a = accents()
+    val accent = a.byKey(habit.accent)
+    val today = Dates.today()
+    var hours by remember { mutableStateOf("") }
+    var minutes by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf(today) }
+    val total = (hours.toIntOrNull() ?: 0) * 60 + (minutes.toIntOrNull() ?: 0)
+    // A day only has so many minutes; anything past that is a typo.
+    val valid = total in 1..MAX_ADD_MINUTES
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add to ${habit.name}", style = MaterialTheme.typography.titleLarge) },
+        title = { Text("Add time to ${habit.name}", style = MaterialTheme.typography.titleLarge) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
                 Text(
-                    "Banks time you did away from the app.",
+                    "For time you did without the timer.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                options.chunked(3).forEach { chunk ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                        chunk.forEach { minutes ->
-                            OutlinedButton(onClick = { onPick(minutes) }, modifier = Modifier.weight(1f)) {
-                                Text(Dates.formatMinutes(minutes))
-                            }
+                // Minutes first: "read for 20 minutes" is the usual case.
+                Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+                    OutlinedTextField(
+                        value = minutes,
+                        onValueChange = { minutes = it.filter(Char::isDigit).take(3) },
+                        label = { Text("Minutes") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedTextField(
+                        value = hours,
+                        onValueChange = { hours = it.filter(Char::isDigit).take(2) },
+                        label = { Text("Hours") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                listOf(5, 10, 15, 20, 30, 45, 60, 90).chunked(4).forEach { chunk ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
+                        chunk.forEach { m ->
+                            OutlinedButton(
+                                onClick = { hours = (m / 60).takeIf { it > 0 }?.toString().orEmpty(); minutes = (m % 60).toString() },
+                                contentPadding = PaddingValues(horizontal = Space.xs),
+                                modifier = Modifier.weight(1f)
+                            ) { Text(Dates.formatMinutes(m), maxLines = 1) }
                         }
                     }
                 }
+                SegmentedPicker(
+                    options = listOf(today, Dates.shift(today, -1)),
+                    selected = date,
+                    onSelect = { date = it },
+                    label = { Dates.label(it) },
+                    accent = accent,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Done") } }
+        confirmButton = {
+            TextButton(onClick = { onAdd(total, date) }, enabled = valid) {
+                Text(if (valid) "Add ${Dates.formatMinutes(total)}" else "Add")
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }
+
+/** 16 hours: more than that in one entry is almost certainly a typo. */
+private const val MAX_ADD_MINUTES = 16 * 60
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
