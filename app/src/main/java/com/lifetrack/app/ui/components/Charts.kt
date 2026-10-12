@@ -406,12 +406,16 @@ fun BreakdownList(
 
 // ---------------------------------------------------------------- calendar
 
-/** One day in the habit calendar. [intensity] is 0f..1f of the day's goal. */
+/**
+ * One day in the habit calendar. [intensity] is 0f..1f of the day's goal. [missed] is a day
+ * that is over without the goal being met (see `HabitDays`); it is drawn red.
+ */
 data class CalendarDay(
     val date: String,
     val intensity: Float,
     val done: Boolean,
-    val future: Boolean = false
+    val future: Boolean = false,
+    val missed: Boolean = false
 )
 
 /**
@@ -430,6 +434,7 @@ fun MonthCalendar(
     val cells = Dates.monthGrid(monthAnchor)
     val today = Dates.today()
     val outline = MaterialTheme.colorScheme.outline
+    val missedColor = accents().negative
 
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Row(Modifier.fillMaxWidth()) {
@@ -451,8 +456,10 @@ fun MonthCalendar(
                         val day = days[date]
                         val future = Dates.isFuture(date)
                         val intensity = day?.intensity?.coerceIn(0f, 1f) ?: 0f
+                        val missed = day?.missed == true
                         val fill = when {
                             future -> Color.Transparent
+                            missed -> missedColor.copy(alpha = 0.8f)
                             intensity <= 0f -> outline.copy(alpha = 0.4f)
                             else -> accent.copy(alpha = 0.25f + 0.75f * intensity)
                         }
@@ -479,7 +486,7 @@ fun MonthCalendar(
                                 fontWeight = if (date == today) FontWeight.Bold else FontWeight.Normal,
                                 color = when {
                                     future -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                                    intensity > 0.55f -> MaterialTheme.colorScheme.surface
+                                    missed || intensity > 0.55f -> MaterialTheme.colorScheme.surface
                                     else -> MaterialTheme.colorScheme.onSurface
                                 }
                             )
@@ -491,7 +498,7 @@ fun MonthCalendar(
     }
 }
 
-/** The four-step key under a calendar. */
+/** The four-step key under a calendar, then the red "missed" swatch. */
 @Composable
 fun CalendarLegend(accent: Color, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -517,12 +524,25 @@ fun CalendarLegend(accent: Color, modifier: Modifier = Modifier) {
             "More", style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        Spacer(Modifier.width(Space.md))
+        Box(
+            Modifier
+                .size(12.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(accents().negative.copy(alpha = 0.8f))
+        )
+        Spacer(Modifier.width(Space.xs))
+        Text(
+            "Missed", style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
-/** Seven dots for the current week, filled where the goal was met. */
+/** Seven dots for the current week: filled where the goal was met, red where a day was missed. */
 @Composable
 fun WeekDots(days: List<CalendarDay>, accent: Color, modifier: Modifier = Modifier) {
+    val missed = accents().negative
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
         days.forEach { d ->
             Box(
@@ -530,8 +550,11 @@ fun WeekDots(days: List<CalendarDay>, accent: Color, modifier: Modifier = Modifi
                     .size(9.dp)
                     .clip(CircleShape)
                     .background(
-                        if (d.done) accent
-                        else MaterialTheme.colorScheme.outline.copy(alpha = if (d.future) 0.3f else 0.7f)
+                        when {
+                            d.done -> accent
+                            d.missed -> missed
+                            else -> MaterialTheme.colorScheme.outline.copy(alpha = if (d.future) 0.3f else 0.7f)
+                        }
                     )
             )
         }

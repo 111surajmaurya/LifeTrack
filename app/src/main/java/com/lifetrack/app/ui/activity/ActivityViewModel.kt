@@ -153,7 +153,7 @@ class ActivityViewModel(private val repo: Repository) : ViewModel() {
                     link.update {
                         it.copy(missing = sync.missingMetrics(), error = dayError, backgroundMissing = backgroundMissing)
                     }
-                    // First connect: the six months already on the phone are worth more than
+                    // First connect: the history already on the phone is worth more than
                     // starting today's chart from scratch.
                     if (!triedFirstImport && repo.metricCount(Metric.Steps) == 0) {
                         triedFirstImport = true
@@ -170,7 +170,7 @@ class ActivityViewModel(private val repo: Repository) : ViewModel() {
         }
     }
 
-    /** Pulls the last six months out of Health Connect into daily_metrics. */
+    /** Pulls up to the last twelve months out of Health Connect into daily_metrics. */
     fun importHistory(context: Context) {
         if (link.value.importing) return
         val app = context.applicationContext

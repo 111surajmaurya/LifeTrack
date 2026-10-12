@@ -252,7 +252,8 @@ class Repository(private val db: AppDatabase) {
     fun sessionsOn(habitId: Long, date: String) = db.habitDao().sessionsOn(habitId, date)
     fun recentSessions(habitId: Long, limit: Int = 20) = db.habitDao().recentSessions(habitId, limit)
 
-    suspend fun addHabit(habit: Habit): Long = db.habitDao().insert(habit.copy(seeded = false))
+    suspend fun addHabit(habit: Habit): Long =
+        db.habitDao().insert(habit.copy(seeded = false, createdOn = habit.createdOn.ifBlank { Dates.today() }))
     suspend fun updateHabit(habit: Habit) = db.habitDao().update(habit)
 
     /**

@@ -1,5 +1,6 @@
 package com.lifetrack.app.ui.home
 
+import com.lifetrack.app.ui.settings.Feature
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -225,8 +226,8 @@ fun HomeScreen(
             progress = act.progress,
             progressColor = if (act.met) a.positive else a.activity,
             delta = act.delta,
-            empty = !act.hasData,
-            emptyHint = "Start counting your steps  →",
+            empty = !act.hasData || Feature.Steps in state.locked,
+            emptyHint = if (Feature.Steps in state.locked) OFF_HINT else "Start counting your steps  →",
             onClick = onOpenActivity
         )
         CardGap()
@@ -279,12 +280,13 @@ fun HomeScreen(
             caption = "tracked today",
             detail = scr.detail,
             progress = scr.progress,
-            progressColor = a.forProgress(scr.progress, scr.over),
+            // Screen time is a cost, not a goal: its bar is red however little has been used.
+            progressColor = a.negative,
             delta = scr.delta,
             higherIsBetter = false,
             showBar = scr.limitMinutes > 0,
-            empty = !scr.hasData,
-            emptyHint = "Turn on usage access  →",
+            empty = !scr.hasData || Feature.ScreenTime in state.locked,
+            emptyHint = if (Feature.ScreenTime in state.locked) OFF_HINT else "Nothing used yet today  →",
             onClick = onOpenScreenTime
         )
         CardGap()
@@ -301,8 +303,12 @@ fun HomeScreen(
             progress = 0f,
             progressColor = a.alarms,
             showBar = false,
-            empty = !alarms.hasNext,
-            emptyHint = if (alarms.total == 0) "Set your first alarm  →" else "Nothing scheduled  →",
+            empty = !alarms.hasNext || Feature.Alarms in state.locked,
+            emptyHint = when {
+                Feature.Alarms in state.locked -> OFF_HINT
+                alarms.total == 0 -> "Set your first alarm  →"
+                else -> "Nothing scheduled  →"
+            },
             onClick = onOpenAlarms
         )
 
@@ -396,8 +402,12 @@ private fun Hero(state: HomeState, onOpenProfile: () -> Unit) {
 @Composable
 private fun MiniGoal(goal: DayGoal, modifier: Modifier = Modifier) {
     val a = accents()
-    val color = if (goal.budget) a.forProgress(goal.progress, goal.over)
-    else if (goal.met) a.positive else a.byKey(goal.accentKey)
+    val color = when {
+        goal.usage -> a.negative
+        goal.budget -> a.forProgress(goal.progress, goal.over)
+        goal.met -> a.positive
+        else -> a.byKey(goal.accentKey)
+    }
     val track = MaterialTheme.colorScheme.outline
     val swept by animateFloatAsState(goal.progress.coerceIn(0f, 1f), tween(700), label = "mini")
 
@@ -419,13 +429,17 @@ private fun MiniGoal(goal: DayGoal, modifier: Modifier = Modifier) {
         Text(
             goal.label,
             style = MaterialTheme.typography.labelSmall,
-            color = if (goal.met) color else MaterialTheme.colorScheme.onSurfaceVariant,
+            // A red label under a limit that held would read as failure; only "over" is red.
+            color = if (if (goal.usage) goal.over else goal.met) color else MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center
         )
     }
 }
+
+/** What a card says while its section is switched off for want of access. */
+private const val OFF_HINT = "Switched off - needs access  →"
 
 private fun greetingFor(hour: Int): String = when (hour) {
     in 5..11 -> "Good morning"

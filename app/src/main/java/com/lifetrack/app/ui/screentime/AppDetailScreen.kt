@@ -164,7 +164,7 @@ fun AppDetailScreen(
                 )
                 if (state.limitMin > 0) {
                     Spacer(Modifier.height(Space.md))
-                    OverflowBar(state.minutesToday.toFloat(), state.limitMin.toFloat())
+                    OverflowBar(state.minutesToday.toFloat(), state.limitMin.toFloat(), usage = true)
                     Spacer(Modifier.height(Space.sm))
                     Text(
                         if (state.overToday)
@@ -405,7 +405,8 @@ private fun RecentDaysCard(state: AppDetailState) {
                         value = minutes.toFloat(),
                         goal = state.limitMin.toFloat().coerceAtLeast(1f),
                         modifier = Modifier.weight(1f),
-                        height = 6.dp
+                        height = 6.dp,
+                        usage = true
                     )
                     Spacer(Modifier.size(Space.md))
                     Text(

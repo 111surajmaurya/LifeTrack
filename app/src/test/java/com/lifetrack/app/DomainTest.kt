@@ -437,15 +437,15 @@ class DomainTest {
 
     // ------------------------------------------------------------------ retention
 
-    @Test fun `retention keeps six months`() {
-        assertEquals(180L, Retention.DAYS)
-        assertEquals(Dates.shift("2026-09-10", -180), Retention.cutoff("2026-09-10"))
+    @Test fun `retention keeps twelve months`() {
+        assertEquals(365L, Retention.DAYS)
+        assertEquals(Dates.shift("2026-09-10", -365), Retention.cutoff("2026-09-10"))
     }
 
-    @Test fun `the cutoff is old enough to keep half a year of charts`() {
+    @Test fun `the cutoff is old enough to keep a year of charts and no more`() {
         val cutoff = Retention.cutoff("2026-09-10")
-        assertTrue("six months back should be in early 2026", cutoff < "2026-04-01")
-        assertTrue(cutoff > "2026-03-01")
+        assertEquals("2025-09-10", cutoff)
+        assertTrue("a year back should be in late 2025", cutoff < "2025-10-01")
     }
 
     @Test fun `pruned totals add up and report whether anything went`() {

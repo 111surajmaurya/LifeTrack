@@ -442,10 +442,30 @@ data class Habit(
     val accent: String = "leaf",
     val seeded: Boolean = false,
     val archived: Boolean = false,
-    val sortOrder: Int = 0
+    val sortOrder: Int = 0,
+    /**
+     * ISO date the habit was added, so the days before it are blank rather than misses.
+     * Empty for the starter habits and anything older than v14: they count from [TrackingStart].
+     */
+    @ColumnInfo(defaultValue = "''") val createdOn: String = ""
 ) {
     val kindType: HabitKind get() = HabitKind.from(kind)
     val dailyGoalMillis: Long get() = dailyGoalMin * 60_000L
+}
+
+/**
+ * When a habit's day counts as missed. A day is only judged once it is over: until midnight
+ * there is still time, so today is never red. The next morning an unmet day turns into a miss
+ * by itself - nothing has to be written, it is read off the day's total.
+ */
+object HabitDays {
+
+    /** The first day [habit] is scored: the day it was added, but never before tracking began. */
+    fun firstDay(habit: Habit, trackingStart: String): String = maxOf(habit.createdOn, trackingStart)
+
+    /** [date] is over, was a day the habit existed, and its goal wasn't reached. */
+    fun missed(date: String, met: Boolean, firstDay: String, today: String = Dates.today()): Boolean =
+        !met && date < today && date >= firstDay
 }
 
 /**

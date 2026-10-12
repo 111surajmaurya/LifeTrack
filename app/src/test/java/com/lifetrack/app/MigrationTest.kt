@@ -801,4 +801,27 @@ class MigrationTest {
             assertEquals(0L, (c.query("SELECT removed FROM routine_items")[0][0] as Number).toLong())
         }
     }
+
+    @Test fun `v14 gives existing habits an empty start date and keeps them`() {
+        db("v13.db").use { c ->
+            c.exec(
+                "CREATE TABLE `habits` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, " +
+                    "`kind` TEXT NOT NULL, `dailyGoalMin` INTEGER NOT NULL, `dailyTarget` INTEGER NOT NULL, " +
+                    "`emoji` TEXT NOT NULL, `accent` TEXT NOT NULL, `seeded` INTEGER NOT NULL, " +
+                    "`archived` INTEGER NOT NULL, `sortOrder` INTEGER NOT NULL)",
+                "INSERT INTO habits VALUES (1, 'Gym', 'TIMED', 45, 1, '🏋', 'leaf', 1, 0, 0)"
+            )
+            c.run(Migrations.V13_TO_V14)
+            assertEquals(
+                listOf("id", "name", "kind", "dailyGoalMin", "dailyTarget", "emoji", "accent",
+                    "seeded", "archived", "sortOrder", "createdOn"),
+                c.columns("habits")
+            )
+            assertEquals(listOf(listOf<Any?>("Gym", "")), c.query("SELECT name, createdOn FROM habits"))
+            // NOT NULL with a default: an insert that leaves it out still works.
+            c.exec("INSERT INTO habits (name, kind, dailyGoalMin, dailyTarget, emoji, accent, seeded, archived, sortOrder) " +
+                "VALUES ('Read', 'TIMED', 20, 1, '📖', 'sky', 0, 0, 1)")
+            assertEquals("", c.query("SELECT createdOn FROM habits WHERE id = 2")[0][0])
+        }
+    }
 }

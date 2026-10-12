@@ -4,8 +4,8 @@ package com.lifetrack.app.data
  * How long LifeTrack keeps each kind of data point.
  *
  * Everything is stored on the phone, in one SQLite file, and nothing is uploaded anywhere.
- * A day of tracking is a few kilobytes, so six months of everything is comfortably under
- * a megabyte - the limit exists to stop the charts and the database growing without end,
+ * A day of tracking is a few kilobytes, so a year of everything is comfortably under
+ * two megabytes - the limit exists to stop the charts and the database growing without end,
  * not to save space.
  *
  * **Tuning this:** change [DAYS] and the next launch prunes anything older on a background
@@ -14,8 +14,8 @@ package com.lifetrack.app.data
  */
 object Retention {
 
-    /** Six months. Long enough to see a season change in the monthly charts. */
-    const val DAYS: Long = 180
+    /** Twelve months - the most LifeTrack keeps. Long enough to compare a season with last year's. */
+    const val DAYS: Long = 365
 
     /** Oldest date worth keeping, as an ISO yyyy-MM-dd string. */
     fun cutoff(today: String = Dates.today()): String = Dates.shift(today, -DAYS)

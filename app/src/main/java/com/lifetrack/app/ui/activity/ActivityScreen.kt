@@ -54,6 +54,9 @@ import com.lifetrack.app.ui.components.StatTile
 import com.lifetrack.app.ui.components.TileRow
 import com.lifetrack.app.ui.components.toDailyPoints
 import com.lifetrack.app.ui.settings.AccessNeededCard
+import com.lifetrack.app.ui.settings.Feature
+import com.lifetrack.app.ui.settings.FeatureOffCard
+import com.lifetrack.app.ui.settings.featureLocked
 import com.lifetrack.app.ui.theme.Space
 import com.lifetrack.app.ui.theme.accents
 
@@ -85,6 +88,7 @@ fun ActivityScreen(
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { vm.refresh(context) }
 
     val link = ui.link
+    val locked = featureLocked(Feature.Steps)
     val open: (Intent) -> Unit = { intent ->
         launchError = try {
             context.startActivity(intent)
@@ -113,14 +117,12 @@ fun ActivityScreen(
         }
 
         // Access is asked for in Settings; here we only say what is missing and point there.
-        if (link.checked && !link.connected && !(link.sensorPresent && link.sensorGranted)) {
-            item {
-                AccessNeededCard(
-                    "Steps need Health Connect or Physical activity access.",
-                    onOpenSettings
-                )
-            }
-        } else if (link.connected && link.backgroundMissing) {
+        // With no step source at all the section is switched off rather than showing zeros.
+        if (locked) {
+            item { FeatureOffCard(Feature.Steps, onOpenSettings) }
+            return@LazyColumn
+        }
+        if (link.connected && link.backgroundMissing) {
             item {
                 AccessNeededCard(
                     "Allow Health Connect in background so steps update while LifeTrack is closed.",
@@ -377,7 +379,7 @@ private fun HistoryCard(ui: ActivityUi, onImport: () -> Unit, onOpen: (Intent) -
             if (link.storedFrom != null) {
                 "Stored from ${Dates.label(link.storedFrom)} - ${link.storedDays} days of steps."
             } else {
-                "Nothing stored yet. Importing pulls up to six months out of Health Connect."
+                "Nothing stored yet. Importing pulls up to a year out of Health Connect."
             },
             style = MaterialTheme.typography.bodyMedium
         )
@@ -397,7 +399,7 @@ private fun HistoryCard(ui: ActivityUi, onImport: () -> Unit, onOpen: (Intent) -
                 CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = a.activity)
                 Spacer(Modifier.width(Space.sm))
                 Text(
-                    "Importing six months…",
+                    "Importing history…",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

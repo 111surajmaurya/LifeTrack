@@ -41,7 +41,9 @@ LifeTrack does not share, sell or transfer any data to anyone.
 
 ## Keeping or deleting it
 
-History older than six months is deleted automatically. Uninstalling LifeTrack, or clearing its
+History older than twelve months is deleted automatically. You can download your meals, habits
+and steps as a CSV, Excel or PDF file from Settings; the file goes wherever you choose to save
+it, and LifeTrack itself sends it nowhere. Uninstalling LifeTrack, or clearing its
 storage in Android Settings, deletes everything it stored. You can withdraw any permission at
 any time in Android Settings or in Health Connect; the feature that needed it stops, the rest
 keeps working.

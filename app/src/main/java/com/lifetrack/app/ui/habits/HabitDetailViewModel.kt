@@ -6,6 +6,7 @@ import com.lifetrack.app.data.DayValue
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Habit
 import com.lifetrack.app.data.HabitCheck
+import com.lifetrack.app.data.HabitDays
 import com.lifetrack.app.data.HabitKind
 import com.lifetrack.app.data.Repository
 import com.lifetrack.app.data.Retention
@@ -66,7 +67,8 @@ private data class DetailData(
     val ready: Boolean = false
 )
 
-class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
+/** [trackingStart] is `TrackingStart.date`: no day before it is marked missed. */
+class HabitDetailViewModel(private val repo: Repository, private val trackingStart: String) : ViewModel() {
 
     private val habitId = MutableStateFlow(0L)
     private val anchor = MutableStateFlow(Dates.monthStart(Dates.today()))
@@ -134,13 +136,16 @@ class HabitDetailViewModel(private val repo: Repository) : ViewModel() {
         val today = Dates.today()
 
         val monthDays = Dates.range(Dates.monthStart(d.anchor), Dates.monthEnd(d.anchor))
+        val firstDay = HabitDays.firstDay(habit, trackingStart)
         val calendar = monthDays.associateWith { date ->
             val value = byDate[date] ?: 0.0
+            val done = goal > 0 && value >= goal
             CalendarDay(
                 date = date,
                 intensity = if (goal > 0) (value / goal).toFloat() else 0f,
-                done = goal > 0 && value >= goal,
-                future = Dates.isFuture(date)
+                done = done,
+                future = Dates.isFuture(date),
+                missed = goal > 0 && HabitDays.missed(date, done, firstDay, today)
             )
         }
 

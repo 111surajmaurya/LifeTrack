@@ -60,6 +60,7 @@ import com.lifetrack.app.ui.home.HomeScreen
 import com.lifetrack.app.ui.profile.ProfileScreen
 import com.lifetrack.app.ui.routine.PlanScreen
 import com.lifetrack.app.ui.routine.RoutineScreen
+import com.lifetrack.app.ui.settings.Feature
 import com.lifetrack.app.ui.settings.FirstRun
 import com.lifetrack.app.ui.settings.SettingsScreen
 import com.lifetrack.app.ui.screentime.AppDetailScreen
@@ -196,11 +197,11 @@ fun LifeTrackNav(pendingRoute: StateFlow<String?>, onRouteHandled: () -> Unit) {
                 AllScreen(
                     sections = listOf(
                         SectionLink(Sections.CALORIES, "Calories", "Log meals", Icons.Filled.Restaurant, a.calories),
-                        SectionLink(Sections.ACTIVITY, "Activity", "Steps & sleep", Icons.Filled.DirectionsWalk, a.activity),
+                        SectionLink(Sections.ACTIVITY, "Activity", "Steps & sleep", Icons.Filled.DirectionsWalk, a.activity, Feature.Steps),
                         SectionLink(Sections.HABITS, "Habits", "Timers & counts", Icons.Filled.Autorenew, a.habits),
                         SectionLink(Sections.ROUTINE, "Routine", "Hit or miss", Icons.Filled.TaskAlt, a.positive),
-                        SectionLink(Sections.ALARMS, "Alarms", "Routine & alarms", Icons.Filled.Alarm, a.alarms),
-                        SectionLink(Sections.SCREEN_TIME, "Screen time", "Apps & limits", Icons.Filled.PhoneAndroid, a.screen)
+                        SectionLink(Sections.ALARMS, "Alarms", "Routine & alarms", Icons.Filled.Alarm, a.alarms, Feature.Alarms),
+                        SectionLink(Sections.SCREEN_TIME, "Screen time", "Apps & limits", Icons.Filled.PhoneAndroid, a.screen, Feature.ScreenTime)
                     ),
                     onOpen = ::openSection
                 )

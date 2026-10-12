@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.lifetrack.app.ui.components.ScreenHeader
 import com.lifetrack.app.ui.components.ScreenPadding
+import com.lifetrack.app.ui.settings.Feature
+import com.lifetrack.app.ui.settings.featureLocked
 import com.lifetrack.app.ui.theme.Space
 
 /** One way into a section from the All tab. */
@@ -37,7 +41,9 @@ data class SectionLink(
     val label: String,
     val hint: String,
     val icon: ImageVector,
-    val accent: Color
+    val accent: Color,
+    /** The access-dependent part this section is, if any; greyed out while it is switched off. */
+    val feature: Feature? = null
 )
 
 /**
@@ -64,6 +70,9 @@ fun AllScreen(sections: List<SectionLink>, onOpen: (String) -> Unit) {
 
 @Composable
 private fun SectionButton(section: SectionLink, onClick: () -> Unit) {
+    // Still opens when switched off: the section itself says what to turn on.
+    val locked = section.feature?.let { featureLocked(it) } == true
+    val tint = if (locked) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else section.accent
     Column(
         Modifier
             .clip(MaterialTheme.shapes.large)
@@ -71,19 +80,35 @@ private fun SectionButton(section: SectionLink, onClick: () -> Unit) {
             .padding(vertical = Space.sm),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Surface(
-            shape = CircleShape,
-            color = section.accent.copy(alpha = 0.18f),
-            modifier = Modifier.size(84.dp)
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(section.icon, contentDescription = null, tint = section.accent, modifier = Modifier.size(38.dp))
+        Box {
+            Surface(
+                shape = CircleShape,
+                color = tint.copy(alpha = if (locked) 0.10f else 0.18f),
+                modifier = Modifier.size(84.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(section.icon, contentDescription = null, tint = tint, modifier = Modifier.size(38.dp))
+                }
+            }
+            if (locked) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    modifier = Modifier.size(28.dp).align(Alignment.BottomEnd)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Filled.Lock, contentDescription = "Switched off",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
         }
         Spacer(Modifier.height(Space.sm))
         Text(section.label, style = MaterialTheme.typography.titleSmall, textAlign = TextAlign.Center)
         Text(
-            section.hint,
+            if (locked) "Off - needs access" else section.hint,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,

@@ -296,4 +296,12 @@ object Migrations {
     val V12_TO_V13: List<String> = listOf(
         "ALTER TABLE `routine_items` ADD COLUMN `createdAt` INTEGER NOT NULL DEFAULT 0"
     )
+
+    /**
+     * v13 -> v14: `habits.createdOn`, the day a habit was added, so the days before it are not
+     * coloured as misses. Existing habits get '' and count from the tracking start, as before.
+     */
+    val V13_TO_V14: List<String> = listOf(
+        "ALTER TABLE `habits` ADD COLUMN `createdOn` TEXT NOT NULL DEFAULT ''"
+    )
 }

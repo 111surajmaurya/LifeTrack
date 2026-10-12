@@ -56,6 +56,40 @@ On/Off with **Turn on** (asks, or opens the right system page) or **Manage** (th
 it can be switched off; Android never lets an app revoke its own access). Sections never ask
 themselves: when something they need is off they show a one-line link to Settings.
 
+Access is grouped by the part of the app it serves, and each group card says whether that part
+is **On** or **Off - needs …**. Every access is tagged *Needed for …* or *Optional*, and its ⓘ
+button explains why Android makes LifeTrack ask, what it does with it, and what stops without it.
+
+**A feature without the access it needs is switched off** (`Feature` in `Access.kt`), not left
+showing zeros:
+
+| Feature | Needs | Optional extras |
+| --- | --- | --- |
+| Alarms & reminders | Notifications **and** Exact alarms | Full-screen alarms, Unrestricted battery |
+| Steps & activity | Health Connect **or** Physical activity | Health Connect in background |
+| Screen time | Usage access | - |
+| Limit blocking | Usage access **and** Limit blocking | - |
+
+While off, the section shows only a card naming what is missing and why, the All grid greys its
+button with a lock, its Home card reads "Switched off", and its goal leaves the day's score.
+`AccessStore` holds the last reading for every screen and is refreshed on every resume. Alarm
+*scheduling* is unchanged: the inexact fallback is still armed, and `BootReceiver` re-arms
+everything as exact the moment Exact alarms is granted.
+
+### Download your data
+Settings → **Download your data**: meals, habits or steps, for the last 7 days, 30 days or
+12 months, as **CSV**, **Excel (.xlsx)** or **PDF**. Android's own "Save as" screen picks the
+place, so no storage permission is needed and nothing is sent anywhere.
+- Meals: every item (meal, quantity, portion, kcal, protein, fibre, vitamins A/C, iron,
+  calcium), then a per-day table with each meal's calories.
+- Habits: one line per habit per day - amount, goal, **Done / Missed / In progress** - then a
+  per-habit summary (days done, days missed, success rate, total).
+- Steps: steps, distance, calories burned and active time per day, then the period's totals.
+
+The tables are built by `export/ExportTables.kt` (pure, unit-tested). CSV and Excel are written
+by hand in `ExportWriters.kt` - an .xlsx is five small XML files in a zip, not worth megabytes of
+library - and the PDF with Android's own `PdfDocument` (`PdfWriter.kt`).
+
 A fresh install opens on Settings with a welcome card (`FirstRun`), and nothing requests a
 permission on launch. Routes are in
 `Nav.kt` (`Sections`); the grid is `ui/all/AllScreen.kt`.
@@ -114,6 +148,10 @@ permission on launch. Routes are in
   wipes what has been banked today.
 - The five starter habits are `seeded`: they **archive** rather than delete, so history is
   never orphaned and the tab can never end up empty. Habits you add yourself delete outright.
+- **Done is green, missed is red.** A day is judged once it is over: at midnight an unmet day
+  turns red in the week dots and the month calendar (`HabitDays.missed`). Nothing is written -
+  it is read off the day's total, so logging time to yesterday afterwards turns it back. Days
+  before a habit was added (`habits.createdOn`, v14) or before tracking began stay blank.
 
 ### Daily routine
 Ten fixed items seeded from `Routine.SEED` - wake-up 7:00 and meditation/gym 7:30 (alarms),
@@ -158,12 +196,15 @@ readings are spread over the hours between readings (`StepSplit`); its last read
 its own preferences file, not the settings row.
 
 Health Connect is read-only and de-duplicated, so a phone and a watch are not double-counted.
-On first connect the app **backfills up to six months** of history into `daily_metrics`, so the
+On first connect the app **backfills up to twelve months** of history into `daily_metrics`, so the
 charts are useful immediately. If Health Connect is unavailable, steps fall back to the phone's
 `TYPE_STEP_COUNTER` sensor. Failures are shown in plain words — an earlier build swallowed
 every exception, so a permission problem looked identical to "0 steps".
 
 ### Screen time
+**Screen time is drawn in red.** It is a cost, not a goal, so its bars fill red from the first
+minute (deepening towards the limit) instead of the green a budget gets while you are inside it.
+
 **Limits are enforced** with Usage access plus *Display over other apps* (Settings → Limit
 blocking) - no accessibility service, so nothing on screen is ever read. `LimitWatchService` is
 a foreground service (quiet, minimum-priority notification) that runs only while at least one
@@ -185,13 +226,14 @@ add yourself can.
 
 ## Data retention
 
-**Everything is kept for 180 days (six months), then pruned on the next launch.**
+**Everything is kept for 365 days (twelve months), then pruned on the next launch.** Twelve
+months is the most LifeTrack keeps.
 
 One knob, in `data/Retention.kt`:
 
 ```kotlin
 object Retention {
-    const val DAYS: Long = 180
+    const val DAYS: Long = 365
 }
 ```
 
@@ -204,12 +246,12 @@ settings are never pruned — only the day-by-day rows.
 
 | Want | Do |
 | --- | --- |
-| Keep a year | `DAYS = 365` |
+| Keep six months | `DAYS = 180` |
 | Keep everything | `DAYS = 36_500` (a century — simpler than special-casing "never") |
 | Keep less | Lower it, but see the warning below |
 
-A day of tracking is a few kilobytes, so six months of everything is comfortably under a
-megabyte. The limit exists to stop the database and the charts growing without end, not to save
+A day of tracking is a few kilobytes, so a year of everything is comfortably under two
+megabytes. The limit exists to stop the database and the charts growing without end, not to save
 space — raise it freely.
 
 ⚠️ **Raising `DAYS` does not bring back what has already been pruned.** Raise it *before* you
@@ -232,13 +274,14 @@ app/src/main/java/com/lifetrack/app/
 │   ├── HourlySteps.kt       Steps per clock hour + spreading counter readings
 │   ├── Migrations.kt        Upgrade SQL as plain strings, so tests can replay it
 │   ├── Repository.kt        Screens talk to this, never to Room
-│   ├── Retention.kt         The 180-day window
+│   ├── Retention.kt         The 365-day window
 │   ├── Dates.kt             ISO dates, durations, month grids, next-trigger maths
 │   ├── FoodSeed.kt          GENERATED - 226 USDA foods; see tools/foodseed/
 │   ├── IndianFoodSeed.kt    GENERATED - 524 Indian dishes + thalis (indian_db.py)
 │   └── Catalogue.kt         Joins the two; seed VERSION and category emoji
 ├── reminders/               AlarmManager scheduling, ringing service, full-screen alarm
 ├── screentime/              UsageStats reading + daily snapshotting
+├── export/                  Download tables, CSV / Excel / PDF writers
 ├── steps/                   Health Connect reads, history import, sensor fallback
 └── ui/
     ├── Nav.kt               Five tabs + detail routes
@@ -264,9 +307,9 @@ database entry behind every number in the catalogue.
   with today outlined. A week of history in the height of one row. The trend charts answer "how
   much"; this answers "did I, on each of the last seven days". On Home it tracks steps.
 - **`PeriodPicker`** — the dropdown on every detail screen: Today / This week / This month /
-  3 months / 6 months. It replaced a three-way pill switcher, which stops being readable past
-  about four options. Six months is the last stop because `Retention` prunes past it — offering
-  "this year" would show half a year of blank.
+  3 months / 6 months / 12 months. It replaced a three-way pill switcher, which stops being
+  readable past about four options. Twelve months is the last stop because `Retention` prunes
+  past it.
 - **`HistoryList`** — one row per day, newest first, with the day's numbers written out. A chart
   shows the shape of a window; this answers "what did I actually eat on the 14th".
 - **`ChartDetailSheet`** — **every chart in the app is tappable.** Tap a bar, a point on a line,
@@ -312,6 +355,10 @@ there is not a failing test, it is a crash on launch for anyone who already has 
 | v8 | **Body profile** on `settings`: height, weight, age, sex, activity level — all optional |
 | v9 | `autoGoals` — the switch that keeps the calorie, protein and fibre goals in step with the profile |
 | v10 | Daily routine (`routine_items`, `routine_plans`, `routine_logs`) and `hourly_steps` — new tables only |
+| v11 | Burn goal default 400 → 250 kcal (data only, no schema change) |
+| v12 | `food_items.hidden`, `routine_items.removed` — foods and routine items you take off your lists |
+| v13 | `routine_items.createdAt` — days before a user-added item are off, not misses |
+| v14 | `habits.createdOn` — days before a habit was added are blank, not red misses |
 
 `fallbackToDestructiveMigration()` is still set as a last resort for anyone on a build older
 than v3. Every upgrade from v3 onwards preserves data.

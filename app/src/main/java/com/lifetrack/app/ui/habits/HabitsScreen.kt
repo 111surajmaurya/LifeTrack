@@ -1,5 +1,7 @@
 package com.lifetrack.app.ui.habits
 
+import androidx.compose.ui.platform.LocalContext
+import com.lifetrack.app.data.TrackingStart
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +82,7 @@ private enum class RowAction { AddMinutes, Edit, ResetToday, Remove }
 @Composable
 fun HabitsScreen(
     onOpenHabit: (Long) -> Unit,
-    vm: HabitsViewModel = appViewModel { HabitsViewModel(it) }
+    vm: HabitsViewModel = LocalContext.current.let { ctx -> appViewModel { HabitsViewModel(it, TrackingStart.date(ctx)) } }
 ) {
     val state by vm.state.collectAsStateWithLifecycle()
     val notice by vm.notice.collectAsStateWithLifecycle()

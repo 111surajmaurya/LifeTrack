@@ -18,7 +18,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +33,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -67,8 +75,9 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var states by remember { mutableStateOf<Map<Access, AccessState>>(emptyMap()) }
-    fun refresh() = scope.launch { states = readAccess(context) }
+    val states by AccessStore.states.collectAsState()
+    var explaining by remember { mutableStateOf<Access?>(null) }
+    fun refresh() = scope.launch { AccessStore.refresh(context) }
 
     // Every grant happens in another screen (a system dialog, Settings, Health Connect), so the
     // truth is re-read whenever we come back rather than trusted from a callback.
@@ -128,18 +137,24 @@ fun SettingsScreen(
             item { WelcomeCard(onFinishSetup) }
         }
 
+        // One card per part of the app: what it powers and whether that is working, then each
+        // access it uses - the required ones first.
         Access.entries.groupBy { it.group }.forEach { (group, items) ->
             item(key = group) {
                 LifeCard {
                     SectionLabel(group)
+                    Feature.entries.filter { it.group == group }.forEach { feature ->
+                        FeatureLine(feature, feature.missing(states))
+                    }
                     Spacer(Modifier.height(Space.xs))
-                    items.forEachIndexed { index, access ->
+                    items.sortedBy { Feature.needing(it).isEmpty() }.forEachIndexed { index, access ->
                         if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                         AccessRow(
                             access = access,
                             state = states[access],
                             onTurnOn = { turnOn(access) },
-                            onManage = { open(context, manageIntent(context, access)) }
+                            onManage = { open(context, manageIntent(context, access)) },
+                            onInfo = { explaining = access }
                         )
                     }
                 }
@@ -162,6 +177,8 @@ fun SettingsScreen(
             }
         }
 
+        item { ExportCard() }
+
         item {
             Text(
                 "Everything LifeTrack stores stays on this phone. Turning something off only stops " +
@@ -175,6 +192,70 @@ fun SettingsScreen(
             }
         }
     }
+
+    explaining?.let { access ->
+        AccessInfoDialog(
+            access = access,
+            state = states[access],
+            onTurnOn = { explaining = null; turnOn(access) },
+            onDismiss = { explaining = null }
+        )
+    }
+}
+
+/** "Screen time · On", or "Screen time · Off - needs Usage access" in red. */
+@Composable
+private fun FeatureLine(feature: Feature, missing: List<Access>?) {
+    val a = accents()
+    val on = missing?.isEmpty() == true
+    Text(
+        when {
+            missing == null -> feature.title
+            on -> "${feature.title}  ·  On"
+            else -> "${feature.title}  ·  Off - needs ${feature.needs(missing)}"
+        },
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Medium,
+        color = when {
+            missing == null -> MaterialTheme.colorScheme.onSurfaceVariant
+            on -> a.positive
+            else -> a.negative
+        },
+        modifier = Modifier.padding(top = 2.dp)
+    )
+}
+
+/** What the info button says: why it is asked for, what LifeTrack does with it, what stops without it. */
+@Composable
+private fun AccessInfoDialog(access: Access, state: AccessState?, onTurnOn: () -> Unit, onDismiss: () -> Unit) {
+    val needing = Feature.needing(access)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+        title = { Text(access.title) },
+        text = {
+            Column {
+                Text(
+                    if (needing.isEmpty()) "Optional - makes ${access.group.lowercase()} more reliable."
+                    else "Needed for ${needing.joinToString(" and ") { it.title }}.",
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Spacer(Modifier.height(Space.md))
+                Text("Why it's needed", style = MaterialTheme.typography.titleSmall)
+                Text(access.why, style = MaterialTheme.typography.bodyMedium)
+                Spacer(Modifier.height(Space.md))
+                Text("Without it", style = MaterialTheme.typography.titleSmall)
+                Text(access.without, style = MaterialTheme.typography.bodyMedium)
+            }
+        },
+        confirmButton = {
+            if (state == AccessState.OFF) TextButton(onClick = onTurnOn) { Text("Turn on") }
+            else TextButton(onClick = onDismiss) { Text("Got it") }
+        },
+        dismissButton = {
+            if (state == AccessState.OFF) TextButton(onClick = onDismiss) { Text("Not now") }
+        }
+    )
 }
 
 @Composable
@@ -196,8 +277,14 @@ private fun WelcomeCard(onFinish: () -> Unit) {
 }
 
 @Composable
-private fun AccessRow(access: Access, state: AccessState?, onTurnOn: () -> Unit, onManage: () -> Unit) {
-    val a = accents()
+private fun AccessRow(
+    access: Access,
+    state: AccessState?,
+    onTurnOn: () -> Unit,
+    onManage: () -> Unit,
+    onInfo: () -> Unit
+) {
+    val needing = Feature.needing(access)
     Row(
         Modifier.fillMaxWidth().padding(vertical = Space.sm),
         verticalAlignment = Alignment.CenterVertically
@@ -206,13 +293,28 @@ private fun AccessRow(access: Access, state: AccessState?, onTurnOn: () -> Unit,
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // The title gives way (wraps) before the pill does, so "On" never breaks in half.
                 Text(access.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f, fill = false))
-                Spacer(Modifier.width(Space.sm))
+                IconButton(onClick = onInfo, modifier = Modifier.size(32.dp)) {
+                    Icon(
+                        Icons.Outlined.Info,
+                        contentDescription = "Why ${access.title} is needed",
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 StatePill(state)
             }
             Text(
                 access.purpose,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                if (needing.isEmpty()) "Optional"
+                else "Needed for ${needing.joinToString(" and ") { it.title }}",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 2.dp)
             )
         }
         Spacer(Modifier.width(Space.sm))
@@ -252,6 +354,50 @@ private fun StatePill(state: AccessState?) {
 private fun open(context: Context, intent: Intent?) {
     if (intent == null) return
     runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+}
+
+/** Whether [feature] is switched off right now. False until access has been read. */
+@Composable
+fun featureLocked(feature: Feature): Boolean {
+    val states by AccessStore.states.collectAsState()
+    return feature.locked(states)
+}
+
+/**
+ * What a section shows instead of itself while [feature] is switched off: what it needs, why,
+ * and the way to Settings. Sections show nothing else, so no screen pretends to have numbers
+ * it cannot read.
+ */
+@Composable
+fun FeatureOffCard(feature: Feature, onOpenSettings: () -> Unit) {
+    val a = accents()
+    val states by AccessStore.states.collectAsState()
+    val missing = feature.missing(states).orEmpty()
+    LifeCard(accent = a.negative) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Outlined.Lock, contentDescription = null, tint = a.negative)
+            Spacer(Modifier.width(Space.sm))
+            Text("${feature.title} is switched off", style = MaterialTheme.typography.titleMedium)
+        }
+        Spacer(Modifier.height(Space.sm))
+        Text(
+            "It needs ${feature.needs(missing)}, which is off.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        missing.forEach { access ->
+            Spacer(Modifier.height(Space.sm))
+            Text(access.title, style = MaterialTheme.typography.titleSmall)
+            Text(
+                access.why,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Spacer(Modifier.height(Space.md))
+        Button(onClick = onOpenSettings, shape = MaterialTheme.shapes.large, modifier = Modifier.fillMaxWidth()) {
+            Text("Turn on in Settings")
+        }
+    }
 }
 
 /** A one-line pointer used by sections when something they need is switched off. */

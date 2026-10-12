@@ -17,13 +17,14 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-/** How far back a detail screen looks. Six months is the retention limit, so it's the last stop. */
+/** How far back a detail screen looks. Twelve months is the retention limit, so it's the last stop. */
 enum class DetailWindow(val label: String, val days: Int) {
     Today("Today", 1),
     Week("This week", 7),
     Month("This month", 30),
     Quarter("3 months", 90),
-    HalfYear("6 months", Retention.DAYS.toInt());
+    HalfYear("6 months", 182),
+    Year("12 months", Retention.DAYS.toInt());
 
     val barred: Boolean get() = days <= 7
 }

@@ -72,6 +72,9 @@ import com.lifetrack.app.ui.components.SegmentedPicker
 import com.lifetrack.app.ui.routine.RoutineEdits
 import com.lifetrack.app.ui.routine.RoutineItemSheet
 import com.lifetrack.app.ui.settings.AccessNeededCard
+import com.lifetrack.app.ui.settings.Feature
+import com.lifetrack.app.ui.settings.FeatureOffCard
+import com.lifetrack.app.ui.settings.featureLocked
 import com.lifetrack.app.ui.theme.Space
 import com.lifetrack.app.ui.theme.accents
 
@@ -84,6 +87,7 @@ fun AlarmsScreen(
     val state by vm.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val accent = accents().alarms
+    val locked = featureLocked(Feature.Alarms)
     var draft by remember { mutableStateOf<Reminder?>(null) }
     var routineDraft by remember { mutableStateOf<RoutineItem?>(null) }
 
@@ -111,7 +115,7 @@ fun AlarmsScreen(
                 subtitle = state.nextAny?.let { "Next ${Dates.untilLabel(it)}" }
                     ?: "Nothing scheduled",
                 trailing = {
-                    Button(onClick = { draft = blankReminder() }, shape = MaterialTheme.shapes.large) {
+                    if (!locked) Button(onClick = { draft = blankReminder() }, shape = MaterialTheme.shapes.large) {
                         Icon(Icons.Rounded.Add, contentDescription = null, Modifier.size(18.dp))
                         Spacer(Modifier.width(Space.xs))
                         Text("New")
@@ -120,9 +124,16 @@ fun AlarmsScreen(
             )
         }
 
+        // An alarm that can't reach you, or can't ring on time, is worse than none: switch the
+        // section off until Notifications and Exact alarms are both on.
+        if (locked) {
+            item { FeatureOffCard(Feature.Alarms, onOpenSettings) }
+            return@LazyColumn
+        }
+
         if (state.health?.allGood == false) {
             item {
-                AccessNeededCard("Some alarms will be late or silent - an alarm permission is off.", onOpenSettings)
+                AccessNeededCard("Alarms may be dropped or show as a small banner - turn on the optional alarm settings.", onOpenSettings)
             }
         }
 

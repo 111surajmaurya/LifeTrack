@@ -1,5 +1,7 @@
 package com.lifetrack.app.ui.home
 
+import com.lifetrack.app.ui.settings.AccessStore
+import com.lifetrack.app.ui.settings.Feature
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifetrack.app.data.DayValue
@@ -43,7 +45,9 @@ data class DayGoal(
     val progress: Float,
     val met: Boolean,
     val budget: Boolean = false,
-    val over: Boolean = false
+    val over: Boolean = false,
+    /** Time spent rather than earned (screen time): its ring is drawn red at any size. */
+    val usage: Boolean = false
 )
 
 // ---------------------------------------------------------------- per-section summaries
@@ -199,7 +203,9 @@ data class HomeState(
     val habits: HabitsCard = HabitsCard(),
     val running: RunningTimer? = null,
     val screen: ScreenCard = ScreenCard(),
-    val alarms: AlarmsCard = AlarmsCard()
+    val alarms: AlarmsCard = AlarmsCard(),
+    /** Sections switched off for want of access; their cards say so and their goals don't count. */
+    val locked: Set<Feature> = emptySet()
 ) {
     /**
      * The goals behind "3 of 5". Burn only joins the list once the phone is actually
@@ -212,8 +218,9 @@ data class HomeState(
                 budget = true, over = calories.over
             )
         )
-        add(DayGoal("Steps", "👣", "activity", activity.progress, activity.met))
-        if (activity.burnGoal > 0 && activity.burnKcal > 0) {
+        // A goal the phone can't measure would sit at zero all day; it doesn't count.
+        if (Feature.Steps !in locked) add(DayGoal("Steps", "👣", "activity", activity.progress, activity.met))
+        if (Feature.Steps !in locked && activity.burnGoal > 0 && activity.burnKcal > 0) {
             add(
                 DayGoal(
                     "Burn", "🔥", "activity",
@@ -223,10 +230,10 @@ data class HomeState(
             )
         }
         add(DayGoal("Habits", "🌱", "habits", habits.progress, habits.met))
-        add(
+        if (Feature.ScreenTime !in locked) add(
             DayGoal(
                 "Focus", "📱", "screen", screen.progress, screen.met,
-                budget = true, over = screen.over
+                budget = true, over = screen.over, usage = true
             )
         )
     }
@@ -382,18 +389,22 @@ class HomeViewModel(repo: Repository) : ViewModel() {
     }
 
     val state: StateFlow<HomeState> =
-        combine(calories, activity, habits, screen, alarms) { cal, act, hab, scr, alm ->
-            HomeState(
-                today = today,
-                from = from,
-                calories = cal,
-                activity = act,
-                habits = hab.card,
-                running = hab.running,
-                screen = scr,
-                alarms = alm
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
+        combine(
+            combine(calories, activity, habits, screen, alarms) { cal, act, hab, scr, alm ->
+                HomeState(
+                    today = today,
+                    from = from,
+                    calories = cal,
+                    activity = act,
+                    habits = hab.card,
+                    running = hab.running,
+                    screen = scr,
+                    alarms = alm
+                )
+            },
+            AccessStore.states
+        ) { home, access -> home.copy(locked = Feature.lockedIn(access)) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
 }
 
 /** The longest the next-alarm card goes without re-deriving itself. */

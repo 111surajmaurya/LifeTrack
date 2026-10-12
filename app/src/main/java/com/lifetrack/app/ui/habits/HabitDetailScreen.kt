@@ -1,5 +1,7 @@
 package com.lifetrack.app.ui.habits
 
+import androidx.compose.ui.platform.LocalContext
+import com.lifetrack.app.data.TrackingStart
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -67,7 +69,7 @@ private enum class Span(val label: String) { Week("Week"), Month("Month") }
 fun HabitDetailScreen(
     habitId: Long,
     onBack: () -> Unit,
-    vm: HabitDetailViewModel = appViewModel { HabitDetailViewModel(it) }
+    vm: HabitDetailViewModel = LocalContext.current.let { ctx -> appViewModel { HabitDetailViewModel(it, TrackingStart.date(ctx)) } }
 ) {
     LaunchedEffect(habitId) { vm.load(habitId) }
 

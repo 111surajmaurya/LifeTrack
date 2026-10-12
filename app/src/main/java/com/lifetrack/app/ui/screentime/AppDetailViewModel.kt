@@ -26,7 +26,8 @@ enum class DetailWindow(val days: Int, val label: String) {
     Week(7, "This week"),
     Month(30, "This month"),
     Quarter(90, "3 months"),
-    HalfYear(182, "6 months");
+    HalfYear(182, "6 months"),
+    Year(365, "12 months");
 
     val barred: Boolean get() = days <= 7
 }

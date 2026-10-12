@@ -257,18 +257,25 @@ fun ProgressBar(
 /**
  * A bar that keeps going once you pass the goal, with the overflow drawn in the
  * over-budget colour on top of the filled track. Used for per-meal calorie budgets.
+ *
+ * [usage] is for something that is a cost however little of it there is - screen time. Its
+ * bar is red from the first minute, deepening towards the limit, instead of the green a meal
+ * inside its budget gets: an hour on Instagram is never "on track".
  */
 @Composable
 fun OverflowBar(
     value: Float,
     goal: Float,
     modifier: Modifier = Modifier,
-    height: Dp = 8.dp
+    height: Dp = 8.dp,
+    usage: Boolean = false
 ) {
     val a = accents()
     val ratio = if (goal > 0f) value / goal else 0f
     if (ratio <= 1f) {
-        ProgressBar(ratio, a.forProgress(ratio), modifier, height)
+        val fill = if (usage) a.negative.copy(alpha = 0.55f + 0.45f * ratio.coerceIn(0f, 1f))
+        else a.forProgress(ratio)
+        ProgressBar(ratio, fill, modifier, height)
     } else {
         val overFraction = ((ratio - 1f) / ratio).coerceIn(0f, 1f)
         Box(
@@ -378,9 +385,9 @@ fun <T> SegmentedPicker(
  * A dropdown for choosing how far back a screen looks.
  *
  * Replaces the three-way [SegmentedPicker] on the detail screens: a pill switcher stops being
- * readable past about four options, and the windows worth offering (today through six months)
- * are more than that. Six months is the last useful stop because [Retention] prunes past it -
- * offering "this year" would show half a year of blank.
+ * readable past about four options, and the windows worth offering (today through twelve months)
+ * are more than that. Twelve months is the last useful stop because [Retention] prunes past it -
+ * offering anything longer would show nothing but blank.
  */
 @Composable
 fun <T> PeriodPicker(

@@ -17,13 +17,14 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlin.math.roundToInt
 
-/** How far back the detail screen looks. Six months is the whole retention window. */
+/** How far back the detail screen looks. Twelve months is the whole retention window. */
 enum class CalorieWindow(val label: String, val days: Int) {
     Today("Today", 1),
     Week("This week", 7),
     Month("This month", 30),
     Quarter("3 months", 90),
-    HalfYear("6 months", Retention.DAYS.toInt());
+    HalfYear("6 months", 182),
+    Year("12 months", Retention.DAYS.toInt());
 
     /** Short enough to draw as bars; anything longer becomes a line. */
     val barred: Boolean get() = days <= 7

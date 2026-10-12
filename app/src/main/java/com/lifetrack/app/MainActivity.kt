@@ -15,6 +15,7 @@ import com.lifetrack.app.data.Slot
 import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.screentime.UsageSync
 import com.lifetrack.app.ui.LifeTrackNav
+import com.lifetrack.app.ui.settings.AccessStore
 import com.lifetrack.app.ui.theme.LifeTrackTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -156,5 +157,7 @@ class MainActivity : ComponentActivity() {
             // Back from a settings page, an access may have just been switched on or off.
             runCatching { LimitWatchService.sync(this@MainActivity) }
         }
+        // ...and every screen that locks without it should hear about it.
+        lifecycleScope.launch { runCatching { AccessStore.refresh(this@MainActivity) } }
     }
 }

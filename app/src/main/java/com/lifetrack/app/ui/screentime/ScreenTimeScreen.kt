@@ -63,6 +63,9 @@ import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.TrackedApp
 import com.lifetrack.app.screentime.LimitWatchService
 import com.lifetrack.app.ui.settings.AccessNeededCard
+import com.lifetrack.app.ui.settings.Feature
+import com.lifetrack.app.ui.settings.FeatureOffCard
+import com.lifetrack.app.ui.settings.featureLocked
 import com.lifetrack.app.screentime.UsageSync
 import com.lifetrack.app.ui.appViewModel
 import com.lifetrack.app.ui.components.BarChart
@@ -126,6 +129,7 @@ fun ScreenTimeScreen(
     var limitFor by remember { mutableStateOf<TrackedApp?>(null) }
     var selectedDay by remember { mutableStateOf<String?>(null) }
 
+    val locked = featureLocked(Feature.ScreenTime)
     val heroAccent = if (state.anyOver) a.negative else a.screen
     val palette = listOf(a.screen, a.activity, a.habits, a.calories, a.alarms, a.caution)
 
@@ -145,7 +149,7 @@ fun ScreenTimeScreen(
                     subtitle = Dates.label(state.day),
                     modifier = Modifier.weight(1f),
                     trailing = {
-                        FilledTonalButton(onClick = { showAdd = true }) {
+                        if (!locked) FilledTonalButton(onClick = { showAdd = true }) {
                             Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(Space.xs))
                             Text("Add app")
@@ -155,8 +159,10 @@ fun ScreenTimeScreen(
             }
         }
 
-        if (!state.permission) {
-            item { AccessNeededCard("Usage access is off, so app times can't be read.", onOpenSettings) }
+        // Without usage access there is nothing true to show, so show nothing but the way to fix it.
+        if (locked) {
+            item { FeatureOffCard(Feature.ScreenTime, onOpenSettings) }
+            return@LazyColumn
         }
 
         if (!guardOn) {
@@ -293,7 +299,7 @@ private fun TodayHero(state: ScreenTimeState, accent: Color) {
         )
         if (state.totalLimit > 0) {
             Spacer(Modifier.height(Space.md))
-            OverflowBar(state.totalToday.toFloat(), state.totalLimit.toFloat())
+            OverflowBar(state.totalToday.toFloat(), state.totalLimit.toFloat(), usage = true)
             Spacer(Modifier.height(Space.sm))
             Text(
                 when {
@@ -386,7 +392,7 @@ private fun AppCard(
             }
         }
         Spacer(Modifier.height(Space.md))
-        OverflowBar(row.minutes.toFloat(), row.limitMin.toFloat().coerceAtLeast(1f))
+        OverflowBar(row.minutes.toFloat(), row.limitMin.toFloat().coerceAtLeast(1f), usage = true)
         Row(
             Modifier.fillMaxWidth().padding(top = Space.xs),
             verticalAlignment = Alignment.CenterVertically

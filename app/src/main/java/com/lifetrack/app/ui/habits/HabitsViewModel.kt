@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifetrack.app.data.Dates
 import com.lifetrack.app.data.Habit
+import com.lifetrack.app.data.HabitDays
 import com.lifetrack.app.data.HabitKind
 import com.lifetrack.app.data.Repository
 import com.lifetrack.app.ui.components.CalendarDay
@@ -82,7 +83,8 @@ private data class HabitHistory(val habit: Habit, val byDate: Map<String, Double
     }
 }
 
-class HabitsViewModel(private val repo: Repository) : ViewModel() {
+/** [trackingStart] is `TrackingStart.date`: no habit is marked missed on a day before it. */
+class HabitsViewModel(private val repo: Repository, private val trackingStart: String) : ViewModel() {
 
     private val _notice = MutableStateFlow<String?>(null)
 
@@ -151,7 +153,11 @@ class HabitsViewModel(private val repo: Repository) : ViewModel() {
                         (h.byDate[today] ?: 0.0).toLong() else 0L,
                     countToday = if (h.habit.kindType == HabitKind.COUNT)
                         (h.byDate[today] ?: 0.0).toInt() else 0,
-                    week = week.map { d -> CalendarDay(d, h.progressOn(d), h.metOn(d)) }
+                    week = week.map { d ->
+                        val met = h.metOn(d)
+                        val first = HabitDays.firstDay(h.habit, trackingStart)
+                        CalendarDay(d, h.progressOn(d), met, missed = HabitDays.missed(d, met, first, today))
+                    }
                 )
             }
             HabitsUiState(
