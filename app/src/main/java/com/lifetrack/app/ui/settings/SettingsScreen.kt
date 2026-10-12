@@ -7,6 +7,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -38,9 +43,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -138,24 +145,54 @@ fun SettingsScreen(
         }
 
         // One card per part of the app: what it powers and whether that is working, then each
-        // access it uses - the required ones first.
+        // access it uses - the required ones first. Cards start folded to that status line so
+        // the screen reads at a glance; tapping the header opens the access rows. On first run
+        // they start open, since that is when everything gets turned on.
         Access.entries.groupBy { it.group }.forEach { (group, items) ->
             item(key = group) {
-                LifeCard {
-                    SectionLabel(group)
-                    Feature.entries.filter { it.group == group }.forEach { feature ->
-                        FeatureLine(feature, feature.missing(states))
-                    }
-                    Spacer(Modifier.height(Space.xs))
-                    items.sortedBy { Feature.needing(it).isEmpty() }.forEachIndexed { index, access ->
-                        if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
-                        AccessRow(
-                            access = access,
-                            state = states[access],
-                            onTurnOn = { turnOn(access) },
-                            onManage = { open(context, manageIntent(context, access)) },
-                            onInfo = { explaining = access }
+                var expanded by rememberSaveable(group) { mutableStateOf(firstRun) }
+                val turnedOn = items.count { states[it] == AccessState.ON }
+                LifeCard(padding = PaddingValues(0.dp)) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = !expanded }
+                            .padding(start = Space.lg, end = Space.md, top = Space.lg, bottom = if (expanded) Space.xs else Space.lg),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            SectionLabel(group)
+                            Feature.entries.filter { it.group == group }.forEach { feature ->
+                                FeatureLine(feature, feature.missing(states))
+                            }
+                        }
+                        if (states.isNotEmpty()) {
+                            Text(
+                                "$turnedOn of ${items.size} on",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            Icons.Rounded.ExpandMore,
+                            contentDescription = if (expanded) "Collapse $group" else "Expand $group",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = Space.xs).rotate(if (expanded) 180f else 0f)
                         )
+                    }
+                    AnimatedVisibility(expanded, enter = expandVertically(), exit = shrinkVertically()) {
+                        Column(Modifier.padding(start = Space.lg, end = Space.lg, bottom = Space.lg)) {
+                            items.sortedBy { Feature.needing(it).isEmpty() }.forEachIndexed { index, access ->
+                                if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                                AccessRow(
+                                    access = access,
+                                    state = states[access],
+                                    onTurnOn = { turnOn(access) },
+                                    onManage = { open(context, manageIntent(context, access)) },
+                                    onInfo = { explaining = access }
+                                )
+                            }
+                        }
                     }
                 }
             }
