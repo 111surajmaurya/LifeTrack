@@ -63,6 +63,12 @@ def resolve(src):
 
 def nutrients_for(src, grams):
     """Totals for one serving, plus provenance and the weight those totals actually describe."""
+    if src[0] == 'label':
+        # A chain's own published figure for the item as sold; nutrients it doesn't publish
+        # stay 0, which the app treats as unknown.
+        _kind, per_serving, prov = src
+        totals = dict((k, float(per_serving.get(k) or 0.0)) for k in NUTRIENTS)
+        return totals, "LABEL " + prov, float(grams)
     if src[0] == 'mix':
         totals = dict((k, 0.0) for k in NUTRIENTS)
         parts, weight = [], 0.0
@@ -92,12 +98,15 @@ CATEGORY_CONST = {
     "Roti & bread": 'ROTI', "Rice & grains": 'RICE', "Dal & curry": 'DAL', "Sabji": 'SABJI',
     "Egg & meat": 'NONVEG', "South Indian": 'SOUTH', "Chaat & street": 'CHAAT', "Snacks": 'SNACK',
     "Italian": 'ITALIAN', "Fast food": 'FAST', "Dairy & drinks": 'DAIRY', "Fruit & nuts": 'FRUIT',
-    "Sweets": 'SWEET', "Other": 'OTHER',
+    "Sweets": 'SWEET', "Other": 'OTHER', "Cakes & bakery": 'BAKERY',
+    "Beer, wine & spirits": 'ALCOHOL', "Domino's": 'DOMINOS', "McDonald's": 'MCD',
+    "Starbucks": 'STARBUCKS',
 }
 
 CATEGORY_ORDER = ["Roti & bread", "Rice & grains", "Dal & curry", "Sabji", "Egg & meat",
                   "South Indian", "Chaat & street", "Snacks", "Italian", "Fast food",
-                  "Dairy & drinks", "Fruit & nuts", "Sweets", "Other"]
+                  "Dairy & drinks", "Fruit & nuts", "Sweets", "Cakes & bakery",
+                  "Beer, wine & spirits", "Domino's", "McDonald's", "Starbucks", "Other"]
 
 
 def main():
@@ -141,6 +150,8 @@ def main():
              "",
              "Sources: FNDDS 2021-2023 (survey foods, released 2024-10-31) for prepared dishes,",
              "         SR Legacy (2018-04) for reference foods. Both from fdc.nal.usda.gov.",
+             "         LABEL rows are a chain's own published India nutrition sheet, per item as",
+             "         sold; the weight column is 0 there because the sheet gives the serving.",
              "",
              "kcal/protein/fibre/vitA/vitC/iron/calcium are per ONE MEDIUM SERVING at the gram",
              "weight shown, not per 100 g.",
@@ -169,7 +180,9 @@ KT_TEMPLATE = '''package com.lifetrack.app.data
  * FNDDS 2021-2023 for prepared dishes (dosa, biryani, samosa, pizza) and SR Legacy for
  * reference foods (chapati, rice, fruit) - scaled to a real Indian serving: a 150 g katori,
  * a 40 g roti, a 250 ml glass. Dishes neither database carries (poha, lassi, bhel puri,
- * gulab jamun) are built from their measured ingredients instead of guessed at.
+ * gulab jamun) are built from their measured ingredients instead of guessed at. Domino's,
+ * McDonald's and Starbucks items use each chain's own published India nutrition figures,
+ * per item as sold; what a chain doesn't publish (usually vitamins and minerals) is 0.
  *
  * The tooling that produced it, including the per-food provenance of every figure, lives in
  * `tools/foodseed/` - edit `catalogue.py` and re-run `generate_seed.py`, never this file.
@@ -185,7 +198,7 @@ object FoodSeed {
      * `Settings.seedVersion` and refreshes the catalogue when it is behind, which is the only
      * reason a phone that already has `food_items` rows ever sees a corrected figure.
      */
-    const val VERSION = 2
+    const val VERSION = 3
 
     const val ROTI = "Roti & bread"
     const val RICE = "Rice & grains"
@@ -201,11 +214,16 @@ object FoodSeed {
     const val FRUIT = "Fruit & nuts"
     const val SWEET = "Sweets"
     const val OTHER = "Other"
+    const val BAKERY = "Cakes & bakery"
+    const val ALCOHOL = "Beer, wine & spirits"
+    const val DOMINOS = "Domino's"
+    const val MCD = "McDonald's"
+    const val STARBUCKS = "Starbucks"
 
     /** Categories in the order they show up as browse chips. */
     val categories = listOf(
         ROTI, RICE, DAL, SABJI, NONVEG, SOUTH, CHAAT, SNACK, ITALIAN, FAST,
-        DAIRY, FRUIT, SWEET, OTHER
+        DAIRY, FRUIT, SWEET, BAKERY, ALCOHOL, DOMINOS, MCD, STARBUCKS, OTHER
     )
 
     fun emojiFor(category: String): String = when (category) {
@@ -222,6 +240,11 @@ object FoodSeed {
         DAIRY -> "\\uD83E\\uDD5B"     // milk
         FRUIT -> "\\uD83C\\uDF4E"     // apple
         SWEET -> "\\uD83C\\uDF6E"     // custard
+        BAKERY -> "\\uD83C\\uDF70"    // shortcake
+        ALCOHOL -> "\\uD83C\\uDF7A"   // beer mug
+        DOMINOS -> "\\uD83C\\uDF55"   // pizza
+        MCD -> "\\uD83C\\uDF54"       // burger
+        STARBUCKS -> "\\u2615"          // hot beverage
         else -> "\\uD83C\\uDF7D"      // plate
     }
 

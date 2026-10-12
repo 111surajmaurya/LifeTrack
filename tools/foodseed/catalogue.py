@@ -10,6 +10,9 @@ Each entry is (name, category, serving, grams, source) where
           ('id', 123456)              -> a specific FDC entry, pinned because the search picked wrong
           ('mix', [(src, g), ...])    -> a dish neither database carries, built from its measured
                                          ingredients; the grams listed ARE the serving.
+          ('label', {kcal, protein, fiber}, provenance)
+                                      -> a chain's published figure for the item as sold
+                                         (Domino's, McDonald's, Starbucks); grams is 0.
 
 Everything downstream (calories, protein, fibre, vitamin A, vitamin C, iron, calcium) is
 computed from those, so no nutrient number in this project is typed in by hand.
@@ -29,6 +32,11 @@ DAIRY = "Dairy & drinks"
 FRUIT = "Fruit & nuts"
 SWEET = "Sweets"
 OTHER = "Other"
+BAKERY = "Cakes & bakery"
+ALCOHOL = "Beer, wine & spirits"
+DOMINOS = "Domino's"
+MCD = "McDonald's"
+STARBUCKS = "Starbucks"
 
 PIECE, BOWL, PLATE, GLASS, CUP, SPOON, HANDFUL, SERVE = (
     "Piece", "Bowl", "Plate", "Glass", "Cup", "Spoon", "Handful", "Serve")
@@ -323,3 +331,281 @@ FOODS = [
     ("Gajar Halwa", SWEET, BOWL, 100, ('mix', [(('q', 'carrots cooked'), 55), (MILK, 20), (SUGAR, 15), (GHEE, 10)])),
     ("Rasmalai", SWEET, PIECE, 60, ('mix', [(('q', 'cheese paneer'), 20), (MILK, 25), (SUGAR, 14)])),
 ]
+
+# ---------------------------------------------------------------------------------------------
+# Second round (seed v3): cakes and bakery, cafe drinks and shakes, sides, desserts, packaged
+# snacks, fruit and seeds, more protein, alcohol, and three chains' menus. Same rules as above,
+# except the chain items: those come from each chain's published India nutrition sheet
+# ('label' source), because no composition table carries a branded recipe.
+# ---------------------------------------------------------------------------------------------
+WHIPPED_CREAM = ('id', 2705598)  # Cream, whipped
+VANILLA_SHAKE = ('id', 170884)   # Milk shakes, thick vanilla
+VANILLA_ICE = ('id', 2705630)    # Ice cream, vanilla
+SPONGE = ('id', 2707886)         # Cake, sponge
+WHITE_FLOUR = ('q', 'flour wheat white')
+
+FOODS += [
+    # ------------------------------------------------------------------ Cakes & bakery
+    ("Chocolate cake (slice)", BAKERY, PIECE, 80, ('id', 2707866)),
+    ("Black forest cake (slice)", BAKERY, PIECE, 90, ('mix', [(('id', 2707868), 55), (WHIPPED_CREAM, 25), (('id', 171719), 10)])),
+    ("Pineapple cake (slice)", BAKERY, PIECE, 90, ('mix', [(SPONGE, 60), (WHIPPED_CREAM, 20), (('id', 2709260), 10)])),
+    ("Pastry (fresh cream, slice)", BAKERY, PIECE, 90, ('mix', [(SPONGE, 60), (WHIPPED_CREAM, 30)])),
+    ("Red velvet cake (slice)", BAKERY, PIECE, 80, ('id', 2707884)),
+    ("Vanilla cake (slice)", BAKERY, PIECE, 80, ('id', 2707891)),
+    ("Cheesecake (slice)", BAKERY, PIECE, 100, ('id', 2707861)),
+    ("Cupcake", BAKERY, PIECE, 50, ('id', 2707853)),
+    ("Plum cake / fruit cake (slice)", BAKERY, PIECE, 50, ('id', 174939)),
+    ("Pound cake / butter cake (slice)", BAKERY, PIECE, 60, ('id', 2707882)),
+    ("Sponge cake (slice)", BAKERY, PIECE, 60, ('id', 2707886)),
+    ("Swiss roll (slice)", BAKERY, PIECE, 40, ('id', 2707878)),
+    ("Cake rusk", BAKERY, PIECE, 20, ('id', 2707705)),
+    ("Muffin (blueberry / fruit)", BAKERY, PIECE, 110, ('id', 2707830)),
+    ("Chocolate muffin", BAKERY, PIECE, 110, ('id', 2707833)),
+    ("Brownie", BAKERY, PIECE, 60, ('id', 2707904)),
+    ("Croissant (butter)", BAKERY, PIECE, 60, ('id', 2707678)),
+    ("Danish pastry", BAKERY, PIECE, 70, ('id', 2708060)),
+    ("Cream roll", BAKERY, PIECE, 50, ('id', 2708054)),
+    ("Cream bun", BAKERY, PIECE, 70, ('mix', [(('id', 2707666), 55), (WHIPPED_CREAM, 15)])),
+    ("Khari (puff biscuit)", BAKERY, PIECE, 10, ('id', 2708053)),
+    ("Chocolate chip cookie", BAKERY, PIECE, 30, ('id', 2707909)),
+    ("Nankhatai", BAKERY, PIECE, 20, ('mix', [(WHITE_FLOUR, 7), (GHEE, 6), (SUGAR, 5), (BESAN, 2)])),
+    ("Waffle", BAKERY, PIECE, 75, ('id', 2708325)),
+    ("Pancake", BAKERY, PIECE, 75, ('id', 2708304)),
+    ("Crepe", BAKERY, PIECE, 60, ('id', 2708342)),
+    ("French toast (slice)", BAKERY, PIECE, 65, ('id', 2708335)),
+
+    # ------------------------------------------------------------------ Cafe drinks & shakes
+    ("Cappuccino", DAIRY, CUP, 240, ('id', 2710472)),
+    ("Caffe latte", DAIRY, CUP, 300, ('id', 2710386)),
+    ("Americano", DAIRY, CUP, 240, ('id', 2710375)),
+    ("Espresso (single shot)", DAIRY, CUP, 30, ('id', 2710378)),
+    ("Cafe mocha", DAIRY, CUP, 300, ('id', 2710410)),
+    ("Iced latte", DAIRY, GLASS, 300, ('id', 2710431)),
+    ("Frappe / blended iced coffee", DAIRY, GLASS, 350, ('id', 2710398)),
+    ("Iced tea (sweetened)", DAIRY, GLASS, 300, ('id', 2710515)),
+    ("Lemonade", DAIRY, GLASS, 250, ('id', 2710570)),
+    ("Virgin mojito", DAIRY, GLASS, 300, ('mix', [(('id', 168156), 20), (SUGAR, 25)])),
+    ("Fruit smoothie", DAIRY, GLASS, 300, ('id', 2705513)),
+    ("Bubble tea", DAIRY, GLASS, 400, ('id', 2710508)),
+    ("Energy drink (250 ml can)", DAIRY, GLASS, 250, ('id', 2710756)),
+    ("Vanilla milkshake", DAIRY, GLASS, 300, VANILLA_SHAKE),
+    ("Oreo shake", DAIRY, GLASS, 285, ('mix', [(VANILLA_SHAKE, 250), (('id', 2707920), 35)])),
+    ("KitKat shake", DAIRY, GLASS, 280, ('mix', [(VANILLA_SHAKE, 250), (('q', 'chocolate milk candy'), 20), (('id', 2707981), 10)])),
+    ("Butterscotch shake", DAIRY, GLASS, 275, ('mix', [(VANILLA_SHAKE, 250), (('id', 2710284), 25)])),
+    ("Tofu (100 g)", DAIRY, PIECE, 100, ('id', 172475)),
+    ("Whey protein (1 scoop)", DAIRY, SPOON, 30, ('id', 173180)),
+
+    # ------------------------------------------------------------------ Beer, wine & spirits
+    # Spirits are 40% ABV (80 proof); a peg is 30 ml (small) or 60 ml (large), ~0.95 g/ml.
+    ("Beer (330 ml bottle)", ALCOHOL, GLASS, 330, ('id', 2710616)),
+    ("Beer (650 ml bottle)", ALCOHOL, GLASS, 650, ('id', 2710616)),
+    ("Light beer (330 ml)", ALCOHOL, GLASS, 330, ('id', 2710617)),
+    ("Red wine (150 ml glass)", ALCOHOL, GLASS, 150, ('id', 2710688)),
+    ("White wine (150 ml glass)", ALCOHOL, GLASS, 150, ('id', 2710689)),
+    ("Whisky (small peg, 30 ml)", ALCOHOL, SERVE, 28.5, ('id', 2710700)),
+    ("Whisky (large peg, 60 ml)", ALCOHOL, SERVE, 57, ('id', 2710700)),
+    ("Rum (small peg, 30 ml)", ALCOHOL, SERVE, 28.5, ('id', 2710703)),
+    ("Vodka (small peg, 30 ml)", ALCOHOL, SERVE, 28.5, ('id', 2710704)),
+    ("Gin (small peg, 30 ml)", ALCOHOL, SERVE, 28.5, ('id', 2710702)),
+    ("Rum & cola", ALCOHOL, GLASS, 250, ('id', 2710660)),
+    ("Mojito (cocktail)", ALCOHOL, GLASS, 250, ('id', 2710644)),
+    ("Margarita (cocktail)", ALCOHOL, GLASS, 150, ('id', 2710638)),
+
+    # ------------------------------------------------------------------ Sides & fast food
+    ("Peri peri fries", FAST, BOWL, 117, ('id', 2709456)),
+    ("Potato wedges", FAST, BOWL, 120, ('id', 168443)),
+    ("Hash brown", FAST, PIECE, 55, ('id', 2709477)),
+    ("Coleslaw", FAST, BOWL, 100, ('id', 2709815)),
+    ("Mashed potato", FAST, BOWL, 150, ('id', 2709492)),
+    ("Baked beans", FAST, BOWL, 130, ('id', 2707390)),
+    ("Sauteed vegetables", FAST, BOWL, 150, ('id', 2710018)),
+    ("Cheese dip", FAST, SERVE, 25, ('id', 2705786)),
+    ("Mayonnaise", FAST, SPOON, 14, ('id', 2710204)),
+    ("Ketchup", FAST, SPOON, 15, ('id', 2709733)),
+    ("Chicken wings (piece)", FAST, PIECE, 30, ('id', 2706065)),
+    ("Popcorn chicken", FAST, SERVE, 100, ('id', 2706092)),
+    ("Chicken strips (piece)", FAST, PIECE, 35, ('id', 2706098)),
+    ("Crispy chicken burger (Zinger style)", FAST, PIECE, 200, ('id', 2707008)),
+    ("Falafel (piece)", FAST, PIECE, 17, ('id', 2707408)),
+    ("Falafel wrap / pita", FAST, PIECE, 200, ('id', 2707483)),
+    ("Hummus", FAST, SERVE, 60, ('id', 2707402)),
+    ("Pita bread", FAST, PIECE, 60, ('id', 2707616)),
+    ("Breadsticks", FAST, PIECE, 30, ('id', 2707689)),
+    ("Chicken pizza slice", ITALIAN, PIECE, 110, ('id', 2708658)),
+    ("Paneer pizza slice", ITALIAN, PIECE, 110, ('mix', [(('id', 2708630), 90), (('q', 'cheese paneer'), 20)])),
+    ("Cheese burst pizza slice", ITALIAN, PIECE, 125, ('mix', [(('id', 2708623), 100), (('id', 2705808), 25)])),
+
+    # ------------------------------------------------------------------ Desserts
+    ("Ice cream sundae", SWEET, SERVE, 150, ('id', 2705658)),
+    ("Brownie with ice cream", SWEET, PLATE, 141, ('mix', [(('id', 2707904), 60), (VANILLA_ICE, 66), (('id', 2710276), 15)])),
+    ("Chocolate ice cream (scoop)", SWEET, PIECE, 66, ('id', 2705632)),
+    ("Gelato (scoop)", SWEET, PIECE, 70, ('id', 2705636)),
+    ("Chocolate pudding", SWEET, BOWL, 120, ('id', 2705679)),
+    ("Chocolate mousse", SWEET, BOWL, 100, ('id', 168777)),
+    ("Jelly (dessert)", SWEET, BOWL, 120, ('id', 2710310)),
+    ("Fruit cream", SWEET, BOWL, 150, ('mix', [(WHIPPED_CREAM, 50), (('q', 'fruit salad'), 90), (SUGAR, 10)])),
+    ("Dark chocolate (2 squares)", SWEET, PIECE, 20, ('id', 170273)),
+
+    # ------------------------------------------------------------------ Packaged snacks
+    # Biscuit weights are one typical biscuit of each kind.
+    ("Lay's / potato chips (52 g pack)", SNACK, PIECE, 52, ('id', 2709422)),
+    ("Kurkure / corn puffs (30 g)", SNACK, HANDFUL, 30, ('id', 167949)),
+    ("Marie biscuit", SNACK, PIECE, 7, ('id', 168014)),
+    ("Parle-G / glucose biscuit", SNACK, PIECE, 7, ('id', 2707970)),
+    ("Bourbon biscuit", SNACK, PIECE, 12, ('id', 2707920)),
+    ("Oreo biscuit", SNACK, PIECE, 11, ('id', 2707920)),
+    ("Good Day / butter cookie", SNACK, PIECE, 9, ('id', 2707970)),
+    ("Digestive biscuit", SNACK, PIECE, 15, ('id', 2707945)),
+    ("Cream biscuit", SNACK, PIECE, 10, ('id', 2707975)),
+    ("Granola bar", SNACK, PIECE, 25, ('id', 2708101)),
+    ("Trail mix", SNACK, HANDFUL, 30, ('id', 2707575)),
+
+    # ------------------------------------------------------------------ Breakfast & protein
+    ("Granola (50 g)", RICE, BOWL, 50, ('id', 171646)),
+    ("Peanut butter", OTHER, SPOON, 16, ('id', 172470)),
+    ("Jam", OTHER, SPOON, 20, ('id', 2710301)),
+    ("Scrambled eggs (2 eggs)", NONVEG, PLATE, 110, ('id', 2707198)),
+    ("Bacon (2 strips)", NONVEG, SERVE, 16, ('id', 2705890)),
+    ("Chicken sausage", NONVEG, PIECE, 40, ('id', 2706200)),
+    ("Chicken salami (slice)", NONVEG, PIECE, 15, ('id', 172937)),
+    ("Grilled chicken (150 g)", NONVEG, SERVE, 150, ('id', 2705967)),
+    ("Tuna, canned (100 g)", NONVEG, SERVE, 100, ('id', 175158)),
+    ("Salmon (100 g)", NONVEG, SERVE, 100, ('id', 172000)),
+    ("Chole chawal", RICE, PLATE, 300, ('mix', [(('id', 2707415), 150), (RICE_COOKED, 150)])),
+
+    # ------------------------------------------------------------------ Fruit, nuts & seeds
+    ("Pineapple", FRUIT, BOWL, 165, ('id', 2709260)),
+    ("Kiwi", FRUIT, PIECE, 75, ('id', 168153)),
+    ("Strawberries", FRUIT, BOWL, 150, ('id', 2709283)),
+    ("Litchi", FRUIT, PIECE, 10, ('id', 169086)),
+    ("Jamun", FRUIT, BOWL, 100, ('id', 168150)),
+    ("Muskmelon", FRUIT, BOWL, 160, ('id', 169092)),
+    ("Plum", FRUIT, PIECE, 66, ('id', 169949)),
+    ("Peach", FRUIT, PIECE, 150, ('id', 169928)),
+    ("Mosambi / sweet lime", FRUIT, PIECE, 140, ('q', 'oranges raw')),
+    ("Custard apple (sitaphal)", FRUIT, PIECE, 100, ('id', 168175)),
+    ("Coconut (fresh piece)", FRUIT, PIECE, 45, ('id', 170169)),
+    ("Cherries", FRUIT, BOWL, 140, ('id', 171719)),
+    ("Blueberries", FRUIT, BOWL, 148, ('id', 2709275)),
+    ("Avocado (half)", FRUIT, PIECE, 100, ('id', 171706)),
+    ("Dragon fruit", FRUIT, BOWL, 150, ('id', 2709234)),
+    ("Fig (fresh)", FRUIT, PIECE, 50, ('id', 173021)),
+    ("Anjeer / dried fig", FRUIT, PIECE, 8, ('id', 174665)),
+    ("Prunes", FRUIT, PIECE, 9.5, ('id', 168162)),
+    ("Hazelnut", FRUIT, PIECE, 1.4, ('id', 2707502)),
+    ("Chia seeds", FRUIT, SPOON, 12, ('id', 170554)),
+    ("Flaxseeds", FRUIT, SPOON, 10, ('id', 169414)),
+    ("Sunflower seeds", FRUIT, SPOON, 10, ('id', 170562)),
+    ("Pumpkin seeds", FRUIT, SPOON, 10, ('id', 170556)),
+]
+
+# ------------------------------------------------------------------ Chains
+# Per item as sold, from the chain's own India nutrition sheet. Pizza slices are a third of
+# the sheet's 3-slice medium hand-tossed serve.
+
+def _label(cat, rows, source):
+    out = []
+    for row in rows:
+        name, serving, kcal, protein = row[:4]
+        fiber = row[4] if len(row) == 6 else None
+        note = row[-1]
+        out.append((name, cat, serving, 0, ('label', {'kcal': kcal, 'protein': protein, 'fiber': fiber}, "%s; %s" % (source, note))))
+    return out
+
+
+DOMINOS_SRC = "Domino's India nutrition & allergen sheet (dominos-nutritional-information.pdf, via carbon-v2.ipsator.com)"
+# (name, serving, kcal, protein, note)
+DOMINOS_MENU = [
+    ("Domino's Margherita (medium slice)", "Piece", 195, 7.0, "medium hand-tossed: 3-slice serve 585 kcal / 21 g, divided by 3"),
+    ("Domino's Farmhouse (medium slice)", "Piece", 206, 7.7, "3-slice serve 619 kcal / 23 g"),
+    ("Domino's Peppy Paneer (medium slice)", "Piece", 240, 10.0, "3-slice serve 721 kcal / 30 g"),
+    ("Domino's Veg Extravaganza (medium slice)", "Piece", 232, 9.3, "3-slice serve 697 kcal / 28 g"),
+    ("Domino's Mexican Green Wave (medium slice)", "Piece", 201, 7.3, "3-slice serve 602 kcal / 22 g"),
+    ("Domino's Deluxe Veggie (medium slice)", "Piece", 235, 9.3, "3-slice serve 704 kcal / 28 g"),
+    ("Domino's Cheese n Corn (medium slice)", "Piece", 200, 7.3, "3-slice serve 600 kcal / 22 g"),
+    ("Domino's Paneer Makhani (medium slice)", "Piece", 268, 10.3, "3-slice serve 804 kcal / 31 g"),
+    ("Domino's Veggie Paradise (medium slice)", "Piece", 203, 7.3, "3-slice serve 610 kcal / 22 g"),
+    ("Domino's Indi Tandoori Paneer (medium slice)", "Piece", 269, 8.7, "3-slice serve 806 kcal / 26 g"),
+    ("Domino's Chicken Dominator (medium slice)", "Piece", 243, 12.0, "3-slice serve 728 kcal / 36 g"),
+    ("Domino's Chicken Golden Delight (medium slice)", "Piece", 229, 9.7, "3-slice serve 688 kcal / 29 g"),
+    ("Domino's Pepper Barbecue Chicken (medium slice)", "Piece", 211, 9.0, "3-slice serve 632 kcal / 27 g"),
+    ("Domino's Indi Chicken Tikka (medium slice)", "Piece", 246, 9.7, "3-slice serve 737 kcal / 29 g"),
+    ("Domino's Chicken Sausage (medium slice)", "Piece", 218, 8.7, "3-slice serve 655 kcal / 26 g"),
+    ("Domino's Non-veg Supreme (medium slice)", "Piece", 226, 10.7, "3-slice serve 678 kcal / 32 g"),
+    ("Domino's Garlic Breadsticks (full order)", "Serve", 288, 5.0, "2 serves x 144 kcal"),
+    ("Domino's Stuffed Garlic Bread (full order)", "Serve", 288, 9.0, "2 serves x 144 kcal, as published"),
+    ("Domino's Cheesy Dip (1 cup)", "Serve", 55, 2.0, "per serve"),
+    ("Domino's Choco Lava Cake", "Piece", 327, 6.0, "per cake"),
+    ("Domino's Taco Mexicana Veg (1 taco)", "Piece", 248, 4.0, "veg single"),
+    ("Domino's Taco Mexicana Non-veg (1 taco)", "Piece", 219, 4.5, "single 219 kcal; protein half of the 2-pc pack"),
+    ("Domino's Burger Pizza Classic Veg", "Piece", 356, 12.0, "per serve"),
+    ("Domino's Burger Pizza Premium Veg", "Piece", 455, 18.0, "per serve"),
+    ("Domino's Burger Pizza Classic Non-veg", "Piece", 390, 19.0, "per serve"),
+    ("Domino's Creamy Tomato Pasta Veg", "Serve", 440, 7.0, "per serve"),
+    ("Domino's Cheesy Jalapeno Pasta Veg", "Serve", 523, 8.0, "per serve"),
+    ("Domino's Pepsi (350 ml)", "Glass", 151, 0.0, "fountain, per 350 ml"),
+]
+
+MCD_SRC = "McDonald's India (West & South) nutrition information, mcdonaldsindia.com/pdf/2024/nutrition-information.pdf; fibre and McPuff/Cold Coffee from the earlier mcdonaldsindia.com/pdf/nutrition-information.pdf"
+# (name, serving, kcal, protein, fibre or None, note)
+MCD_MENU = [
+    ("McDonald's McAloo Tikki burger", "Piece", 340, 8.5, 4, "146 g"),
+    ("McDonald's McVeggie burger", "Piece", 402, 10.2, 5, "168 g"),
+    ("McDonald's McSpicy Paneer burger", "Piece", 653, 20.3, 4, "199 g"),
+    ("McDonald's McSpicy Chicken burger", "Piece", 452, 21.5, 3, "186 g"),
+    ("McDonald's McChicken burger", "Piece", 401, 15.7, 3, "173 g"),
+    ("McDonald's Chicken Maharaja Mac", "Piece", 695, 33.9, None, "296 g"),
+    ("McDonald's Veg Maharaja Mac", "Piece", 833, 24.2, None, "306 g"),
+    ("McDonald's Filet-O-Fish", "Piece", 348, 15.4, 3, "136 g"),
+    ("McDonald's Chicken Kebab burger", "Piece", 357, 8.6, None, "138 g; protein as printed"),
+    ("McDonald's Spicy Paneer Wrap", "Piece", 727, 21.2, 5, "270 g"),
+    ("McDonald's Spicy Chicken Wrap", "Piece", 567, 23.7, None, "257 g"),
+    ("McDonald's Chicken McNuggets (6 pc)", "Serve", 255, 15.0, 1, "96 g"),
+    ("McDonald's Fries (regular)", "Serve", 225, 3.4, None, "77 g"),
+    ("McDonald's Fries (medium)", "Serve", 318, 4.8, None, "109 g"),
+    ("McDonald's Fries (large)", "Serve", 449, 6.8, None, "154 g"),
+    ("McDonald's Veg Pizza McPuff", "Piece", 226, 4.0, 2, "87 g, earlier sheet"),
+    ("McDonald's McFlurry Oreo (regular)", "Cup", 234, 4.1, None, "120 g in the nutrition table"),
+    ("McDonald's Soft serve cone", "Piece", 100, 2.3, None, "65 g"),
+    ("McDonald's Hot fudge sundae (regular)", "Cup", 122, 2.3, None, "65 g"),
+    ("McDonald's McCafe Cappuccino (regular)", "Cup", 184, 8.8, None, "297.5 ml"),
+    ("McDonald's Cold coffee", "Glass", 182, 5.0, 0, "250 g, earlier sheet"),
+    ("McDonald's Coca-Cola (medium)", "Glass", 151, 0.0, 0, "394 ml"),
+    ("McDonald's Piri Piri chicken wings (4 pc)", "Serve", 481, 25.9, None, "160 g"),
+    ("McDonald's McSpicy Fried Chicken (1 pc)", "Piece", 249, 17.3, None, "115 g"),
+    ("McDonald's Hash brown", "Piece", 140, 1.9, 2, "64 g"),
+]
+
+FOODS += _label(DOMINOS, DOMINOS_MENU, DOMINOS_SRC) + _label(MCD, MCD_MENU, MCD_SRC)
+
+STARBUCKS_SRC = "Tata Starbucks India menu (starbucks.in, per-size kcal); India publishes kcal only, so drink protein/fibre are Starbucks US (starbucks.com) figures for the same drink in Tall, and food protein/fibre are unknown"
+# (name, serving, kcal, protein, fibre or None, note)
+STARBUCKS_MENU = [
+    ("Starbucks Caffe Latte (tall)", "Cup", 173, 10, 0, "protein: US tall"),
+    ("Starbucks Cappuccino (tall)", "Cup", 99, 7, 0, "protein: US tall"),
+    ("Starbucks Caffe Americano (tall)", "Cup", 0, 0, 0, "India lists 0 kcal"),
+    ("Starbucks Caffe Mocha (tall)", "Cup", 332, 11, 3, "no whipped topping; protein: US tall"),
+    ("Starbucks Caramel Macchiato (tall)", "Cup", 255, 8, 0, "protein: US tall"),
+    ("Starbucks Flat White (tall)", "Cup", 173, 9, 0, "protein: US tall"),
+    ("Starbucks Espresso (doppio)", "Cup", 0, 0, 0, "India lists 0 kcal"),
+    ("Starbucks Java Chip Frappuccino (tall)", "Glass", 329, 4, 2, "protein: US tall"),
+    ("Starbucks Caramel Frappuccino (tall)", "Glass", 284, 3, 0, "protein: US tall"),
+    ("Starbucks Mocha Frappuccino (tall)", "Glass", 261, 4, 1, "protein: US tall"),
+    ("Starbucks Coffee Frappuccino (tall)", "Glass", 153, 3, 0, "protein: US tall"),
+    ("Starbucks Signature Hot Chocolate (tall)", "Cup", 463, 0, None, "India recipe; protein unknown"),
+    ("Starbucks Iced Caffe Latte (tall)", "Glass", 122, 6, 0, "protein: US tall"),
+    ("Starbucks Cold Brew (tall)", "Glass", 0, 0, 0, "black, India lists 0 kcal"),
+    ("Starbucks Chai Tea Latte (tall)", "Cup", 203, 5, 0, "protein: US tall, recipes differ"),
+    ("Starbucks Green Tea Latte (tall)", "Cup", 240, 8, 1, "matcha; protein: US tall"),
+    ("Starbucks Iced Shaken Hibiscus Lemonade (tall)", "Glass", 74, 0, None, "India figure"),
+    ("Starbucks Chocolate Chip Cookie", "Piece", 427, 0, None, "90 g"),
+    ("Starbucks Blueberry Muffin", "Piece", 388, 0, None, "120 g"),
+    ("Starbucks Butter Croissant", "Piece", 381, 0, None, "75 g, served with butter"),
+    ("Starbucks Chocolate Croissant", "Piece", 614, 0, None, "100 g"),
+    ("Starbucks Banana Chocolate Loaf Cake", "Piece", 482, 0, None, "125 g"),
+    ("Starbucks New York Cheesecake", "Piece", 552, 0, None, "125 g slice"),
+    ("Starbucks Paneer Tikka Sandwich", "Piece", 738, 0, None, "185 g"),
+    ("Starbucks Chicken Tikka Sandwich", "Piece", 609, 0, None, "180 g"),
+]
+
+FOODS += _label(STARBUCKS, STARBUCKS_MENU, STARBUCKS_SRC)

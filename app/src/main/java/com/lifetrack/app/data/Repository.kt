@@ -170,7 +170,9 @@ class Repository(private val db: AppDatabase) {
 
     // ---------------------------------------------------------------- food catalogue
 
-    fun searchFoods(query: String): Flow<List<FoodItem>> = db.foodDao().search(query.trim())
+    /** Apostrophes (straight or curly) are dropped so "dominos" and "mcdonalds" still match. */
+    fun searchFoods(query: String): Flow<List<FoodItem>> =
+        db.foodDao().search(query.trim().replace("'", "").replace("’", ""))
     fun foodSuggestions(): Flow<List<FoodItem>> = db.foodDao().suggestions()
     fun foodsInCategory(category: String): Flow<List<FoodItem>> = db.foodDao().byCategory(category)
     /**

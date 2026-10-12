@@ -66,16 +66,21 @@ interface FoodDao {
 
     /**
      * Type-ahead search. Matches at the start of the name or at the start of any word inside it,
-     * so "da" finds Daal, Daliya and Dahi, and "pan" finds Paneer and Palak Paneer.
-     * Exact prefixes rank first, then whatever you eat most.
+     * so "da" finds Daal, Daliya and Dahi, and "pan" finds Paneer and Palak Paneer. Apostrophes
+     * are ignored ("dominos" finds Domino's - [q] arrives without them, see
+     * `Repository.searchFoods`), and a category name lists its whole group ("starbucks",
+     * "beer", "bakery"). Exact prefixes rank first, then whatever you eat most.
      */
     @Query(
         """
         SELECT * FROM food_items
-        WHERE hidden = 0 AND (name LIKE :q || '%' OR name LIKE '% ' || :q || '%')
-        ORDER BY (CASE WHEN name LIKE :q || '%' THEN 0 ELSE 1 END),
+        WHERE hidden = 0 AND (
+            REPLACE(name, '''', '') LIKE :q || '%' OR REPLACE(name, '''', '') LIKE '% ' || :q || '%'
+            OR REPLACE(category, '''', '') LIKE :q || '%' OR category LIKE '% ' || :q || '%'
+        )
+        ORDER BY (CASE WHEN REPLACE(name, '''', '') LIKE :q || '%' THEN 0 ELSE 1 END),
                  useCount DESC, lastUsedAt DESC, name ASC
-        LIMIT 30
+        LIMIT 40
         """
     )
     fun search(q: String): Flow<List<FoodItem>>

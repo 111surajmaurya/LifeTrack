@@ -19,6 +19,20 @@ is the better source for Indian *ingredients* — 528 foods sampled across six r
 covers raw foods only: there is no chapati in it, no dal, no curry. For a meal tracker the
 composite dish is the unit, so FNDDS is the primary source and IFCT informs the serving sizes.
 
+## Chain menus (Domino's, McDonald's, Starbucks)
+
+A branded recipe is in no composition table, so these items use the chain's **own published
+India nutrition figures**, per item as sold - a `label` source in `catalogue.py`:
+
+| Chain | Source | Notes |
+| --- | --- | --- |
+| Domino's | Domino's India nutrition & allergen sheet | Pizza = one slice: a third of the sheet's 3-slice medium hand-tossed serve |
+| McDonald's | mcdonaldsindia.com nutrition PDF (West & South), 2024 | Fibre from the earlier PDF where the serve weight matches |
+| Starbucks | starbucks.in menu (Tata Starbucks) | India publishes kcal only; drink protein/fibre are the US figure for the same Tall drink |
+
+Chains publish energy and macros, not vitamins or minerals, so those are 0 (unknown) here. Menus
+change; re-check a sheet before trusting an old figure, and edit the list in `catalogue.py`.
+
 ## Serving sizes
 
 Nutrient data is published per 100 g; people eat katoris. Each food carries the gram weight of
@@ -74,4 +88,4 @@ python resolve.py "Kheer=rice pudding"   # see what the scorer would pick, and w
 | `build_index.py` / `add_srlegacy.py` | Flatten each dataset into the shared per-100 g index. |
 | `check_queries.py` | Fails fast on any source that no longer resolves. |
 | `find.py` / `resolve.py` | Interactive helpers for curating `catalogue.py`. |
-| `mapping_audit.txt` | Generated provenance for all 226 foods. |
+| `mapping_audit.txt` | Generated provenance for every food in `FoodSeed.kt`. |

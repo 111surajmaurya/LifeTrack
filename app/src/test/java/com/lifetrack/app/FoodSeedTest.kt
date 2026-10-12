@@ -100,6 +100,35 @@ class FoodSeedTest {
         assertTrue(food("Cooking Oil").kcal >= 100)
     }
 
+    // ------------------------------------------------------------------ second round (v3)
+
+    @Test fun `chain items carry the chain's own published figure`() {
+        // Domino's India: a medium hand-tossed 3-slice serve is 585 kcal / 21 g; one slice is a third.
+        assertEquals(195, food("Domino's Margherita (medium slice)").kcal)
+        assertEquals(7.0f, food("Domino's Margherita (medium slice)").protein, 0.05f)
+        assertEquals(340, food("McDonald's McAloo Tikki burger").kcal)
+        assertEquals(4.0f, food("McDonald's McAloo Tikki burger").fiber, 0.05f)
+        assertEquals(173, food("Starbucks Caffe Latte (tall)").kcal)
+        listOf(FoodSeed.DOMINOS, FoodSeed.MCD, FoodSeed.STARBUCKS).forEach { chain ->
+            assertTrue("$chain items must be named after it",
+                FoodSeed.items.filter { it.category == chain }.all { it.name.startsWith(chain) })
+        }
+    }
+
+    @Test fun `a peg of spirits is about 66 kcal and a large peg twice that`() {
+        // 30 ml of 40% spirit: ~0.95 g/ml at 231 kcal/100 g (FNDDS whiskey)
+        assertEquals(66, food("Whisky (small peg, 30 ml)").kcal)
+        assertEquals(132, food("Whisky (large peg, 60 ml)").kcal)
+        assertTrue(food("Beer (650 ml bottle)").kcal in 250..320)
+    }
+
+    @Test fun `the bakery and cafe additions land where a menu would put them`() {
+        assertTrue(food("Chocolate cake (slice)").kcal in 200..400)
+        assertTrue(food("Oreo shake").kcal > food("Vanilla milkshake").kcal)
+        assertTrue(food("Caffe latte").kcal > food("Americano").kcal)
+        assertEquals(Serving.Piece, food("Croissant (butter)").servingType)
+    }
+
     // ------------------------------------------------------------------ known values
 
     /**

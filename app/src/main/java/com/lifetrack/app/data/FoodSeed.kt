@@ -1,14 +1,16 @@
 package com.lifetrack.app.data
 
 /**
- * The food catalogue: 226 everyday foods with calories, protein, fibre, vitamin A,
+ * The food catalogue: 439 everyday foods with calories, protein, fibre, vitamin A,
  * vitamin C, iron and calcium for one *medium* serving.
  *
  * **This file is generated.** Every number is computed from USDA FoodData Central -
  * FNDDS 2021-2023 for prepared dishes (dosa, biryani, samosa, pizza) and SR Legacy for
  * reference foods (chapati, rice, fruit) - scaled to a real Indian serving: a 150 g katori,
  * a 40 g roti, a 250 ml glass. Dishes neither database carries (poha, lassi, bhel puri,
- * gulab jamun) are built from their measured ingredients instead of guessed at.
+ * gulab jamun) are built from their measured ingredients instead of guessed at. Domino's,
+ * McDonald's and Starbucks items use each chain's own published India nutrition figures,
+ * per item as sold; what a chain doesn't publish (usually vitamins and minerals) is 0.
  *
  * The tooling that produced it, including the per-food provenance of every figure, lives in
  * `tools/foodseed/` - edit `catalogue.py` and re-run `generate_seed.py`, never this file.
@@ -24,7 +26,7 @@ object FoodSeed {
      * `Settings.seedVersion` and refreshes the catalogue when it is behind, which is the only
      * reason a phone that already has `food_items` rows ever sees a corrected figure.
      */
-    const val VERSION = 2
+    const val VERSION = 3
 
     const val ROTI = "Roti & bread"
     const val RICE = "Rice & grains"
@@ -40,11 +42,16 @@ object FoodSeed {
     const val FRUIT = "Fruit & nuts"
     const val SWEET = "Sweets"
     const val OTHER = "Other"
+    const val BAKERY = "Cakes & bakery"
+    const val ALCOHOL = "Beer, wine & spirits"
+    const val DOMINOS = "Domino's"
+    const val MCD = "McDonald's"
+    const val STARBUCKS = "Starbucks"
 
     /** Categories in the order they show up as browse chips. */
     val categories = listOf(
         ROTI, RICE, DAL, SABJI, NONVEG, SOUTH, CHAAT, SNACK, ITALIAN, FAST,
-        DAIRY, FRUIT, SWEET, OTHER
+        DAIRY, FRUIT, SWEET, BAKERY, ALCOHOL, DOMINOS, MCD, STARBUCKS, OTHER
     )
 
     fun emojiFor(category: String): String = when (category) {
@@ -61,6 +68,11 @@ object FoodSeed {
         DAIRY -> "\uD83E\uDD5B"     // milk
         FRUIT -> "\uD83C\uDF4E"     // apple
         SWEET -> "\uD83C\uDF6E"     // custard
+        BAKERY -> "\uD83C\uDF70"    // shortcake
+        ALCOHOL -> "\uD83C\uDF7A"   // beer mug
+        DOMINOS -> "\uD83C\uDF55"   // pizza
+        MCD -> "\uD83C\uDF54"       // burger
+        STARBUCKS -> "\u2615"          // hot beverage
         else -> "\uD83C\uDF7D"      // plate
     }
 
@@ -141,6 +153,8 @@ object FoodSeed {
         bowl("Cornflakes with Milk", 213, 7.5f, 1.1f, 57.4f, 0.0f, 8.4f, 210.3f, RICE),
         bowl("Sabudana Khichdi", 373, 5.0f, 2.4f, 7.6f, 5.0f, 1.1f, 20.1f, RICE),
         bowl("Quinoa", 180, 6.6f, 4.2f, 0.0f, 0.0f, 2.2f, 25.5f, RICE),
+        bowl("Granola (50 g)", 244, 6.8f, 4.5f, 0.5f, 0.6f, 2.0f, 38.0f, RICE),
+        plate("Chole chawal", 510, 16.4f, 11.2f, 1.5f, 1.6f, 5.8f, 84.0f, RICE),
 
         // ---- Dal & curry ----
         bowl("Daal", 218, 12.9f, 11.2f, 49.5f, 2.1f, 4.8f, 28.5f, DAL),
@@ -199,6 +213,13 @@ object FoodSeed {
         piece("Chicken Breast (100 g)", 161, 30.2f, 0.0f, 9.0f, 0.0f, 0.5f, 7.0f, NONVEG),
         piece("Prawns (100 g)", 99, 24.0f, 0.0f, 0.0f, 0.0f, 0.5f, 70.0f, NONVEG),
         bowl("Keema", 424, 37.2f, 0.0f, 0.0f, 0.0f, 2.7f, 33.0f, NONVEG),
+        plate("Scrambled eggs (2 eggs)", 204, 12.8f, 0.0f, 212.3f, 0.0f, 1.7f, 50.6f, NONVEG),
+        serve("Bacon (2 strips)", 75, 5.4f, 0.0f, 1.8f, 0.0f, 0.2f, 1.8f, NONVEG),
+        piece("Chicken sausage", 77, 7.8f, 0.0f, 0.0f, 0.0f, 0.6f, 15.2f, NONVEG),
+        piece("Chicken salami (slice)", 26, 2.9f, 0.0f, 0.3f, 0.0f, 0.2f, 6.0f, NONVEG),
+        serve("Grilled chicken (150 g)", 309, 38.5f, 0.0f, 25.5f, 0.0f, 0.8f, 10.5f, NONVEG),
+        serve("Tuna, canned (100 g)", 128, 23.6f, 0.0f, 6.0f, 0.0f, 1.0f, 14.0f, NONVEG),
+        serve("Salmon (100 g)", 154, 25.8f, 0.0f, 34.0f, 0.0f, 0.7f, 14.0f, NONVEG),
 
         // ---- South Indian ----
         piece("Dosa", 168, 4.6f, 1.4f, 0.0f, 0.2f, 1.8f, 12.8f, SOUTH),
@@ -246,6 +267,17 @@ object FoodSeed {
         handful("Roasted Chana", 49, 2.6f, 2.3f, 0.3f, 0.4f, 0.9f, 14.7f, SNACK),
         handful("Makhana", 18, 0.8f, 0.0f, 0.2f, 0.0f, 0.2f, 8.8f, SNACK),
         piece("Protein Bar", 232, 13.4f, 2.8f, 315.6f, 62.4f, 3.1f, 170.4f, SNACK),
+        piece("Lay's / potato chips (52 g pack)", 277, 3.3f, 1.6f, 0.0f, 11.2f, 0.7f, 10.9f, SNACK),
+        handful("Kurkure / corn puffs (30 g)", 170, 1.6f, 0.2f, 3.9f, 0.0f, 0.5f, 15.9f, SNACK),
+        piece("Marie biscuit", 31, 0.5f, 0.1f, 0.0f, 0.0f, 0.2f, 3.0f, SNACK),
+        piece("Parle-G / glucose biscuit", 32, 0.4f, 0.1f, 0.5f, 0.0f, 0.2f, 2.5f, SNACK),
+        piece("Bourbon biscuit", 56, 0.6f, 0.3f, 0.1f, 0.0f, 1.5f, 2.5f, SNACK),
+        piece("Oreo biscuit", 51, 0.6f, 0.3f, 0.1f, 0.0f, 1.3f, 2.3f, SNACK),
+        piece("Good Day / butter cookie", 42, 0.5f, 0.1f, 0.6f, 0.0f, 0.2f, 3.1f, SNACK),
+        piece("Digestive biscuit", 68, 0.9f, 0.4f, 0.8f, 0.1f, 0.4f, 5.5f, SNACK),
+        piece("Cream biscuit", 48, 0.5f, 0.1f, 0.0f, 0.0f, 0.2f, 2.7f, SNACK),
+        piece("Granola bar", 118, 2.5f, 1.3f, 0.5f, 0.2f, 0.7f, 15.2f, SNACK),
+        handful("Trail mix", 181, 6.0f, 2.4f, 0.0f, 0.2f, 1.0f, 26.1f, SNACK),
 
         // ---- Italian ----
         piece("Pizza Slice", 285, 12.2f, 2.5f, 73.8f, 1.5f, 2.7f, 201.2f, ITALIAN),
@@ -266,6 +298,9 @@ object FoodSeed {
         bowl("Minestrone Soup", 98, 4.2f, 3.7f, 76.0f, 14.5f, 1.2f, 31.9f, ITALIAN),
         piece("Tiramisu", 353, 5.7f, 0.6f, 185.0f, 1.1f, 1.1f, 65.0f, ITALIAN),
         piece("Focaccia", 137, 4.8f, 1.0f, 0.0f, 0.0f, 1.7f, 19.2f, ITALIAN),
+        piece("Chicken pizza slice", 301, 15.2f, 2.0f, 61.6f, 1.2f, 2.5f, 168.3f, ITALIAN),
+        piece("Paneer pizza slice", 259, 11.5f, 1.9f, 81.4f, 4.4f, 2.1f, 258.0f, ITALIAN),
+        piece("Cheese burst pizza slice", 313, 12.2f, 2.2f, 79.8f, 1.1f, 2.5f, 220.8f, ITALIAN),
 
         // ---- Fast food ----
         piece("Burger", 317, 19.2f, 0.8f, 0.0f, 0.6f, 3.1f, 72.6f, FAST),
@@ -285,6 +320,25 @@ object FoodSeed {
         piece("Doughnut", 256, 3.3f, 1.1f, 2.4f, 0.4f, 1.4f, 41.4f, FAST),
         glass("Milkshake", 444, 10.1f, 2.7f, 273.0f, 0.0f, 1.4f, 345.0f, FAST),
         bowl("Nachos", 293, 4.9f, 2.2f, 14.3f, 0.0f, 1.0f, 91.3f, FAST),
+        bowl("Peri peri fries", 263, 2.9f, 2.1f, 0.0f, 9.1f, 0.6f, 12.9f, FAST),
+        bowl("Potato wedges", 155, 3.2f, 2.4f, 0.0f, 13.4f, 0.8f, 18.0f, FAST),
+        piece("Hash brown", 119, 1.4f, 1.8f, 0.0f, 3.6f, 0.3f, 9.3f, FAST),
+        bowl("Coleslaw", 117, 0.9f, 1.9f, 79.0f, 26.9f, 0.1f, 33.0f, FAST),
+        bowl("Mashed potato", 171, 3.2f, 1.8f, 55.5f, 15.2f, 0.4f, 37.5f, FAST),
+        bowl("Baked beans", 136, 5.9f, 5.7f, 1.3f, 0.0f, 1.8f, 50.7f, FAST),
+        bowl("Sauteed vegetables", 134, 4.2f, 6.5f, 310.5f, 4.7f, 1.2f, 36.0f, FAST),
+        serve("Cheese dip", 41, 0.8f, 0.1f, 4.8f, 0.0f, 0.1f, 17.8f, FAST),
+        spoon("Mayonnaise", 95, 0.1f, 0.0f, 2.2f, 0.0f, 0.0f, 1.1f, FAST),
+        spoon("Ketchup", 16, 0.2f, 0.0f, 3.9f, 0.6f, 0.1f, 2.1f, FAST),
+        piece("Chicken wings (piece)", 87, 5.8f, 0.1f, 3.3f, 0.0f, 0.3f, 6.6f, FAST),
+        serve("Popcorn chicken", 307, 15.9f, 0.9f, 5.0f, 0.6f, 0.8f, 11.0f, FAST),
+        piece("Chicken strips (piece)", 95, 6.7f, 0.4f, 1.1f, 0.4f, 0.3f, 6.0f, FAST),
+        piece("Crispy chicken burger (Zinger style)", 538, 24.8f, 3.4f, 8.0f, 1.6f, 3.6f, 158.0f, FAST),
+        piece("Falafel (piece)", 87, 1.4f, 0.8f, 2.0f, 1.2f, 0.4f, 14.6f, FAST),
+        piece("Falafel wrap / pita", 530, 12.4f, 5.0f, 44.0f, 10.4f, 3.1f, 134.0f, FAST),
+        serve("Hummus", 146, 4.4f, 3.2f, 0.6f, 0.0f, 1.4f, 24.6f, FAST),
+        piece("Pita bread", 165, 5.5f, 1.3f, 0.0f, 0.0f, 1.6f, 51.6f, FAST),
+        piece("Breadsticks", 103, 3.7f, 0.7f, 7.2f, 0.0f, 1.4f, 26.1f, FAST),
 
         // ---- Dairy & drinks ----
         glass("Milk", 152, 8.2f, 0.0f, 80.0f, 0.0f, 0.0f, 307.5f, DAIRY),
@@ -313,6 +367,25 @@ object FoodSeed {
         spoon("Sugar", 48, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, DAIRY),
         spoon("Honey", 64, 0.1f, 0.0f, 0.0f, 0.1f, 0.1f, 1.3f, DAIRY),
         spoon("Jaggery", 57, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 12.4f, DAIRY),
+        cup("Cappuccino", 65, 4.1f, 0.0f, 100.8f, 0.2f, 0.0f, 156.0f, DAIRY),
+        cup("Caffe latte", 129, 8.4f, 0.0f, 207.0f, 0.6f, 0.1f, 315.0f, DAIRY),
+        cup("Americano", 2, 0.3f, 0.0f, 0.0f, 0.0f, 0.0f, 4.8f, DAIRY),
+        cup("Espresso (single shot)", 3, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f, 0.6f, DAIRY),
+        cup("Cafe mocha", 192, 7.7f, 0.0f, 189.0f, 0.6f, 0.1f, 288.0f, DAIRY),
+        glass("Iced latte", 81, 5.2f, 0.0f, 129.0f, 0.3f, 0.1f, 198.0f, DAIRY),
+        glass("Frappe / blended iced coffee", 238, 5.5f, 0.0f, 133.0f, 0.3f, 0.1f, 206.5f, DAIRY),
+        glass("Iced tea (sweetened)", 96, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f, DAIRY),
+        glass("Lemonade", 115, 0.0f, 0.0f, 0.0f, 7.8f, 0.0f, 5.0f, DAIRY),
+        glass("Virgin mojito", 105, 0.1f, 0.1f, 0.4f, 6.0f, 0.0f, 3.0f, DAIRY),
+        glass("Fruit smoothie", 198, 7.0f, 3.3f, 60.0f, 28.5f, 0.6f, 240.0f, DAIRY),
+        glass("Bubble tea", 220, 1.6f, 0.4f, 48.0f, 0.4f, 0.5f, 60.0f, DAIRY),
+        glass("Energy drink (250 ml can)", 108, 1.1f, 0.0f, 0.0f, 0.0f, 0.1f, 15.0f, DAIRY),
+        glass("Vanilla milkshake", 336, 11.6f, 0.0f, 75.0f, 0.0f, 0.3f, 438.0f, DAIRY),
+        glass("Oreo shake", 442, 11.5f, 1.0f, 62.9f, 0.0f, 4.5f, 372.4f, DAIRY),
+        glass("KitKat shake", 424, 11.9f, 0.9f, 65.3f, 0.0f, 0.7f, 375.8f, DAIRY),
+        glass("Butterscotch shake", 334, 10.0f, 0.0f, 67.2f, 0.1f, 0.2f, 377.2f, DAIRY),
+        piece("Tofu (100 g)", 144, 17.3f, 2.3f, 0.0f, 0.2f, 2.7f, 683.0f, DAIRY),
+        spoon("Whey protein (1 scoop)", 106, 23.4f, 0.9f, 0.0f, 0.0f, 0.3f, 140.7f, DAIRY),
 
         // ---- Fruit & nuts ----
         piece("Banana", 105, 1.3f, 3.1f, 3.5f, 10.3f, 0.3f, 5.9f, FRUIT),
@@ -333,6 +406,29 @@ object FoodSeed {
         piece("Walnut", 26, 0.6f, 0.3f, 0.0f, 0.1f, 0.1f, 3.9f, FRUIT),
         piece("Raisin (10 pc)", 15, 0.2f, 0.2f, 0.0f, 0.2f, 0.0f, 3.2f, FRUIT),
         piece("Pistachio", 4, 0.2f, 0.1f, 0.2f, 0.0f, 0.0f, 0.8f, FRUIT),
+        bowl("Pineapple", 99, 0.8f, 1.5f, 5.0f, 96.7f, 0.1f, 19.8f, FRUIT),
+        piece("Kiwi", 46, 0.9f, 2.2f, 3.0f, 69.5f, 0.2f, 25.5f, FRUIT),
+        bowl("Strawberries", 54, 1.0f, 2.7f, 1.5f, 89.4f, 0.4f, 25.5f, FRUIT),
+        piece("Litchi", 7, 0.1f, 0.1f, 0.0f, 7.2f, 0.0f, 0.5f, FRUIT),
+        bowl("Jamun", 60, 0.7f, 0.0f, 0.0f, 14.3f, 0.2f, 19.0f, FRUIT),
+        bowl("Muskmelon", 54, 1.3f, 1.4f, 270.4f, 58.7f, 0.3f, 14.4f, FRUIT),
+        piece("Plum", 30, 0.5f, 0.9f, 11.2f, 6.3f, 0.1f, 4.0f, FRUIT),
+        piece("Peach", 58, 1.4f, 2.2f, 24.0f, 9.9f, 0.4f, 9.0f, FRUIT),
+        piece("Mosambi / sweet lime", 64, 1.0f, 3.4f, 15.4f, 63.0f, 0.1f, 60.2f, FRUIT),
+        piece("Custard apple (sitaphal)", 94, 2.1f, 4.4f, 0.0f, 36.3f, 0.6f, 24.0f, FRUIT),
+        piece("Coconut (fresh piece)", 159, 1.5f, 4.0f, 0.0f, 1.5f, 1.1f, 6.3f, FRUIT),
+        bowl("Cherries", 88, 1.5f, 2.9f, 4.2f, 9.8f, 0.5f, 18.2f, FRUIT),
+        bowl("Blueberries", 95, 1.0f, 3.6f, 4.4f, 12.0f, 0.5f, 17.8f, FRUIT),
+        piece("Avocado (half)", 167, 2.0f, 6.8f, 7.0f, 8.8f, 0.6f, 13.0f, FRUIT),
+        bowl("Dragon fruit", 102, 1.0f, 2.7f, 7.5f, 29.7f, 0.2f, 19.5f, FRUIT),
+        piece("Fig (fresh)", 37, 0.4f, 1.4f, 3.5f, 1.0f, 0.2f, 17.5f, FRUIT),
+        piece("Anjeer / dried fig", 20, 0.3f, 0.8f, 0.0f, 0.1f, 0.2f, 13.0f, FRUIT),
+        piece("Prunes", 23, 0.2f, 0.7f, 3.7f, 0.1f, 0.1f, 4.1f, FRUIT),
+        piece("Hazelnut", 9, 0.2f, 0.1f, 0.0f, 0.1f, 0.1f, 1.6f, FRUIT),
+        spoon("Chia seeds", 58, 2.0f, 4.1f, 0.0f, 0.2f, 0.9f, 75.7f, FRUIT),
+        spoon("Flaxseeds", 53, 1.8f, 2.7f, 0.0f, 0.1f, 0.6f, 25.5f, FRUIT),
+        spoon("Sunflower seeds", 58, 2.1f, 0.9f, 0.3f, 0.1f, 0.5f, 7.8f, FRUIT),
+        spoon("Pumpkin seeds", 56, 3.0f, 0.6f, 0.1f, 0.2f, 0.9f, 4.6f, FRUIT),
 
         // ---- Sweets ----
         piece("Gulab Jamun", 153, 0.9f, 0.1f, 4.7f, 0.2f, 0.4f, 17.9f, SWEET),
@@ -347,7 +443,148 @@ object FoodSeed {
         bowl("Kheer", 162, 4.8f, 0.5f, 28.5f, 1.9f, 0.2f, 142.5f, SWEET),
         bowl("Shrikhand", 155, 2.7f, 0.0f, 33.6f, 0.3f, 0.0f, 89.2f, SWEET),
         bowl("Gajar Halwa", 197, 1.2f, 1.6f, 490.6f, 2.5f, 0.1f, 46.4f, SWEET),
-        piece("Rasmalai", 131, 4.0f, 0.0f, 39.0f, 0.0f, 0.0f, 150.3f, SWEET)
+        piece("Rasmalai", 131, 4.0f, 0.0f, 39.0f, 0.0f, 0.0f, 150.3f, SWEET),
+        serve("Ice cream sundae", 364, 5.5f, 1.6f, 145.5f, 0.8f, 0.5f, 162.0f, SWEET),
+        plate("Brownie with ice cream", 420, 5.2f, 1.7f, 89.9f, 0.4f, 1.4f, 101.9f, SWEET),
+        piece("Chocolate ice cream (scoop)", 143, 2.5f, 0.8f, 77.9f, 0.5f, 0.6f, 71.9f, SWEET),
+        piece("Gelato (scoop)", 174, 2.5f, 0.0f, 127.4f, 0.0f, 0.2f, 81.9f, SWEET),
+        bowl("Chocolate pudding", 170, 2.5f, 0.0f, 16.8f, 0.4f, 1.5f, 61.2f, SWEET),
+        bowl("Chocolate mousse", 225, 4.1f, 0.6f, 140.0f, 0.1f, 0.6f, 96.0f, SWEET),
+        bowl("Jelly (dessert)", 72, 1.5f, 0.0f, 0.0f, 0.0f, 0.0f, 3.6f, SWEET),
+        bowl("Fruit cream", 352, 2.2f, 0.5f, 214.3f, 24.3f, 0.3f, 48.4f, SWEET),
+        piece("Dark chocolate (2 squares)", 120, 1.6f, 2.2f, 0.4f, 0.0f, 2.4f, 14.6f, SWEET),
+
+        // ---- Cakes & bakery ----
+        piece("Chocolate cake (slice)", 276, 2.6f, 1.3f, 15.2f, 0.0f, 1.4f, 56.0f, BAKERY),
+        piece("Black forest cake (slice)", 259, 3.4f, 1.5f, 96.0f, 0.8f, 1.1f, 81.5f, BAKERY),
+        piece("Pineapple cake (slice)", 249, 3.7f, 0.4f, 88.3f, 6.0f, 1.6f, 54.6f, BAKERY),
+        piece("Pastry (fresh cream, slice)", 278, 3.8f, 0.3f, 118.8f, 0.2f, 1.6f, 59.1f, BAKERY),
+        piece("Red velvet cake (slice)", 284, 2.2f, 1.0f, 15.2f, 0.0f, 0.9f, 53.6f, BAKERY),
+        piece("Vanilla cake (slice)", 287, 1.9f, 0.3f, 15.2f, 0.0f, 0.7f, 55.2f, BAKERY),
+        piece("Cheesecake (slice)", 399, 5.3f, 0.5f, 221.0f, 0.0f, 0.8f, 67.0f, BAKERY),
+        piece("Cupcake", 176, 1.4f, 0.5f, 9.5f, 0.0f, 0.7f, 35.0f, BAKERY),
+        piece("Plum cake / fruit cake (slice)", 162, 1.4f, 1.9f, 3.5f, 0.2f, 1.0f, 16.5f, BAKERY),
+        piece("Pound cake / butter cake (slice)", 212, 3.0f, 0.4f, 42.0f, 0.0f, 0.9f, 28.2f, BAKERY),
+        piece("Sponge cake (slice)", 174, 3.2f, 0.3f, 26.4f, 0.0f, 1.6f, 42.0f, BAKERY),
+        piece("Swiss roll (slice)", 114, 1.3f, 0.3f, 9.6f, 1.6f, 0.7f, 19.2f, BAKERY),
+        piece("Cake rusk", 85, 2.0f, 0.5f, 3.2f, 1.1f, 0.1f, 4.0f, BAKERY),
+        piece("Muffin (blueberry / fruit)", 412, 4.9f, 1.2f, 23.1f, 1.0f, 1.4f, 48.4f, BAKERY),
+        piece("Chocolate muffin", 434, 7.2f, 2.1f, 40.7f, 0.0f, 3.6f, 179.3f, BAKERY),
+        piece("Brownie", 243, 2.9f, 1.3f, 12.0f, 0.0f, 1.4f, 17.4f, BAKERY),
+        piece("Croissant (butter)", 244, 4.9f, 1.6f, 123.6f, 0.1f, 1.2f, 22.2f, BAKERY),
+        piece("Danish pastry", 260, 3.8f, 1.3f, 10.5f, 2.7f, 1.2f, 32.2f, BAKERY),
+        piece("Cream roll", 205, 2.8f, 0.4f, 43.0f, 0.1f, 0.8f, 22.0f, BAKERY),
+        piece("Cream bun", 228, 5.8f, 1.7f, 68.2f, 0.2f, 1.5f, 42.7f, BAKERY),
+        piece("Khari (puff biscuit)", 56, 0.7f, 0.1f, 0.0f, 0.0f, 0.3f, 1.0f, BAKERY),
+        piece("Chocolate chip cookie", 148, 1.5f, 0.6f, 0.0f, 0.0f, 1.7f, 6.3f, BAKERY),
+        piece("Nankhatai", 96, 1.1f, 0.3f, 41.1f, 0.0f, 0.6f, 3.4f, BAKERY),
+        piece("Waffle", 280, 6.5f, 1.9f, 67.5f, 0.0f, 1.3f, 181.5f, BAKERY),
+        piece("Pancake", 212, 5.6f, 1.6f, 57.8f, 0.0f, 1.1f, 154.5f, BAKERY),
+        piece("Crepe", 134, 5.3f, 0.4f, 58.8f, 0.0f, 1.1f, 57.0f, BAKERY),
+        piece("French toast (slice)", 177, 6.8f, 0.8f, 68.9f, 0.0f, 1.6f, 93.0f, BAKERY),
+
+        // ---- Beer, wine & spirits ----
+        glass("Beer (330 ml bottle)", 142, 1.5f, 0.0f, 0.0f, 0.0f, 0.1f, 13.2f, ALCOHOL),
+        glass("Beer (650 ml bottle)", 280, 3.0f, 0.0f, 0.0f, 0.0f, 0.1f, 26.0f, ALCOHOL),
+        glass("Light beer (330 ml)", 96, 0.8f, 0.0f, 0.0f, 0.0f, 0.1f, 13.2f, ALCOHOL),
+        glass("Red wine (150 ml glass)", 128, 0.1f, 0.0f, 0.0f, 0.0f, 0.7f, 12.0f, ALCOHOL),
+        glass("White wine (150 ml glass)", 123, 0.1f, 0.0f, 0.0f, 0.0f, 0.4f, 13.5f, ALCOHOL),
+        serve("Whisky (small peg, 30 ml)", 66, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, ALCOHOL),
+        serve("Whisky (large peg, 60 ml)", 132, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, ALCOHOL),
+        serve("Rum (small peg, 30 ml)", 66, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, ALCOHOL),
+        serve("Vodka (small peg, 30 ml)", 66, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, ALCOHOL),
+        serve("Gin (small peg, 30 ml)", 66, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, ALCOHOL),
+        glass("Rum & cola", 222, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 2.5f, ALCOHOL),
+        glass("Mojito (cocktail)", 152, 0.2f, 0.5f, 17.5f, 6.0f, 0.3f, 17.5f, ALCOHOL),
+        glass("Margarita (cocktail)", 183, 0.1f, 0.0f, 0.0f, 3.0f, 0.1f, 3.0f, ALCOHOL),
+
+        // ---- Domino's ----
+        piece("Domino's Margherita (medium slice)", 195, 7.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Farmhouse (medium slice)", 206, 7.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Peppy Paneer (medium slice)", 240, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Veg Extravaganza (medium slice)", 232, 9.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Mexican Green Wave (medium slice)", 201, 7.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Deluxe Veggie (medium slice)", 235, 9.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Cheese n Corn (medium slice)", 200, 7.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Paneer Makhani (medium slice)", 268, 10.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Veggie Paradise (medium slice)", 203, 7.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Indi Tandoori Paneer (medium slice)", 269, 8.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Chicken Dominator (medium slice)", 243, 12.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Chicken Golden Delight (medium slice)", 229, 9.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Pepper Barbecue Chicken (medium slice)", 211, 9.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Indi Chicken Tikka (medium slice)", 246, 9.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Chicken Sausage (medium slice)", 218, 8.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Non-veg Supreme (medium slice)", 226, 10.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        serve("Domino's Garlic Breadsticks (full order)", 288, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        serve("Domino's Stuffed Garlic Bread (full order)", 288, 9.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        serve("Domino's Cheesy Dip (1 cup)", 55, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Choco Lava Cake", 327, 6.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Taco Mexicana Veg (1 taco)", 248, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Taco Mexicana Non-veg (1 taco)", 219, 4.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Burger Pizza Classic Veg", 356, 12.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Burger Pizza Premium Veg", 455, 18.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        piece("Domino's Burger Pizza Classic Non-veg", 390, 19.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        serve("Domino's Creamy Tomato Pasta Veg", 440, 7.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        serve("Domino's Cheesy Jalapeno Pasta Veg", 523, 8.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+        glass("Domino's Pepsi (350 ml)", 151, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, DOMINOS),
+
+        // ---- McDonald's ----
+        piece("McDonald's McAloo Tikki burger", 340, 8.5f, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's McVeggie burger", 402, 10.2f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's McSpicy Paneer burger", 653, 20.3f, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's McSpicy Chicken burger", 452, 21.5f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's McChicken burger", 401, 15.7f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Chicken Maharaja Mac", 695, 33.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Veg Maharaja Mac", 833, 24.2f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Filet-O-Fish", 348, 15.4f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Chicken Kebab burger", 357, 8.6f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Spicy Paneer Wrap", 727, 21.2f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Spicy Chicken Wrap", 567, 23.7f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        serve("McDonald's Chicken McNuggets (6 pc)", 255, 15.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        serve("McDonald's Fries (regular)", 225, 3.4f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        serve("McDonald's Fries (medium)", 318, 4.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        serve("McDonald's Fries (large)", 449, 6.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Veg Pizza McPuff", 226, 4.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        cup("McDonald's McFlurry Oreo (regular)", 234, 4.1f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Soft serve cone", 100, 2.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        cup("McDonald's Hot fudge sundae (regular)", 122, 2.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        cup("McDonald's McCafe Cappuccino (regular)", 184, 8.8f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        glass("McDonald's Cold coffee", 182, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        glass("McDonald's Coca-Cola (medium)", 151, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        serve("McDonald's Piri Piri chicken wings (4 pc)", 481, 25.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's McSpicy Fried Chicken (1 pc)", 249, 17.3f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+        piece("McDonald's Hash brown", 140, 1.9f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, MCD),
+
+        // ---- Starbucks ----
+        cup("Starbucks Caffe Latte (tall)", 173, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Cappuccino (tall)", 99, 7.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Caffe Americano (tall)", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Caffe Mocha (tall)", 332, 11.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Caramel Macchiato (tall)", 255, 8.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Flat White (tall)", 173, 9.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Espresso (doppio)", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Java Chip Frappuccino (tall)", 329, 4.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Caramel Frappuccino (tall)", 284, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Mocha Frappuccino (tall)", 261, 4.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Coffee Frappuccino (tall)", 153, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Signature Hot Chocolate (tall)", 463, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Iced Caffe Latte (tall)", 122, 6.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Cold Brew (tall)", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Chai Tea Latte (tall)", 203, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        cup("Starbucks Green Tea Latte (tall)", 240, 8.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        glass("Starbucks Iced Shaken Hibiscus Lemonade (tall)", 74, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Chocolate Chip Cookie", 427, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Blueberry Muffin", 388, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Butter Croissant", 381, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Chocolate Croissant", 614, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Banana Chocolate Loaf Cake", 482, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks New York Cheesecake", 552, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Paneer Tikka Sandwich", 738, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+        piece("Starbucks Chicken Tikka Sandwich", 609, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, STARBUCKS),
+
+        // ---- Other ----
+        spoon("Peanut butter", 96, 3.6f, 0.8f, 0.0f, 0.0f, 0.3f, 7.8f, OTHER),
+        spoon("Jam", 56, 0.1f, 0.2f, 0.0f, 1.8f, 0.1f, 4.0f, OTHER)
     )
 
     /**
